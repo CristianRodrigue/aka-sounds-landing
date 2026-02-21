@@ -2,8 +2,7 @@ name: Deploy website on push
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   web-deploy:
@@ -19,17 +18,10 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: |
-          npm install
-          # Dar permisos de ejecución a los binarios de Node
-          chmod +x node_modules/.bin/vite
-          chmod +x node_modules/.bin/tsc
+        run: npm install
 
       - name: Build project
         run: npm run build
-
-      - name: Debug - List dist folder
-        run: ls -la dist/
 
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
@@ -38,4 +30,4 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./dist/
-          server-dir: /htdocs/
+          server-dir: /public_html/   # <-- ESTO ES LO ÚNICO QUE CAMBIA
