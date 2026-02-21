@@ -24,8 +24,11 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Debug - List dist folder
+        run: ls -la dist/
+
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.7  # <-- CAMBIADO A 4.3.7
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
