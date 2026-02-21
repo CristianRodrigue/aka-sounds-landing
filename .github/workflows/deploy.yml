@@ -28,7 +28,7 @@ jobs:
         run: ls -la dist/
 
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.7  # <-- CAMBIADO A 4.3.7
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.7  # <-- CORREGIDO
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
