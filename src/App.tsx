@@ -19,7 +19,7 @@ const products = [
     price: "$29.99",
     genre: "HARD TECHNO",
     image: htEssentialsImg,
-    link: "https://akasounds.com/b/hardtechno-essentials-vol-1"
+    link: "https://akasounds.com/store/p/hardtechno-essentials-vol1/"
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ const products = [
     price: "FREE",
     genre: "SAMPLE PACK",
     image: htFreeTrialImg,
-    link: "https://akasounds.com/b/hardtechno-essentials-vol-1-free-trial"
+    link: "https://akasounds.com/store/p/aka-sounds-hardtechno-essentials-vol-1-free-trial/"
   }
 ];
 
