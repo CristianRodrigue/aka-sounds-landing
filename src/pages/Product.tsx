@@ -4,8 +4,8 @@ import { ShoppingCart, Check, Star, ArrowLeft } from "lucide-react";
 import { products } from "../data/products";
 
 export default function Product() {
-    const { id } = useParams();
-    const product = products.find(p => p.id === Number(id));
+    const { slug } = useParams();
+    const product = products.find(p => p.slug === slug);
 
     if (!product) {
         return (
@@ -16,8 +16,8 @@ export default function Product() {
         );
     }
 
-    // Generate the WooCommerce cart API link dynamically
-    const addToCartUrl = `https://akasounds.com/store/wp-json/wc/v3/cart/add?product_id=${product.wcProductId}`;
+    // URL temporarily set to 404, awaiting new payment platform links
+    const addToCartUrl = "/404";
 
     return (
         <div className="min-h-screen pt-24 pb-24">
@@ -115,16 +115,14 @@ export default function Product() {
                             </li>
                         </ul>
 
-                        {/* API ADD TO CART BUTTON */}
-                        <a
-                            href={addToCartUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        {/* API ADD TO CART BUTTON (Temporarily disabled) */}
+                        <Link
+                            to={addToCartUrl}
                             className="w-full flex items-center justify-center gap-3 bg-white text-black font-extrabold text-lg px-8 py-5 rounded-2xl hover:bg-white/90 transition-all active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)] mb-12 group"
                         >
                             <ShoppingCart size={22} className="group-hover:scale-110 transition-transform" />
                             COMPRAR AHORA
-                        </a>
+                        </Link>
 
                         {/* Testimonials */}
                         <div className="border-t border-white/10 pt-10">

@@ -128,7 +128,7 @@ export default function Home() {
                                     <div className="absolute inset-[1px] rounded-[2.4rem] bg-gradient-to-br from-white/60 to-transparent pointer-events-none" />
 
                                     <div className="h-full w-full rounded-[2.4rem] overflow-hidden relative flex flex-col z-10">
-                                        <Link to={`/product/${product.id}`} className="relative flex-1 overflow-hidden m-4 rounded-[1.8rem] block cursor-pointer">
+                                        <Link to={`/product/${product.slug}`} className="relative flex-1 overflow-hidden m-4 rounded-[1.8rem] block cursor-pointer">
                                             <img
                                                 src={product.image}
                                                 alt={product.name}
@@ -153,7 +153,7 @@ export default function Home() {
                                         <div className="px-8 pb-8">
                                             <div className="flex justify-between items-end mb-6">
                                                 <div>
-                                                    <Link to={`/product/${product.id}`} className="block hover:opacity-70 transition-opacity">
+                                                    <Link to={`/product/${product.slug}`} className="block hover:opacity-70 transition-opacity">
                                                         <h3 className="text-lg font-display font-bold tracking-tight mb-1 text-black">{product.name}</h3>
                                                     </Link>
                                                     <p className="text-xs text-black/50 font-medium">{product.description}</p>
@@ -165,7 +165,7 @@ export default function Home() {
 
                                             <div className="flex items-center gap-2">
                                                 <Link
-                                                    to={`/product/${product.id}`}
+                                                    to={`/product/${product.slug}`}
                                                     className="flex-1 bg-black/5 hover:bg-black text-black hover:text-white border border-black/5 hover:border-black py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase transition-all active:scale-95 flex items-center justify-center gap-2"
                                                 >
                                                     <ShoppingCart size={14} />

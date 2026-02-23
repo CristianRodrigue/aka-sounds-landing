@@ -4,6 +4,7 @@ import htFreeTrialImg from '../assets/HARDTECHNO-ESSENTIALS-VOL.-1-FREE-SAMPLEPA
 export const products = [
     {
         id: 1,
+        slug: "hardtechno-essentials-vol-1",
         name: "Hardtechno Essentials Vol. 1",
         description: "The ultimate collection for modern hard techno production.",
         price: "$29.99",
@@ -14,6 +15,7 @@ export const products = [
     },
     {
         id: 2,
+        slug: "hardtechno-essentials-vol-1-free-trial",
         name: "Hardtechno Essentials Vol. 1 FREE TRIAL",
         description: "Get a taste of our premium sounds at no cost.",
         price: "FREE",

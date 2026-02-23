@@ -10,6 +10,7 @@ import { HashRouter, Routes, Route, Link } from "react-router-dom";
 import logoImage from './assets/LOGO-AKA-SOUNDS-PNG.png';
 import Home from "./pages/Home";
 import Product from "./pages/Product";
+import NotFound from "./pages/NotFound";
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -57,7 +58,8 @@ export default function App() {
         <div className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/product/:id" element={<Product />} />
+            <Route path="/product/:slug" element={<Product />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
 
