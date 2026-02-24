@@ -34,6 +34,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          port: 21  # Agrégale esta línea para ir a la fija
           local-dir: ./dist/
           server-dir: ./
           dangerous-clean-slate: true

@@ -1,7 +1,8 @@
 import { motion } from "motion/react";
-import { ShoppingCart, Search, Play, ChevronRight, Zap } from "lucide-react";
+import { ShoppingCart, Search, Play, ChevronRight, Zap, Instagram, CloudLightning, Music2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { products } from "../data/products";
+import deatPortrait from "../assets/deat_portrait.png";
 
 export default function Home() {
     return (
@@ -25,7 +26,7 @@ export default function Home() {
                             className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs font-bold tracking-widest uppercase mb-8"
                         >
                             <Zap size={12} className="text-white" />
-                            New Release: HARD TECHNO VOL. 4
+                            New Release: HARDTECHNO ESSENTIALS VOL. 1
                         </motion.div>
 
                         <h1 className="text-6xl md:text-8xl font-display font-extrabold tracking-tighter leading-[0.9] mb-8">
@@ -89,6 +90,8 @@ export default function Home() {
                     </motion.div>
                 </div>
             </main>
+
+
 
             {/* Featured Products Section */}
             <section className="py-24 relative bg-white text-black">
@@ -158,8 +161,22 @@ export default function Home() {
                                                     </Link>
                                                     <p className="text-xs text-black/50 font-medium">{product.description}</p>
                                                 </div>
-                                                <div className="text-base font-display font-bold text-black/80">
-                                                    {product.price}
+                                                <div className="flex flex-col items-end">
+                                                    {product.originalPrice && (
+                                                        <span className="text-[10px] font-bold text-black/40 line-through mb-0.5">
+                                                            {product.originalPrice}
+                                                        </span>
+                                                    )}
+                                                    <div className="flex items-center gap-2">
+                                                        {product.discountPercentage && (
+                                                            <span className="bg-red-500/10 text-red-600 border border-red-500/20 text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                                                                -{product.discountPercentage}%
+                                                            </span>
+                                                        )}
+                                                        <span className="text-base font-display font-bold text-black/80">
+                                                            {product.price}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -177,6 +194,64 @@ export default function Home() {
                                 </div>
                             </motion.div>
                         ))}
+                    </div>
+                </div>
+            </section>
+            {/* About Me Section - Tri-Grid Layout */}
+            <section className="py-24 relative bg-black text-white border-y border-white/5">
+                <div className="max-w-[1400px] mx-auto px-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white/10 rounded-[2rem] overflow-hidden">
+
+                        {/* Column 1: Info & Links */}
+                        <div className="p-12 md:p-16 border-b md:border-b-0 md:border-r border-white/10 flex flex-col justify-between">
+                            <div>
+                                <h3 className="text-4xl lg:text-5xl font-display font-bold tracking-tight mb-4">
+                                    About <br /> <span className="text-white/40">DEAT AKA</span>
+                                </h3>
+                                <p className="text-white/60 text-sm leading-relaxed mb-8">
+                                    DEAT AKA is the sonic architect of a dark, futuristic underworld. With 10 years of experience refining his craft in the shadows, he has emerged as a relentless force in the Hard Dance scene. His sound is a visceral dive into the dirtiest and most aggressive side of electronic music—merging industrial textures with raw, high-octane energy. From bone-crushing Hardtechno to the frontiers of XTRARAW, DEAT AKA doesn't just produce tracks; he engineers high-pressure sonic weapons for those who thrive in the underground.
+                                </p>
+                            </div>
+
+                            <div className="mt-8 flex items-center gap-6">
+                                <a href="https://soundcloud.com/deat_aka" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 hover:text-[#ff5500] hover:border-[#ff5500] transition-colors" title="Soundcloud">
+                                    <CloudLightning size={20} />
+                                </a>
+                                <a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU?si=e1WUj9Z6TfOckAKzqED8hg" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 hover:text-[#1DB954] hover:border-[#1DB954] transition-colors" title="Spotify">
+                                    <Music2 size={20} />
+                                </a>
+                                <a href="https://www.instagram.com/deat_aka/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 hover:text-[#E1306C] hover:border-[#E1306C] transition-colors" title="Instagram">
+                                    <Instagram size={20} />
+                                </a>
+                            </div>
+                        </div>
+
+                        {/* Column 2: Visual Center (The Portrait) */}
+                        <div className="relative aspect-square md:aspect-auto border-b md:border-b-0 md:border-r border-white/10 bg-zinc-950 flex flex-col items-center justify-center overflow-hidden p-0 group">
+
+                            <div className="relative z-10 w-full h-full grayscale contrast-125 brightness-75 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-700">
+                                <img src={deatPortrait} alt="DEAT AKA" className="w-full h-full object-cover scale-[1.15]" />
+                            </div>
+                        </div>
+
+                        {/* Column 3: Philosophy / Tech */}
+                        <div className="p-12 md:p-16 flex flex-col justify-between bg-zinc-950">
+                            <div className="space-y-4 mb-20 text-right md:text-left">
+                                <div className="text-2xl font-display font-medium text-white/30 hover:text-white transition-colors cursor-default">Distort</div>
+                                <div className="text-2xl font-display font-medium text-white/30 hover:text-white transition-colors cursor-default">Compress</div>
+                                <div className="text-3xl font-display font-bold text-white tracking-tight">Annihilate.</div>
+                                <div className="text-2xl font-display font-medium text-white/30 hover:text-white transition-colors cursor-default">Repeat</div>
+                            </div>
+
+                            <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black group">
+                                <div className="absolute inset-0 bg-blue-600/20 group-hover:bg-blue-600/0 transition-colors mix-blend-screen z-10" />
+                                {/* Placeholder for secondary tech image/video */}
+                                <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                                    <span className="text-xs uppercase tracking-[0.2em] font-bold text-white/40">Technical Process</span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </section>

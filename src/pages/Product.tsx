@@ -16,9 +16,6 @@ export default function Product() {
         );
     }
 
-    // URL temporarily set to 404, awaiting new payment platform links
-    const addToCartUrl = "/404";
-
     return (
         <div className="min-h-screen pt-24 pb-24">
             {/* Background Grid */}
@@ -87,8 +84,36 @@ export default function Product() {
                             {product.name}
                         </h1>
 
-                        <div className="text-4xl font-display font-bold text-white/90 mb-8">
-                            {product.price}
+                        <div className="flex flex-col mb-8">
+                            <div className="flex items-end gap-4 mb-4">
+                                <div className="text-5xl md:text-6xl font-display font-bold text-white/90">
+                                    {product.price}
+                                </div>
+                                {product.originalPrice && (
+                                    <div className="flex flex-col mb-1">
+                                        <span className="text-2xl text-white/30 line-through font-bold decoration-red-500/50">
+                                            {product.originalPrice}
+                                        </span>
+                                        <span className="text-sm font-bold text-red-400">
+                                            Save {product.discountPercentage}%
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+
+                            {product.originalPrice && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 flex items-start gap-3 w-fit"
+                                >
+                                    <span className="text-xl">⏳</span>
+                                    <div>
+                                        <div className="text-red-400 font-bold text-sm mb-1 uppercase tracking-wider">Limited Time Offer</div>
+                                        <div className="text-white/60 text-sm">Grab this special discount. Price will soon return to {product.originalPrice}.</div>
+                                    </div>
+                                </motion.div>
+                            )}
                         </div>
 
                         <p className="text-lg text-white/70 mb-8 leading-relaxed">
@@ -115,14 +140,16 @@ export default function Product() {
                             </li>
                         </ul>
 
-                        {/* API ADD TO CART BUTTON (Temporarily disabled) */}
-                        <Link
-                            to={addToCartUrl}
+                        {/* API ADD TO CART BUTTON (Payhip) */}
+                        <a
+                            href={product.paymentUrl || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="w-full flex items-center justify-center gap-3 bg-white text-black font-extrabold text-lg px-8 py-5 rounded-2xl hover:bg-white/90 transition-all active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)] mb-12 group"
                         >
                             <ShoppingCart size={22} className="group-hover:scale-110 transition-transform" />
-                            COMPRAR AHORA
-                        </Link>
+                            BUY NOW
+                        </a>
 
                         {/* Testimonials */}
                         <div className="border-t border-white/10 pt-10">
