@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { ShoppingCart, Check, Star, ArrowLeft } from "lucide-react";
 import { products } from "../data/products";
+import AudioPlayer from "../components/AudioPlayer";
 
 export default function Product() {
     const { slug } = useParams();
@@ -57,20 +58,24 @@ export default function Product() {
                             </div>
                         </div>
 
-                        {/* Embedded SoundCloud Player */}
-                        <div className="bg-white/5 border border-white/10 rounded-3xl p-4 backdrop-blur-md">
-                            <h3 className="text-xs font-bold tracking-widest uppercase text-white/60 mb-4 ml-2">Audio Demo</h3>
-                            <div className="rounded-2xl overflow-hidden bg-black">
-                                <iframe
-                                    width="100%"
-                                    height="166"
-                                    scrolling="no"
-                                    frameBorder="no"
-                                    allow="autoplay"
-                                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(product.scTrackUrl)}&color=%23ffffff&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
-                                ></iframe>
+                        {/* Embedded Audio Player */}
+                        {product.previewTracks && product.previewTracks.length > 0 ? (
+                            <AudioPlayer tracks={product.previewTracks} />
+                        ) : (
+                            <div className="bg-white/5 border border-white/10 rounded-3xl p-4 backdrop-blur-md">
+                                <h3 className="text-xs font-bold tracking-widest uppercase text-white/60 mb-4 ml-2">Audio Demo</h3>
+                                <div className="rounded-2xl overflow-hidden bg-black">
+                                    <iframe
+                                        width="100%"
+                                        height="166"
+                                        scrolling="no"
+                                        frameBorder="no"
+                                        allow="autoplay"
+                                        src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(product.scTrackUrl)}&color=%23ffffff&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
+                                    ></iframe>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </motion.div>
 
                     {/* Right Column - Product Info */}

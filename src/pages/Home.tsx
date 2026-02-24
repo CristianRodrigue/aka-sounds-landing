@@ -8,6 +8,9 @@ export default function Home() {
     return (
         <>
             {/* Hero Section */}
+
+
+
             <main className="relative pt-20 overflow-hidden">
                 {/* Background Accents - Grid Only */}
                 <div className="absolute top-0 left-0 w-full h-full bg-grid pointer-events-none opacity-20" />
