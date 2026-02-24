@@ -11,6 +11,8 @@ import logoImage from './assets/LOGO-AKA-SOUNDS-PNG.png';
 import Home from "./pages/Home";
 import Product from "./pages/Product";
 import NotFound from "./pages/NotFound";
+import Legal from "./pages/Legal";
+
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -59,28 +61,63 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/product/:slug" element={<Product />} />
+            <Route path="/legal/:page" element={<Legal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
 
 
-        {/* Footer / Bottom Info */}
-        <section className="border-t border-white/5 py-12">
-          <div className="max-w-7xl mx-auto px-6 flex flex-wrap justify-between gap-8 opacity-40">
-            <div className="flex flex-col gap-2">
-              <div className="text-[10px] font-bold tracking-widest uppercase">Genre Focus</div>
-              <div className="text-sm">Hard Techno, Hardstyle, Rawstyle, Uptempo, Hardcore, Psytrance</div>
+        {/* Full Footer */}
+        <footer className="border-t border-white/10 py-16 mt-20 bg-black">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-white">
+
+            {/* Brand Column */}
+            <div className="flex flex-col gap-6">
+              <Link to="/">
+                <div className="flex items-center gap-3 text-2xl font-display font-bold tracking-tighter">
+                  <img src={logoImage} alt="AKA SOUNDS Logo" className="h-8 w-auto object-contain" />
+                  AKA SOUNDS
+                </div>
+              </Link>
+              <p className="text-white/50 text-sm leading-relaxed max-w-xs">
+                The sonic architect of a dark, futuristic underworld. Delivering the heaviest industrial sound design for the modern mainstage.
+              </p>
             </div>
-            <div className="flex flex-col gap-2">
-              <div className="text-[10px] font-bold tracking-widest uppercase">Instant Access</div>
-              <div className="text-sm">Digital Download after purchase</div>
+
+            {/* Quick Links */}
+            <div className="flex flex-col gap-4">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Navigation</h4>
+              <Link to="/" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Home</Link>
+              <a href="#" className="text-sm text-white/70 hover:text-white transition-colors w-fit">All Packs</a>
+              <a href="#" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Free Samples</a>
             </div>
-            <div className="flex flex-col gap-2">
-              <div className="text-[10px] font-bold tracking-widest uppercase">Royalty Free</div>
-              <div className="text-sm">100% Royalty Free for all productions</div>
+
+            {/* Support & Legal */}
+            <div className="flex flex-col gap-4">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Support & Legal</h4>
+              <Link to="/legal/contact" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Contact Us</Link>
+              <Link to="/legal/privacy-policy" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Privacy Policy</Link>
+              <Link to="/legal/terms-of-service" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Terms of Service</Link>
+              <Link to="/legal/refund-policy" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Refund Policy</Link>
             </div>
+
+            {/* Social / Contact Info */}
+            <div className="flex flex-col gap-4">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Connect</h4>
+              <a href="mailto:contact@akasounds.com" className="text-sm text-white/70 hover:text-white transition-colors w-fit">contact@akasounds.com</a>
+              <div className="flex gap-4 mt-2">
+                <a href="https://soundcloud.com/deat_aka" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-[#ff5500] transition-colors">SoundCloud</a>
+                <a href="https://www.instagram.com/aka_sounds/" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-[#E1306C] transition-colors">Instagram</a>
+              </div>
+            </div>
+
           </div>
-        </section>
+
+          <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-xs text-white/30">
+            <p>© {new Date().getFullYear()} AKA SOUNDS. All rights reserved.</p>
+            <p className="mt-2 md:mt-0 font-medium">100% Royalty Free Audio</p>
+          </div>
+        </footer>
       </div>
     </HashRouter>
   );

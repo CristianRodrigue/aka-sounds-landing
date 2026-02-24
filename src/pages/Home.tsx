@@ -3,6 +3,7 @@ import { ShoppingCart, Search, Play, ChevronRight, Zap, Instagram, CloudLightnin
 import { Link } from "react-router-dom";
 import { products } from "../data/products";
 import deatPortrait from "../assets/deat_portrait.png";
+import Newsletter from "../components/Newsletter";
 
 export default function Home() {
     return (
@@ -258,6 +259,12 @@ export default function Home() {
                     </div>
                 </div>
             </section>
+
+            {/* Global Newsletter Subscription */}
+            <div className="max-w-7xl mx-auto px-6">
+                <Newsletter />
+            </div>
+
         </>
     );
 }

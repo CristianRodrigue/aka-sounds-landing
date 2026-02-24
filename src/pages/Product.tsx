@@ -1,8 +1,9 @@
 import { useParams, Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { ShoppingCart, Check, Star, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Check, Star, ArrowLeft, Package, Award, Lock, ShieldCheck } from "lucide-react";
 import { products } from "../data/products";
 import AudioPlayer from "../components/AudioPlayer";
+import Newsletter from "../components/Newsletter";
 
 export default function Product() {
     const { slug } = useParams();
@@ -184,6 +185,59 @@ export default function Product() {
                     </motion.div>
 
                 </div>
+
+                {/* Trust Badges / Guarantees Section */}
+                <div className="mt-32 pt-16 border-t border-white/10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {/* 1. Instant Downloads */}
+                        <div className="flex flex-col items-center text-center p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors group">
+                            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all">
+                                <Package size={28} className="text-white/80" />
+                            </div>
+                            <h4 className="text-[11px] font-bold tracking-[0.2em] uppercase text-white/90 mb-4">Instant Downloads</h4>
+                            <p className="text-sm text-white/50 leading-relaxed">
+                                Access your downloads at any time. Receive instant access immediately upon ordering.
+                            </p>
+                        </div>
+
+                        {/* 2. Money Back */}
+                        <div className="flex flex-col items-center text-center p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors group">
+                            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all">
+                                <Award size={28} className="text-white/80" />
+                            </div>
+                            <h4 className="text-[11px] font-bold tracking-[0.2em] uppercase text-white/90 mb-4">Money-Back Guarantee</h4>
+                            <p className="text-sm text-white/50 leading-relaxed">
+                                Our products are backed by our 3-day money back guarantee policy.
+                            </p>
+                        </div>
+
+                        {/* 3. Secure Payment */}
+                        <div className="flex flex-col items-center text-center p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors group">
+                            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all">
+                                <Lock size={28} className="text-white/80" />
+                            </div>
+                            <h4 className="text-[11px] font-bold tracking-[0.2em] uppercase text-white/90 mb-4">Secure Payment</h4>
+                            <p className="text-sm text-white/50 leading-relaxed">
+                                Your payment information is processed 100% securely by well-known providers.
+                            </p>
+                        </div>
+
+                        {/* 4. Quality */}
+                        <div className="flex flex-col items-center text-center p-8 rounded-[2rem] bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-colors group">
+                            <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-white/10 transition-all">
+                                <ShieldCheck size={28} className="text-white/80" />
+                            </div>
+                            <h4 className="text-[11px] font-bold tracking-[0.2em] uppercase text-white/90 mb-4">Supreme Quality</h4>
+                            <p className="text-sm text-white/50 leading-relaxed">
+                                Our goal is 100% satisfaction, providing absolutely insane Techno Sample Packs.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Newsletter Subscription */}
+                <Newsletter />
+
             </div>
         </div>
     );
