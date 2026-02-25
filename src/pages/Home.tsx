@@ -9,17 +9,17 @@ import Newsletter from "../components/Newsletter";
 const globalTestimonials = [
     {
         id: 1,
-        text: "The hard techno packs completely transformed my workflow. The quality is excellent and they adapt perfectly to my industrial style!",
+        text: "The hard techno packs completely transformed my workflow. The quality is excellent and they adapt perfectly to my industrial style!🔥",
         author: "Marco Silva",
         role: "Hardstyle Producer",
         initials: "M"
     },
     {
         id: 2,
-        text: "I've used many samples before, but these are on another level. Fast, easy, and professional. I highly recommend them!",
-        author: "Jordan Kim",
-        role: "Electronic Music Producer",
-        initials: "J"
+        text: "Thanks for making awesome Sounds 🔊😎😎 it was so inspirating to use them in this upcoming track 💎",
+        author: "G-Powered",
+        role: "Hypertechno & EDM Producer",
+        initials: "G"
     },
     {
         id: 3,
@@ -86,7 +86,7 @@ export default function Home() {
                         <div className="mt-12 flex items-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all">
                             <div className="text-xs font-bold tracking-widest uppercase">Used by producers at:</div>
                             <div className="flex gap-6 items-center">
-                                <span className="font-display font-bold text-lg">DEFQON.1</span>
+                                <span className="font-display font-bold text-lg">G-POWERED</span>
                                 <span className="font-display font-bold text-lg">REVERZE</span>
                                 <span className="font-display font-bold text-lg">DECIBEL</span>
                             </div>
@@ -184,22 +184,33 @@ export default function Home() {
                             </p>
 
                             <div className="flex flex-col w-full mt-auto pt-8 border-t border-black/5">
-                                <div className="flex flex-col">
-                                    {products[0].originalPrice && (
-                                        <span className="text-2xl font-bold text-black/40 line-through mb-1">
-                                            {products[0].originalPrice}
-                                        </span>
-                                    )}
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-7xl md:text-[5.5rem] font-display font-black text-black tracking-tighter leading-none">
-                                            {products[0].price}
-                                        </span>
-                                        {products[0].discountPercentage && (
-                                            <span className="bg-red-50 text-red-600 border border-red-200 text-xl font-bold px-4 py-1.5 rounded-xl shadow-sm">
-                                                -{products[0].discountPercentage}%
+                                <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-6">
+                                    <div className="flex flex-col w-full xl:w-auto">
+                                        {products[0].originalPrice && (
+                                            <span className="text-xl font-bold text-black/40 line-through mb-1">
+                                                {products[0].originalPrice}
                                             </span>
                                         )}
+                                        <div className="flex items-center gap-4">
+                                            <span className="text-5xl md:text-6xl font-display font-black text-black tracking-tighter leading-none">
+                                                {products[0].price}
+                                            </span>
+                                            {products[0].discountPercentage && (
+                                                <span className="bg-red-50 text-red-600 border border-red-200 text-lg font-bold px-3 py-1 rounded-xl shadow-sm">
+                                                    -{products[0].discountPercentage}%
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
+                                    <a
+                                        href={products[0].paymentUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="w-full xl:w-auto inline-flex items-center justify-center gap-3 bg-black text-white font-extrabold text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:bg-black/90 transition-all active:scale-95 group shadow-lg"
+                                    >
+                                        <Download size={18} className="group-hover:-translate-y-1 transition-transform" />
+                                        Download
+                                    </a>
                                 </div>
                             </div>
                         </div>
