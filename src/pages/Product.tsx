@@ -19,7 +19,7 @@ export default function Product() {
     }
 
     return (
-        <div className="min-h-screen pt-24 pb-24">
+        <div className="min-h-screen pt-32 pb-24">
             {/* Background Grid */}
             <div className="fixed inset-0 bg-grid pointer-events-none opacity-20 z-0" />
 
@@ -31,14 +31,14 @@ export default function Product() {
                     </Link>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                <div className="flex flex-col lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-                    {/* Left Column - Product Image & Player */}
+                    {/* 1. Product Image (Mobile: 1st, Desktop: Top-Left) */}
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="flex flex-col gap-8"
+                        className="order-1 lg:col-start-1 lg:row-start-1 w-full"
                     >
                         {/* The Sculpted Style Card from Landing */}
                         <div className="relative aspect-square rounded-[3rem] overflow-hidden bg-zinc-50 border border-white/10 p-[1px] shadow-[0_0_100px_rgba(255,255,255,0.05)]">
@@ -58,53 +58,68 @@ export default function Product() {
                                 </div>
                             </div>
                         </div>
+                    </motion.div>
 
-                        {/* Embedded Audio Player */}
-                        {product.previewTracks && product.previewTracks.length > 0 ? (
-                            <AudioPlayer tracks={product.previewTracks} />
-                        ) : (
-                            <div className="bg-white/5 border border-white/10 rounded-3xl p-4 backdrop-blur-md">
-                                <h3 className="text-xs font-bold tracking-widest uppercase text-white/60 mb-4 ml-2">Audio Demo</h3>
-                                <div className="rounded-2xl overflow-hidden bg-black">
-                                    <iframe
-                                        width="100%"
-                                        height="166"
-                                        scrolling="no"
-                                        frameBorder="no"
-                                        allow="autoplay"
-                                        src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(product.scTrackUrl)}&color=%23ffffff&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
-                                    ></iframe>
-                                </div>
+                    {/* 3. Audio Demos (Mobile: 3rd, Desktop: Bottom-Left) */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                        className="order-3 lg:col-start-1 lg:row-start-2 flex flex-col gap-8 w-full"
+                    >
+
+                        {/* Main Demo (SoundCloud) */}
+                        <div className="bg-white/5 border border-white/10 rounded-3xl p-4 backdrop-blur-md">
+                            <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 mb-4 ml-2 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                                Main Demo
+                            </h3>
+                            <div className="rounded-2xl overflow-hidden bg-black">
+                                <iframe
+                                    width="100%"
+                                    height="166"
+                                    scrolling="no"
+                                    frameBorder="no"
+                                    allow="autoplay"
+                                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(product.scTrackUrl)}&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
+                                ></iframe>
                             </div>
+                        </div>
+
+                        {/* Individual Sample Previews */}
+                        {product.previewTracks && product.previewTracks.length > 0 && (
+                            <AudioPlayer tracks={product.previewTracks} />
                         )}
                     </motion.div>
 
-                    {/* Right Column - Product Info */}
+                    {/* 2. Product Info (Mobile: 2nd, Desktop: Right Column) */}
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                        className="flex flex-col"
+                        transition={{ duration: 0.6, delay: 0.1 }}
+                        className="order-2 lg:col-start-2 lg:row-start-1 lg:row-span-2 flex flex-col w-full"
                     >
                         <h1 className="text-5xl md:text-6xl font-display font-extrabold tracking-tighter leading-[0.9] mb-6">
                             {product.name}
                         </h1>
 
                         <div className="flex flex-col mb-8">
-                            <div className="flex items-end gap-4 mb-4">
-                                <div className="text-5xl md:text-6xl font-display font-bold text-white/90">
-                                    {product.price}
-                                </div>
+                            <div className="flex flex-col gap-2 mb-6">
                                 {product.originalPrice && (
-                                    <div className="flex flex-col mb-1">
-                                        <span className="text-2xl text-white/30 line-through font-bold decoration-red-500/50">
-                                            {product.originalPrice}
-                                        </span>
-                                        <span className="text-sm font-bold text-red-400">
-                                            Save {product.discountPercentage}%
-                                        </span>
-                                    </div>
+                                    <span className="text-2xl md:text-3xl font-bold text-white/30 line-through decoration-red-500/50">
+                                        {product.originalPrice}
+                                    </span>
                                 )}
+                                <div className="flex items-center gap-4">
+                                    <div className="text-7xl md:text-8xl font-display font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] tracking-tighter">
+                                        {product.price}
+                                    </div>
+                                    {product.discountPercentage && (
+                                        <div className="bg-red-500/15 text-red-400 border border-red-500/30 text-lg md:text-2xl font-black px-4 py-2 rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.25)]">
+                                            -{product.discountPercentage}% OFF
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             {product.originalPrice && (
@@ -129,20 +144,24 @@ export default function Product() {
 
                         <ul className="flex flex-col gap-4 mb-10">
                             <li className="flex items-start gap-3">
-                                <div className="mt-1 bg-white/10 p-1 rounded-full"><RocketIcon /></div>
-                                <span className="text-white/80"><strong>143 MB of High-End Raw Energy.</strong> Includes kicks, synths, and FX designed perfectly.</span>
+                                <div className="mt-1 bg-white/10 p-1 rounded-full"><span className="text-[14px] leading-none block">🔥</span></div>
+                                <span className="text-white/80"><strong>20+ Signature Rumble Kicks:</strong> Pre-processed for maximum impact. Instant low-end dominance.</span>
                             </li>
                             <li className="flex items-start gap-3">
-                                <div className="mt-1 bg-white/10 p-1 rounded-full"><FireIcon /></div>
-                                <span className="text-white/80"><strong>Internationally Validated</strong> by top-tier producers across Finland and Europe.</span>
+                                <div className="mt-1 bg-white/10 p-1 rounded-full"><span className="text-[14px] leading-none block">🛠️</span></div>
+                                <span className="text-white/80"><strong>20+ Elite Kick Builder Kit:</strong> 20+ Toks, 20+ Bodies, 20+ Tails, 20+ Loops. Total control over your signature sound.</span>
                             </li>
                             <li className="flex items-start gap-3">
-                                <div className="mt-1 bg-white/10 p-1 rounded-full"><ToolsIcon /></div>
-                                <span className="text-white/80"><strong>10 Years of Experience</strong> engineered strictly into every single sound.</span>
+                                <div className="mt-1 bg-white/10 p-1 rounded-full"><span className="text-[14px] leading-none block">🎹</span></div>
+                                <span className="text-white/80"><strong>20+ Serum Presets:</strong> Cutting-edge Industrial Screeches & Acid Leads. Pure sonic aggression.</span>
                             </li>
                             <li className="flex items-start gap-3">
-                                <div className="mt-1 bg-green-500/20 text-green-400 p-1 rounded-full"><Check size={14} strokeWidth={3} /></div>
-                                <span className="text-white/80"><strong>100% Royalty-Free & Pro-Grade Compatibility</strong> (WAV + Serum).</span>
+                                <div className="mt-1 bg-white/10 p-1 rounded-full"><span className="text-[14px] leading-none block">🗣️</span></div>
+                                <span className="text-white/80"><strong>40+ Dark Vocals:</strong> (Dry/Wet) Hypnotic, aggressive, and processed for the underground.</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <div className="mt-1 bg-white/10 p-1 rounded-full"><span className="text-[14px] leading-none block">⚡</span></div>
+                                <span className="text-white/80"><strong>40+ High-End FX & Glitch Loops:</strong> High-energy fillers designed for perfect tension and release.</span>
                             </li>
                         </ul>
 
@@ -157,34 +176,66 @@ export default function Product() {
                             BUY NOW
                         </a>
 
-                        {/* Testimonials */}
-                        <div className="border-t border-white/10 pt-10">
-                            <h3 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-6">Producer Testimonials</h3>
-                            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 relative">
-                                <div className="absolute -top-3 -left-3 text-4xl opacity-20 font-serif">"</div>
-                                <p className="text-white/80 italic mb-4 leading-relaxed relative z-10">
-                                    This pack is ridiculous. The rumble kicks cut through the mix instantly without needing 5 plugins to EQ them. Absolute game changer for my workflow.
-                                </p>
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold text-white">KK</div>
-                                    <div>
-                                        <div className="font-bold text-sm text-white">Kimmo Korpela</div>
-                                        <div className="text-xs text-white/40 font-medium tracking-wide">G-Powered (Finland)</div>
+                        {/* Desktop Testimonials */}
+                        {product.testimonials && product.testimonials.length > 0 && (
+                            <div className="hidden lg:flex border-t border-white/10 pt-10 flex-col gap-4">
+                                <h3 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-2">Producer Testimonials</h3>
+                                {product.testimonials.map((t: any) => (
+                                    <div key={t.id} className="bg-white/5 border border-white/10 rounded-3xl p-6 relative">
+                                        <div className="absolute -top-3 -left-3 text-4xl opacity-20 font-serif">"</div>
+                                        <p className="text-white/80 italic mb-4 leading-relaxed relative z-10">
+                                            {t.text}
+                                        </p>
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold text-white shrink-0">
+                                                {t.initials}
+                                            </div>
+                                            <div className="min-w-0">
+                                                <div className="font-bold text-sm text-white truncate">{t.author}</div>
+                                                <div className="text-xs text-white/40 font-medium tracking-wide truncate">{t.role}</div>
+                                            </div>
+                                            <div className="flex ml-auto text-yellow-500 gap-1 opacity-80 shrink-0">
+                                                <Star size={12} fill="currentColor" />
+                                                <Star size={12} fill="currentColor" />
+                                                <Star size={12} fill="currentColor" />
+                                                <Star size={12} fill="currentColor" />
+                                                <Star size={12} fill="currentColor" />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="flex ml-auto text-yellow-500 gap-1 opacity-80">
-                                        <Star size={12} fill="currentColor" />
-                                        <Star size={12} fill="currentColor" />
-                                        <Star size={12} fill="currentColor" />
-                                        <Star size={12} fill="currentColor" />
-                                        <Star size={12} fill="currentColor" />
-                                    </div>
-                                </div>
+                                ))}
                             </div>
-                        </div>
+                        )}
 
                     </motion.div>
 
                 </div>
+
+                {/* Mobile Testimonials Section */}
+                {product.testimonials && product.testimonials.length > 0 && (
+                    <div className="mt-24 max-w-4xl mx-auto flex flex-col lg:hidden">
+                        <h3 className="text-xs font-bold tracking-widest uppercase text-white/40 mb-8 text-center">Producer Testimonials</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {product.testimonials.map((t: any) => (
+                                <div key={t.id} className="bg-white/5 border border-white/10 rounded-3xl p-6 relative">
+                                    <div className="absolute -top-3 -left-3 text-4xl opacity-20 font-serif">"</div>
+                                    <p className="text-white/80 italic mb-4 leading-relaxed relative z-10">
+                                        {t.text}
+                                    </p>
+                                    <div className="flex items-center gap-4 mt-auto">
+                                        <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold text-white shrink-0">
+                                            {t.initials}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className="font-bold text-sm text-white truncate">{t.author}</div>
+                                            <div className="text-[10px] text-white/40 font-medium tracking-wide truncate">{t.role}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Trust Badges / Guarantees Section */}
                 <div className="mt-32 pt-16 border-t border-white/10">
@@ -243,7 +294,4 @@ export default function Product() {
     );
 }
 
-// Icons for the list
-function RocketIcon() { return <span className="text-[14px] leading-none block">🚀</span>; }
-function FireIcon() { return <span className="text-[14px] leading-none block">🔥</span>; }
-function ToolsIcon() { return <span className="text-[14px] leading-none block">🛠️</span>; }
+

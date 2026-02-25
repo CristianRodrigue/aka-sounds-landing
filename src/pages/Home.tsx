@@ -1,9 +1,34 @@
 import { motion } from "motion/react";
-import { ShoppingCart, Search, Play, ChevronRight, Zap, Instagram, CloudLightning, Music2 } from "lucide-react";
+import { ShoppingCart, Search, Play, ChevronRight, Zap, Instagram, CloudLightning, Music2, Star, Download, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { products } from "../data/products";
 import deatPortrait from "../assets/deat_portrait.png";
+import htFreeTrialImg from "../assets/HARDTECHNO-ESSENTIALS-VOL.-1-FREE-SAMPLEPACK.jpg";
 import Newsletter from "../components/Newsletter";
+
+const globalTestimonials = [
+    {
+        id: 1,
+        text: "The hard techno packs completely transformed my workflow. The quality is excellent and they adapt perfectly to my industrial style!",
+        author: "Marco Silva",
+        role: "Hardstyle Producer",
+        initials: "M"
+    },
+    {
+        id: 2,
+        text: "I've used many samples before, but these are on another level. Fast, easy, and professional. I highly recommend them!",
+        author: "Jordan Kim",
+        role: "Electronic Music Producer",
+        initials: "J"
+    },
+    {
+        id: 3,
+        text: "These sounds saved me a ton of time and I was able to finish tracks faster than ever. Definitely my go-to choice!",
+        author: "Sam Taylor",
+        role: "Techno DJ & Producer",
+        initials: "S"
+    }
+];
 
 export default function Home() {
     return (
@@ -12,7 +37,7 @@ export default function Home() {
 
 
 
-            <main className="relative pt-20 overflow-hidden">
+            <main className="relative pt-32 overflow-hidden">
                 {/* Background Accents - Grid Only */}
                 <div className="absolute top-0 left-0 w-full h-full bg-grid pointer-events-none opacity-20" />
 
@@ -97,8 +122,8 @@ export default function Home() {
 
 
 
-            {/* Featured Products Section */}
-            <section className="py-24 relative bg-white text-black">
+            {/* Featured Product Section (Premium Only) */}
+            <section id="featured" className="py-24 relative bg-white text-black">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="flex items-end justify-between mb-12">
                         <div>
@@ -108,101 +133,188 @@ export default function Home() {
                                 viewport={{ once: true }}
                                 className="text-xs font-bold tracking-[0.2em] uppercase text-black/40 mb-4"
                             >
-                                Curated Selection
+                                Premium Selection
                             </motion.div>
-                            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight">Featured Products</h2>
+                            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight">Featured Release</h2>
                         </div>
-                        <button className="hidden sm:flex items-center gap-2 text-sm font-bold text-black/60 hover:text-black transition-colors group">
-                            View All Packs
-                            <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                        </button>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {products.map((product, index) => (
-                            <motion.div
-                                key={product.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1 }}
-                                className="group relative"
-                            >
-                                <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-zinc-50 border border-black/5 p-[1px] transition-all duration-500 group-hover:border-black/20 group-hover:shadow-[0_0_50px_rgba(0,0,0,0.05)]">
-                                    <div className="absolute inset-0 bg-gradient-to-b from-white to-zinc-100" />
+                    {/* Highlighted Premium Product */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="bg-zinc-50 border border-black/5 rounded-[3rem] overflow-hidden grid grid-cols-1 lg:grid-cols-2 shadow-[0_0_50px_rgba(0,0,0,0.05)] hover:shadow-[0_0_80px_rgba(0,0,0,0.08)] transition-shadow duration-500"
+                    >
+                        {/* Image Content */}
+                        <Link to={`/product/${products[0].slug}`} className="relative aspect-square lg:aspect-auto overflow-hidden group block">
+                            <img
+                                src={products[0].image}
+                                alt={products[0].name}
+                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                                <div className="w-20 h-20 rounded-full bg-white/30 backdrop-blur-xl border border-white/40 flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-500 shadow-xl">
+                                    <Play size={32} fill="black" className="ml-1 text-black" />
+                                </div>
+                            </div>
+                        </Link>
 
-                                    <div className="absolute inset-0 bg-gradient-to-tr from-black/5 via-transparent to-white/60 pointer-events-none" />
-                                    <div className="absolute inset-[1px] rounded-[2.4rem] bg-gradient-to-br from-white/60 to-transparent pointer-events-none" />
+                        {/* Text Content */}
+                        <div className="p-12 md:p-16 flex flex-col justify-center">
+                            <div className="mb-4 flex items-center justify-between">
+                                <span className="px-3 py-1 rounded-full bg-black/5 border border-black/10 text-[10px] font-bold tracking-widest uppercase text-black/60 inline-block">
+                                    {products[0].genre}
+                                </span>
+                                <Link
+                                    to={`/product/${products[0].slug}`}
+                                    className="bg-black text-white hover:bg-black/90 font-bold px-4 py-2 rounded-xl text-[10px] tracking-widest uppercase transition-all active:scale-95 flex items-center gap-2 shadow-sm"
+                                >
+                                    <ShoppingCart size={14} />
+                                    View Details
+                                </Link>
+                            </div>
 
-                                    <div className="h-full w-full rounded-[2.4rem] overflow-hidden relative flex flex-col z-10">
-                                        <Link to={`/product/${product.slug}`} className="relative flex-1 overflow-hidden m-4 rounded-[1.8rem] block cursor-pointer">
-                                            <img
-                                                src={product.image}
-                                                alt={product.name}
-                                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
-                                                referrerPolicy="no-referrer"
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-zinc-100 via-transparent to-transparent opacity-90" />
+                            <Link to={`/product/${products[0].slug}`} className="block hover:opacity-70 transition-opacity mb-4">
+                                <h3 className="text-4xl md:text-5xl font-display font-bold tracking-tight text-black">{products[0].name}</h3>
+                            </Link>
 
-                                            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                                <div className="w-16 h-16 rounded-full bg-white/30 backdrop-blur-xl border border-white/40 flex items-center justify-center scale-75 group-hover:scale-100 transition-transform duration-500 shadow-xl">
-                                                    <Play size={24} fill="black" className="ml-1 text-black" />
-                                                </div>
-                                            </div>
+                            <p className="text-lg text-black/60 mb-8 leading-relaxed">
+                                {products[0].description} Designed for the most demanding producers, this pack delivers earth-shattering kicks and industrial synths.
+                            </p>
 
-                                            <div className="absolute top-4 left-4">
-                                                <span className="px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-black/10 text-[9px] font-bold tracking-widest uppercase text-black/60">
-                                                    {product.genre}
-                                                </span>
-                                            </div>
-                                        </Link>
-
-                                        <div className="px-8 pb-8">
-                                            <div className="flex justify-between items-end mb-6">
-                                                <div>
-                                                    <Link to={`/product/${product.slug}`} className="block hover:opacity-70 transition-opacity">
-                                                        <h3 className="text-lg font-display font-bold tracking-tight mb-1 text-black">{product.name}</h3>
-                                                    </Link>
-                                                    <p className="text-xs text-black/50 font-medium">{product.description}</p>
-                                                </div>
-                                                <div className="flex flex-col items-end">
-                                                    {product.originalPrice && (
-                                                        <span className="text-[10px] font-bold text-black/40 line-through mb-0.5">
-                                                            {product.originalPrice}
-                                                        </span>
-                                                    )}
-                                                    <div className="flex items-center gap-2">
-                                                        {product.discountPercentage && (
-                                                            <span className="bg-red-500/10 text-red-600 border border-red-500/20 text-[10px] font-bold px-1.5 py-0.5 rounded-md">
-                                                                -{product.discountPercentage}%
-                                                            </span>
-                                                        )}
-                                                        <span className="text-base font-display font-bold text-black/80">
-                                                            {product.price}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center gap-2">
-                                                <Link
-                                                    to={`/product/${product.slug}`}
-                                                    className="flex-1 bg-black/5 hover:bg-black text-black hover:text-white border border-black/5 hover:border-black py-3.5 rounded-xl text-xs font-bold tracking-wider uppercase transition-all active:scale-95 flex items-center justify-center gap-2"
-                                                >
-                                                    <ShoppingCart size={14} />
-                                                    VIEW DETAILS
-                                                </Link>
-                                            </div>
-                                        </div>
+                            <div className="flex flex-col w-full mt-auto pt-8 border-t border-black/5">
+                                <div className="flex flex-col">
+                                    {products[0].originalPrice && (
+                                        <span className="text-2xl font-bold text-black/40 line-through mb-1">
+                                            {products[0].originalPrice}
+                                        </span>
+                                    )}
+                                    <div className="flex items-center gap-4">
+                                        <span className="text-7xl md:text-[5.5rem] font-display font-black text-black tracking-tighter leading-none">
+                                            {products[0].price}
+                                        </span>
+                                        {products[0].discountPercentage && (
+                                            <span className="bg-red-50 text-red-600 border border-red-200 text-xl font-bold px-4 py-1.5 rounded-xl shadow-sm">
+                                                -{products[0].discountPercentage}%
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
-                            </motion.div>
+                            </div>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Global Testimonials Section */}
+            <section className="py-24 relative bg-zinc-950 text-white border-t border-white/5">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="text-center mb-16">
+                        <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-4">WHAT PRODUCERS SAY</h2>
+                        <p className="text-white/60">Trusted by industry professionals</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {globalTestimonials.map(t => (
+                            <div key={t.id} className="bg-white/5 border border-white/10 rounded-3xl p-8 relative flex flex-col h-full hover:bg-white/10 transition-colors group">
+                                <div className="text-4xl opacity-20 font-serif mb-4 leading-none">"</div>
+                                <p className="text-white/80 italic mb-8 leading-relaxed flex-1">
+                                    {t.text}
+                                </p>
+                                <div className="flex items-center gap-4 mt-auto">
+                                    <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-white shrink-0 shadow-inner group-hover:bg-white/20 transition-colors">
+                                        {t.initials}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <div className="font-bold text-sm text-white truncate">{t.author}</div>
+                                        <div className="text-xs text-white/40 font-medium tracking-wide truncate">{t.role}</div>
+                                    </div>
+                                    <div className="flex ml-auto text-yellow-500 gap-1 opacity-80 shrink-0">
+                                        <Star size={12} fill="currentColor" />
+                                        <Star size={12} fill="currentColor" />
+                                        <Star size={12} fill="currentColor" />
+                                        <Star size={12} fill="currentColor" />
+                                        <Star size={12} fill="currentColor" />
+                                    </div>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>
             </section>
+
+            {/* Lead Magnet / Free Download Section */}
+            <section id="free-samples" className="py-24 relative bg-black text-white">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="bg-zinc-950 border border-white/10 rounded-[3rem] overflow-hidden grid grid-cols-1 lg:grid-cols-2 shadow-[0_0_100px_rgba(255,255,255,0.02)]">
+                        {/* Text Content */}
+                        <div className="p-12 md:p-16 flex flex-col justify-center">
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-[10px] font-bold tracking-widest uppercase text-red-500 mb-6 self-start"
+                            >
+                                <Zap size={12} fill="currentColor" />
+                                Free Download
+                            </motion.div>
+
+                            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-4">
+                                {products[1].name.replace(" FREE TRIAL", "")} <br />
+                                <span className="text-white/50">Free Trial.</span>
+                            </h2>
+
+                            <p className="text-white/60 text-lg mb-6 leading-relaxed">
+                                {products[1].description} Download it now and start annihilating in seconds.
+                            </p>
+
+                            <ul className="flex flex-col gap-3 mb-8">
+                                <li className="flex items-start gap-3">
+                                    <div className="mt-1 text-red-500 flex-shrink-0"><Check size={16} strokeWidth={3} /></div>
+                                    <span className="text-white/70 text-sm"><strong>01 Kick Builder & Kicks:</strong> 12 surgical samples including Crunches, Punches, Top Kicks, and 155 BPM Rumble Kicks (Loops & One Shots).</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <div className="mt-1 text-red-500 flex-shrink-0"><Check size={16} strokeWidth={3} /></div>
+                                    <span className="text-white/70 text-sm"><strong>02 Serum Presets:</strong> 8 elite presets (Leads like Berlin Bunker and Screeches like Biohazard).</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <div className="mt-1 text-red-500 flex-shrink-0"><Check size={16} strokeWidth={3} /></div>
+                                    <span className="text-white/70 text-sm"><strong>03 Vocals & FX:</strong> 21 high-quality files featuring Dry, Wet, and Glitch vocals to add dark textures to your tracks.</span>
+                                </li>
+                            </ul>
+
+                            <div className="flex flex-col gap-4">
+                                <a
+                                    href={products[1].paymentUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-white text-black font-extrabold text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:bg-white/90 transition-all active:scale-95 group shadow-lg"
+                                >
+                                    <Download size={18} className="group-hover:-translate-y-1 transition-transform" />
+                                    Free Download
+                                </a>
+                                <p className="text-xs text-white/30 font-medium">
+                                    Instant free download link via Payhip.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Image Content */}
+                        <div className="relative aspect-square lg:aspect-auto border-t lg:border-t-0 lg:border-l border-white/10 overflow-hidden group">
+                            <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-10 mix-blend-screen pointer-events-none" />
+                            <img
+                                src={products[1].image}
+                                alt={products[1].name}
+                                className="w-full h-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-105 transition-all duration-700"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* About Me Section - Tri-Grid Layout */}
-            <section className="py-24 relative bg-black text-white border-y border-white/5">
+            <section id="about" className="py-24 relative bg-zinc-950 text-white border-y border-white/5">
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white/10 rounded-[2rem] overflow-hidden">
 
@@ -212,6 +324,9 @@ export default function Home() {
                                 <h3 className="text-4xl lg:text-5xl font-display font-bold tracking-tight mb-4">
                                     About <br /> <span className="text-white/40">DEAT AKA</span>
                                 </h3>
+                                <h4 className="text-xs font-bold tracking-[0.2em] uppercase text-white/40 mb-4 flex items-center gap-2">
+                                    <span className="w-8 h-[1px] bg-white/20"></span> Who Am I?
+                                </h4>
                                 <p className="text-white/60 text-sm leading-relaxed mb-8">
                                     DEAT AKA is the sonic architect of a dark, futuristic underworld. With 10 years of experience refining his craft in the shadows, he has emerged as a relentless force in the Hard Dance scene. His sound is a visceral dive into the dirtiest and most aggressive side of electronic music—merging industrial textures with raw, high-octane energy. From bone-crushing Hardtechno to the frontiers of XTRARAW, DEAT AKA doesn't just produce tracks; he engineers high-pressure sonic weapons for those who thrive in the underground.
                                 </p>
@@ -239,19 +354,24 @@ export default function Home() {
                         </div>
 
                         {/* Column 3: Philosophy / Tech */}
-                        <div className="p-12 md:p-16 flex flex-col justify-between bg-zinc-950">
-                            <div className="space-y-4 mb-20 text-right md:text-left">
-                                <div className="text-2xl font-display font-medium text-white/30 hover:text-white transition-colors cursor-default">Distort</div>
-                                <div className="text-2xl font-display font-medium text-white/30 hover:text-white transition-colors cursor-default">Compress</div>
-                                <div className="text-3xl font-display font-bold text-white tracking-tight">Annihilate.</div>
-                                <div className="text-2xl font-display font-medium text-white/30 hover:text-white transition-colors cursor-default">Repeat</div>
+                        <div className="p-12 md:p-16 flex flex-col justify-between bg-zinc-100 text-black">
+                            <div className="mb-12 text-right md:text-left">
+                                <p className="text-black/70 text-sm leading-relaxed font-medium">
+                                    AKA SOUNDS was created to share a piece of the DEAT AKA universe with other producers. It is an invitation to use his exact sonic arsenal as inspiration to destroy and rebuild your own worlds.
+                                </p>
                             </div>
 
-                            <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black group">
-                                <div className="absolute inset-0 bg-blue-600/20 group-hover:bg-blue-600/0 transition-colors mix-blend-screen z-10" />
+                            <div className="space-y-4 mb-16 text-right md:text-left">
+                                <div className="text-2xl font-display font-bold text-black/30 hover:text-black transition-colors cursor-default">Distort</div>
+                                <div className="text-2xl font-display font-bold text-black/30 hover:text-black transition-colors cursor-default">Compress</div>
+                                <div className="text-4xl md:text-5xl font-display font-black text-black tracking-tight drop-shadow-sm">Annihilate.</div>
+                                <div className="text-2xl font-display font-bold text-black/30 hover:text-black transition-colors cursor-default">Repeat</div>
+                            </div>
+
+                            <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-inner bg-zinc-200 border border-black/5 group">
                                 {/* Placeholder for secondary tech image/video */}
                                 <div className="w-full h-full flex flex-col items-center justify-center gap-2">
-                                    <span className="text-xs uppercase tracking-[0.2em] font-bold text-white/40">Technical Process</span>
+                                    <span className="text-xs uppercase tracking-[0.2em] font-bold text-black/40">Technical Process</span>
                                 </div>
                             </div>
                         </div>
@@ -261,7 +381,7 @@ export default function Home() {
             </section>
 
             {/* Global Newsletter Subscription */}
-            <div className="max-w-7xl mx-auto px-6">
+            <div id="community" className="max-w-7xl mx-auto px-6">
                 <Newsletter />
             </div>
 
