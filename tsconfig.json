@@ -18,6 +18,7 @@
         "strict": false
     },
     "include": [
-        "src"
+        "src",
+        "fx"
     ]
 }

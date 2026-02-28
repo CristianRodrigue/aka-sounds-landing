@@ -36,3 +36,8 @@ body {
   display: flex;
   width: max-content;
 }
+
+/* Hide Video Timeline */
+video::-webkit-media-controls-timeline {
+  display: none !important;
+}

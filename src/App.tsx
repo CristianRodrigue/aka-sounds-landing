@@ -34,14 +34,17 @@ function AppContent() {
 
   return (
 
-    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black flex flex-col">
+    <div
+      className="min-h-screen bg-zinc-950 text-white selection:bg-white selection:text-black flex flex-col"
+      onContextMenu={(e) => e.preventDefault()}
+    >
       {/* Fixed Header Group */}
       <div className="fixed top-0 left-0 right-0 z-50">
         {/* Navigation */}
-        <nav className="border-b border-white/5 bg-black/50 backdrop-blur-xl">
+        <nav className="border-b border-white/5 bg-zinc-950/50 backdrop-blur-xl">
           <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div className="flex items-center gap-8">
-              <Link to="/">
+              <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -56,16 +59,15 @@ function AppContent() {
                 <a href="#featured" onClick={(e) => handleNavClick(e, 'featured')} className="hover:text-white transition-colors">Releases</a>
                 <a href="#free-samples" onClick={(e) => handleNavClick(e, 'free-samples')} className="hover:text-white transition-colors">Free Samples</a>
                 <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="hover:text-white transition-colors">About</a>
-                <a href="#community" onClick={(e) => handleNavClick(e, 'community')} className="hover:text-white transition-colors">Join Community</a>
               </div>
             </div>
 
             <div className="flex items-center gap-4">
-              <button className="hidden sm:flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors px-4 py-2">
-                Log in
-              </button>
-              <button className="bg-white text-black text-sm font-bold px-5 py-2.5 rounded-full hover:bg-white/90 transition-all active:scale-95">
-                Sign up
+              <button
+                onClick={(e) => handleNavClick(e as any, 'community')}
+                className="bg-white text-black text-sm font-bold px-5 py-2.5 rounded-full hover:bg-white/90 transition-all active:scale-95"
+              >
+                Join Community
               </button>
               <button className="p-2 text-white/60 hover:text-white md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 <Menu size={20} />
@@ -74,17 +76,30 @@ function AppContent() {
           </div>
         </nav>
 
+        {/* Mobile Menu Dropdown */}
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:hidden bg-zinc-950/95 backdrop-blur-xl border-b border-white/10 px-6 py-6 flex flex-col gap-6 relative z-40"
+          >
+            <a href="#featured" onClick={(e) => { handleNavClick(e, 'featured'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Releases</a>
+            <a href="#free-samples" onClick={(e) => { handleNavClick(e, 'free-samples'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Free Samples</a>
+            <a href="#about" onClick={(e) => { handleNavClick(e, 'about'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">About</a>
+          </motion.div>
+        )}
+
         {/* Announcement Bar */}
         <div className="bg-red-600/10 border-b border-red-500/20 text-red-500 text-[10px] font-bold tracking-[0.25em] uppercase overflow-hidden flex relative w-full items-center backdrop-blur-md h-10">
-          <div className="absolute left-0 w-16 md:w-32 h-full bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute right-0 w-16 md:w-32 h-full bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute left-0 w-16 md:w-32 h-full bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute right-0 w-16 md:w-32 h-full bg-gradient-to-l from-zinc-950 via-zinc-950/80 to-transparent z-10 pointer-events-none"></div>
 
           <div className="animate-marquee flex gap-12">
             {[...Array(12)].map((_, i) => (
               <span key={i} className="flex items-center gap-12 whitespace-nowrap">
                 <span className="flex items-center gap-2 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]">
                   <Zap size={12} fill="currentColor" className="animate-pulse" />
-                  LIMITED OFFER SAMPLE PACK
+                  LIMITED OFFER - 50% DISCOUNT SAMPLE PACK
                 </span>
                 <span className="text-red-500/30 font-serif">/</span>
               </span>

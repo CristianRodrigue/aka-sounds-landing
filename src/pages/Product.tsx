@@ -1,13 +1,21 @@
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { ShoppingCart, Check, Star, ArrowLeft, Package, Award, Lock, ShieldCheck } from "lucide-react";
 import { products } from "../data/products";
 import AudioPlayer from "../components/AudioPlayer";
 import Newsletter from "../components/Newsletter";
+import { CountdownTimer, CountdownSpots, useDiscount } from "../components/Countdown";
 
 export default function Product() {
     const { slug } = useParams();
+    const { isActive } = useDiscount();
     const product = products.find(p => p.slug === slug);
+
+    // Scroll to top when the component mounts or when slug changes
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [slug]);
 
     if (!product) {
         return (
@@ -68,28 +76,46 @@ export default function Product() {
                         className="order-3 lg:col-start-1 lg:row-start-2 flex flex-col gap-8 w-full"
                     >
 
-                        {/* Main Demo (SoundCloud) */}
-                        <div className="bg-white/5 border border-white/10 rounded-3xl p-4 backdrop-blur-md">
-                            <h3 className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 mb-4 ml-2 flex items-center gap-2">
-                                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                                Main Demo
-                            </h3>
-                            <div className="rounded-2xl overflow-hidden bg-black">
-                                <iframe
-                                    width="100%"
-                                    height="166"
-                                    scrolling="no"
-                                    frameBorder="no"
-                                    allow="autoplay"
-                                    src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(product.scTrackUrl)}&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
-                                ></iframe>
-                            </div>
-                        </div>
-
                         {/* Individual Sample Previews */}
                         {product.previewTracks && product.previewTracks.length > 0 && (
                             <AudioPlayer tracks={product.previewTracks} />
                         )}
+
+                        {/* Casos de Exito (SoundCloud Demos) */}
+                        <div className="flex flex-col gap-4 mt-2">
+                            <h3 className="text-xs font-bold tracking-[0.2em] uppercase text-white/60 mb-2 flex items-center gap-2">
+                                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                                SUCCESS STORIES
+                            </h3>
+
+                            {/* Main Demo */}
+                            <div className="bg-white/5 border border-white/10 rounded-3xl p-4 backdrop-blur-md transition-all hover:bg-white/10">
+                                <div className="rounded-2xl overflow-hidden bg-black">
+                                    <iframe
+                                        width="100%"
+                                        height="166"
+                                        scrolling="no"
+                                        frameBorder="no"
+                                        allow="autoplay"
+                                        src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(product.scTrackUrl)}&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
+                                    ></iframe>
+                                </div>
+                            </div>
+
+                            {/* G-Powered Afterlife Demo */}
+                            <div className="bg-white/5 border border-white/10 rounded-3xl p-4 backdrop-blur-md transition-all hover:bg-white/10">
+                                <div className="rounded-2xl overflow-hidden bg-black">
+                                    <iframe
+                                        width="100%"
+                                        height="166"
+                                        scrolling="no"
+                                        frameBorder="no"
+                                        allow="autoplay"
+                                        src={`https://w.soundcloud.com/player/?url=${encodeURIComponent('https://soundcloud.com/gpowered/g-powered-afterlife')}&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
+                                    ></iframe>
+                                </div>
+                            </div>
+                        </div>
                     </motion.div>
 
                     {/* 2. Product Info (Mobile: 2nd, Desktop: Right Column) */}
@@ -104,17 +130,21 @@ export default function Product() {
                         </h1>
 
                         <div className="flex flex-col mb-8">
-                            <div className="flex flex-col gap-2 mb-6">
-                                {product.originalPrice && (
-                                    <span className="text-2xl md:text-3xl font-bold text-white/30 line-through decoration-red-500/50">
-                                        {product.originalPrice}
-                                    </span>
+                            <CountdownTimer />
+                            <div className="flex flex-col gap-2 mb-6 mt-2">
+                                {product.originalPrice && isActive && (
+                                    <div className="flex items-center gap-4">
+                                        <span className="text-2xl md:text-3xl font-bold text-white/30 line-through decoration-red-500/50">
+                                            {product.originalPrice}
+                                        </span>
+                                        <CountdownSpots />
+                                    </div>
                                 )}
                                 <div className="flex items-center gap-4">
                                     <div className="text-7xl md:text-8xl font-display font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] tracking-tighter">
-                                        {product.price}
+                                        {isActive ? product.price : (product.originalPrice || product.price)}
                                     </div>
-                                    {product.discountPercentage && (
+                                    {product.discountPercentage && isActive && (
                                         <div className="bg-red-500/15 text-red-400 border border-red-500/30 text-lg md:text-2xl font-black px-4 py-2 rounded-xl shadow-[0_0_20px_rgba(239,68,68,0.25)]">
                                             -{product.discountPercentage}% OFF
                                         </div>
@@ -122,7 +152,7 @@ export default function Product() {
                                 </div>
                             </div>
 
-                            {product.originalPrice && (
+                            {product.originalPrice && isActive && (
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -131,7 +161,7 @@ export default function Product() {
                                     <span className="text-xl">⏳</span>
                                     <div>
                                         <div className="text-red-400 font-bold text-sm mb-1 uppercase tracking-wider">Limited Time Offer</div>
-                                        <div className="text-white/60 text-sm">Grab this special discount. Price will soon return to {product.originalPrice}.</div>
+                                        <div className="text-white/60 text-sm">Grab this special discount. This offer is strictly limited to the first 50 producers. Price will soon return to {product.originalPrice}.</div>
                                     </div>
                                 </motion.div>
                             )}
@@ -236,6 +266,99 @@ export default function Product() {
                         </div>
                     </div>
                 )}
+
+                {/* WHY USE THIS SAMPLE PACK Section */}
+                <div className="mt-24 max-w-5xl mx-auto flex flex-col items-center">
+                    <h2 className="text-3xl md:text-5xl font-display font-black tracking-tighter mb-8 text-center uppercase">Why Use This Sample Pack?</h2>
+
+                    <div className="bg-[#0a0a0a] border border-white/10 rounded-[2rem] p-8 md:p-12 relative overflow-hidden group">
+                        {/* Red Accent Glow */}
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[2px] bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-50" />
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-32 bg-red-500/10 blur-[80px] pointer-events-none transition-opacity duration-700 group-hover:opacity-70" />
+
+                        <div className="relative z-10 flex flex-col items-center text-center">
+                            <p className="text-lg md:text-xl text-white/70 leading-relaxed font-medium mb-10 max-w-3xl">
+                                We know the struggle. You spend <span className="text-white font-bold bg-red-500/20 px-2 rounded-md">hours layering weak kicks</span>, trying to find that punch that hits you in the chest, only to end up with a muddy, heartless low-end. Your drops lack energy, your leads sound thin, and your tracks just don't have that <span className="text-white font-bold bg-white/10 px-2 rounded-md">massive, main-stage presence</span>.
+                            </p>
+
+                            <h3 className="text-xl md:text-2xl font-black text-white mb-10 tracking-tight uppercase">This pack is the ultimate shortcut.</h3>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 w-full text-left">
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <span className="text-red-500 font-black text-3xl font-display leading-none">01</span>
+                                        <div className="h-px w-8 bg-white/10"></div>
+                                    </div>
+                                    <h4 className="text-white font-bold text-lg uppercase tracking-wide">Instant Impact</h4>
+                                    <p className="text-sm md:text-base text-white/50 leading-relaxed">No more endless tweaking. Drop these meticulously distressed sounds straight into your project and feel the room shake instantly.</p>
+                                </div>
+
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <span className="text-red-500 font-black text-3xl font-display leading-none">02</span>
+                                        <div className="h-px w-8 bg-white/10"></div>
+                                    </div>
+                                    <h4 className="text-white font-bold text-lg uppercase tracking-wide">Label-Ready Quality</h4>
+                                    <p className="text-sm md:text-base text-white/50 leading-relaxed">Engineered with elite analog distortion and high-end processing to meet industry standards without touching a mixing console.</p>
+                                </div>
+
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <span className="text-red-500 font-black text-3xl font-display leading-none">03</span>
+                                        <div className="h-px w-8 bg-white/10"></div>
+                                    </div>
+                                    <h4 className="text-white font-bold text-lg uppercase tracking-wide">Break Creative Blocks</h4>
+                                    <p className="text-sm md:text-base text-white/50 leading-relaxed">With ready-to-use glitch loops, synth presets, and brutal vocals, you'll spark new ideas and finish tracks faster than ever.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 4. ROADMAP (THE INEVITABILITY) */}
+                <div className="mt-32 mb-16 max-w-5xl mx-auto px-6">
+                    <h3 className="text-3xl md:text-5xl font-display font-black tracking-tighter mb-20 text-center uppercase">
+                        Your Shortcut to the Mainstage
+                    </h3>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                        {/* Connecting Line (Desktop) */}
+                        <div className="hidden md:block absolute top-[4.5rem] left-[16.66%] right-[16.66%] h-[2px] bg-gradient-to-r from-red-500/0 via-red-500/20 to-red-500/0" />
+
+                        {/* Step 1 */}
+                        <div className="relative flex flex-col items-center text-center group">
+                            <div className="w-36 h-36 rounded-full bg-black border border-white/5 flex flex-col items-center justify-center mb-8 relative z-10 transition-transform duration-500 group-hover:-translate-y-4 group-hover:border-red-500/40 bg-gradient-to-b from-white/5 to-transparent shadow-2xl">
+                                <span className="text-white/20 font-display font-black text-6xl absolute -top-4 -left-4 group-hover:text-red-500/20 transition-colors">1</span>
+                                <span className="text-white font-black text-2xl mb-1">DOWNLOAD</span>
+                                <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">The Pack</span>
+                            </div>
+                            <h4 className="text-xl font-bold text-white mb-3 tracking-tight">Get The Artillery</h4>
+                            <p className="text-white/50 text-sm leading-relaxed px-4">Instant access to the elite samples used by top-tier producers.</p>
+                        </div>
+
+                        {/* Step 2 */}
+                        <div className="relative flex flex-col items-center text-center group">
+                            <div className="w-36 h-36 rounded-full bg-black border border-white/5 flex flex-col items-center justify-center mb-8 relative z-10 transition-transform duration-500 group-hover:-translate-y-4 group-hover:border-red-500/40 bg-gradient-to-b from-white/5 to-transparent shadow-2xl">
+                                <span className="text-white/20 font-display font-black text-6xl absolute -top-4 -left-4 group-hover:text-red-500/20 transition-colors">2</span>
+                                <span className="text-white font-black text-2xl mb-1">DRAG&DROP</span>
+                                <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Into your DAW</span>
+                            </div>
+                            <h4 className="text-xl font-bold text-white mb-3 tracking-tight">Load The BRUTAL HARD Kick</h4>
+                            <p className="text-white/50 text-sm leading-relaxed px-4">Drop our pre-processed kicks and synth presets directly into your session. No endless tweaking.</p>
+                        </div>
+
+                        {/* Step 3 */}
+                        <div className="relative flex flex-col items-center text-center group">
+                            <div className="w-36 h-36 rounded-full bg-black border border-red-500/30 flex flex-col items-center justify-center mb-8 relative z-10 transition-transform duration-500 group-hover:-translate-y-4 group-hover:border-red-500 shadow-[0_0_30px_rgba(255,0,0,0.15)] group-hover:shadow-[0_0_50px_rgba(255,0,0,0.3)] bg-gradient-to-b from-red-500/10 to-transparent">
+                                <span className="text-red-500/30 font-display font-black text-6xl absolute -top-4 -left-4 group-hover:text-red-500/50 transition-colors">3</span>
+                                <span className="text-red-500 font-black text-2xl mb-1 drop-shadow-[0_0_10px_rgba(255,0,0,0.5)]">DOMINATE</span>
+                                <span className="text-red-400/60 text-[10px] font-bold uppercase tracking-widest">The Scene</span>
+                            </div>
+                            <h4 className="text-xl font-bold text-white mb-3 tracking-tight relative inline-block">Sound Professional <span className="absolute -bottom-1 left-0 w-full h-1 bg-red-500/50 -rotate-1 skew-x-12"></span></h4>
+                            <p className="text-white/80 text-sm leading-relaxed px-4 font-medium">Your low-end is glued, your track has energy, and your demo is finally ready for the label.</p>
+                        </div>
+                    </div>
+                </div>
 
                 {/* Trust Badges / Guarantees Section */}
                 <div className="mt-32 pt-16 border-t border-white/10">

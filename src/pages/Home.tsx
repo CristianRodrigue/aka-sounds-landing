@@ -5,6 +5,7 @@ import { products } from "../data/products";
 import deatPortrait from "../assets/deat_portrait.png";
 import htFreeTrialImg from "../assets/HARDTECHNO-ESSENTIALS-VOL.-1-FREE-SAMPLEPACK.jpg";
 import Newsletter from "../components/Newsletter";
+import { CountdownTimer, CountdownSpots, useDiscount } from "../components/Countdown";
 
 const globalTestimonials = [
     {
@@ -31,6 +32,8 @@ const globalTestimonials = [
 ];
 
 export default function Home() {
+    const { isActive } = useDiscount();
+
     return (
         <>
             {/* Hero Section */}
@@ -47,6 +50,7 @@ export default function Home() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="relative z-10"
                     >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -68,7 +72,7 @@ export default function Home() {
                             Crafted for the biggest stages and the heaviest systems.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                        <div className="hidden flex-col sm:flex-row items-center gap-4">
                             <div className="relative w-full sm:w-96 group">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 group-focus-within:text-white transition-colors" size={18} />
                                 <input
@@ -98,21 +102,17 @@ export default function Home() {
                         initial={{ opacity: 0, scale: 0.8, rotate: 5 }}
                         animate={{ opacity: 1, scale: 1, rotate: 0 }}
                         transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
-                        className="relative flex items-center justify-center -ml-16 xl:-ml-32"
+                        className="relative flex items-center justify-center -ml-6 md:-ml-16 xl:-ml-32 mt-8 md:mt-0"
                     >
-                        <div className="relative w-full max-w-[120%] scale-[1.35]">
-                            <div className="relative w-full flex items-center justify-center group"
-                                style={{
-                                    WebkitMaskImage: 'radial-gradient(ellipse 65% 55% at 50% 40%, black 50%, transparent 80%)',
-                                    maskImage: 'radial-gradient(ellipse 65% 55% at 50% 40%, black 50%, transparent 80%)'
-                                }}>
+                        <div className="relative w-[115%] md:w-full md:max-w-[120%] md:scale-[1.35]">
+                            <div className="relative w-full flex items-center justify-center group" style={{ WebkitMaskImage: 'radial-gradient(ellipse 75% 65% at 50% 50%, black 40%, transparent 80%)', maskImage: 'radial-gradient(ellipse 75% 65% at 50% 50%, black 40%, transparent 80%)' }}>
                                 <video
                                     src="/Ista_esttica_cinematogrfica_1080p_202602201.mp4"
                                     autoPlay
                                     loop
                                     muted
                                     playsInline
-                                    className="w-full h-auto object-contain scale-[1.2] opacity-90 transition-transform duration-1000"
+                                    className="w-full h-auto object-cover scale-[1.25] md:scale-[1.2] opacity-90 transition-transform duration-1000"
                                 />
                             </div>
                         </div>
@@ -186,16 +186,20 @@ export default function Home() {
                             <div className="flex flex-col w-full mt-auto pt-8 border-t border-black/5">
                                 <div className="flex flex-col xl:flex-row xl:items-end justify-between gap-6">
                                     <div className="flex flex-col w-full xl:w-auto">
-                                        {products[0].originalPrice && (
-                                            <span className="text-xl font-bold text-black/40 line-through mb-1">
-                                                {products[0].originalPrice}
-                                            </span>
+                                        <CountdownTimer />
+                                        {products[0].originalPrice && isActive && (
+                                            <div className="flex items-center gap-4 mb-1">
+                                                <span className="text-xl font-bold text-black/40 line-through">
+                                                    {products[0].originalPrice}
+                                                </span>
+                                                <CountdownSpots theme="light" />
+                                            </div>
                                         )}
                                         <div className="flex items-center gap-4">
                                             <span className="text-5xl md:text-6xl font-display font-black text-black tracking-tighter leading-none">
-                                                {products[0].price}
+                                                {isActive ? products[0].price : (products[0].originalPrice || products[0].price)}
                                             </span>
-                                            {products[0].discountPercentage && (
+                                            {products[0].discountPercentage && isActive && (
                                                 <span className="bg-red-50 text-red-600 border border-red-200 text-lg font-bold px-3 py-1 rounded-xl shadow-sm">
                                                     -{products[0].discountPercentage}%
                                                 </span>
@@ -218,8 +222,60 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* 1. THE DIAGNOSTIC & FOMO Section */}
+            <div className="pt-16 pb-8 max-w-4xl mx-auto flex flex-col items-center text-center px-6">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-[10px] tracking-[0.2em] font-bold uppercase mb-8">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    The Hard Truth
+                </div>
+
+                <h2 className="text-3xl md:text-5xl font-display font-black tracking-tighter mb-8 uppercase leading-[1.1]">
+                    Have you ever wondered why your Kicks sound <span className="text-red-500">empty</span> compared to the Pro scene?
+                </h2>
+
+                <p className="text-lg md:text-2xl text-white/60 leading-relaxed font-medium mb-12 max-w-3xl">
+                    Every day you spend tweaking synths and trying to design a Kick from scratch is <span className="text-white underline decoration-red-500 underline-offset-4 font-bold">a day lost sending your demo</span> to labels like Q-Dance, Teletech, or Soave.
+                </p>
+            </div>
+
+            {/* 2. THE EXCLUSION Section */}
+            <div className="w-full bg-zinc-950 border-y border-white/5 py-8 md:py-12 my-0 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50" />
+                <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
+                    <p className="text-base md:text-xl text-white/50 font-medium uppercase tracking-widest leading-relaxed">
+                        <span className="text-red-500 mr-2">⚠️</span> This pack is <span className="text-white font-bold">NOT</span> for commercial EDM producers.<br className="hidden md:block" /> It is strictly designed for those seeking the <span className="text-red-500 font-bold drop-shadow-[0_0_15px_rgba(255,0,0,0.5)]">raw aggression of Industrial Hardtechno</span>.
+                    </p>
+                </div>
+            </div>
+
+            {/* 3. AUTHORITY (THE PROOF) */}
+            <div className="mt-16 mb-16 max-w-5xl mx-auto flex flex-col items-center px-6">
+                <h3 className="text-3xl md:text-5xl font-display font-black tracking-tighter mb-6 text-center uppercase">
+                    The Industry Is Already Listening
+                </h3>
+
+                <div className="mb-8 text-center flex flex-col items-center">
+                    <div className="bg-red-500 text-white text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-3 shadow-[0_0_15px_rgba(255,0,0,0.5)]">Industry Support</div>
+                    <h4 className="text-white font-black font-display text-2xl md:text-3xl drop-shadow-lg leading-tight mb-2">THNDERZ & ENRICO</h4>
+                    <p className="text-white/70 font-medium md:text-lg">Dropping an AKA SOUNDS track live at the mainstage.</p>
+                </div>
+
+                {/* Video Player for THNDERZ & Enrico */}
+                <div className="w-full aspect-video rounded-[2rem] overflow-hidden border border-white/10 relative group bg-black flex items-center justify-center shadow-[0_0_50px_rgba(255,0,0,0.15)]">
+                    <video
+                        src="/0227.mp4"
+                        controls
+                        controlsList="nodownload noplaybackrate"
+                        disablePictureInPicture
+                        className="w-full h-full object-contain bg-black"
+                    >
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+
             {/* Global Testimonials Section */}
-            <section className="py-24 relative bg-zinc-950 text-white border-t border-white/5">
+            <section className="py-16 relative bg-zinc-950 text-white border-t border-white/5">
                 <div className="max-w-7xl mx-auto px-6">
                     <div className="text-center mb-16">
                         <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-4">WHAT PRODUCERS SAY</h2>
@@ -256,9 +312,9 @@ export default function Home() {
             </section>
 
             {/* Lead Magnet / Free Download Section */}
-            <section id="free-samples" className="py-24 relative bg-black text-white">
+            <section id="free-samples" className="py-16 relative bg-zinc-950 text-white">
                 <div className="max-w-6xl mx-auto px-6">
-                    <div className="bg-zinc-950 border border-white/10 rounded-[3rem] overflow-hidden grid grid-cols-1 lg:grid-cols-2 shadow-[0_0_100px_rgba(255,255,255,0.02)]">
+                    <div className="bg-zinc-900 border border-white/10 rounded-[3rem] overflow-hidden grid grid-cols-1 lg:grid-cols-2 shadow-[0_0_100px_rgba(0,0,0,0.5)]">
                         {/* Text Content */}
                         <div className="p-12 md:p-16 flex flex-col justify-center">
                             <motion.div
@@ -324,8 +380,53 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* 4. ROADMAP (THE INEVITABILITY) */}
+            <div className="pt-16 pb-24 max-w-5xl mx-auto px-6">
+                <h3 className="text-3xl md:text-5xl font-display font-black tracking-tighter mb-20 text-center uppercase">
+                    Your Shortcut to the Mainstage
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                    {/* Connecting Line (Desktop) */}
+                    <div className="hidden md:block absolute top-[4.5rem] left-[16.66%] right-[16.66%] h-[2px] bg-gradient-to-r from-red-500/0 via-red-500/20 to-red-500/0" />
+
+                    {/* Step 1 */}
+                    <div className="relative flex flex-col items-center text-center group">
+                        <div className="w-36 h-36 rounded-full bg-zinc-900 border border-white/5 flex flex-col items-center justify-center mb-8 relative z-10 transition-transform duration-500 group-hover:-translate-y-4 group-hover:border-red-500/40 bg-gradient-to-b from-white/5 to-transparent shadow-2xl">
+                            <span className="text-white/20 font-display font-black text-6xl absolute -top-4 -left-4 group-hover:text-red-500/20 transition-colors">1</span>
+                            <span className="text-white font-black text-2xl mb-1">DOWNLOAD</span>
+                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">The Pack</span>
+                        </div>
+                        <h4 className="text-xl font-bold text-white mb-3 tracking-tight">Get The Artillery</h4>
+                        <p className="text-white/50 text-sm leading-relaxed px-4">Instant access to the elite samples used by top-tier producers.</p>
+                    </div>
+
+                    {/* Step 2 */}
+                    <div className="relative flex flex-col items-center text-center group">
+                        <div className="w-36 h-36 rounded-full bg-zinc-900 border border-white/5 flex flex-col items-center justify-center mb-8 relative z-10 transition-transform duration-500 group-hover:-translate-y-4 group-hover:border-red-500/40 bg-gradient-to-b from-white/5 to-transparent shadow-2xl">
+                            <span className="text-white/20 font-display font-black text-6xl absolute -top-4 -left-4 group-hover:text-red-500/20 transition-colors">2</span>
+                            <span className="text-white font-black text-2xl mb-1">DRAG&DROP</span>
+                            <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Into your DAW</span>
+                        </div>
+                        <h4 className="text-xl font-bold text-white mb-3 tracking-tight">Load The BRUTAL HARD Kick</h4>
+                        <p className="text-white/50 text-sm leading-relaxed px-4">Drop our pre-processed kicks and synth presets directly into your session. No endless tweaking.</p>
+                    </div>
+
+                    {/* Step 3 */}
+                    <div className="relative flex flex-col items-center text-center group">
+                        <div className="w-36 h-36 rounded-full bg-zinc-900 border border-red-500/30 flex flex-col items-center justify-center mb-8 relative z-10 transition-transform duration-500 group-hover:-translate-y-4 group-hover:border-red-500 shadow-[0_0_30px_rgba(255,0,0,0.15)] group-hover:shadow-[0_0_50px_rgba(255,0,0,0.3)] bg-gradient-to-b from-red-500/10 to-transparent">
+                            <span className="text-red-500/30 font-display font-black text-6xl absolute -top-4 -left-4 group-hover:text-red-500/50 transition-colors">3</span>
+                            <span className="text-red-500 font-black text-2xl mb-1 drop-shadow-[0_0_10px_rgba(255,0,0,0.5)]">DOMINATE</span>
+                            <span className="text-red-400/60 text-[10px] font-bold uppercase tracking-widest">The Scene</span>
+                        </div>
+                        <h4 className="text-xl font-bold text-white mb-3 tracking-tight relative inline-block">Sound Professional <span className="absolute -bottom-1 left-0 w-full h-1 bg-red-500/50 -rotate-1 skew-x-12"></span></h4>
+                        <p className="text-white/80 text-sm leading-relaxed px-4 font-medium">Your low-end is glued, your track has energy, and your demo is finally ready for the label.</p>
+                    </div>
+                </div>
+            </div>
+
             {/* About Me Section - Tri-Grid Layout */}
-            <section id="about" className="py-24 relative bg-zinc-950 text-white border-y border-white/5">
+            <section id="about" className="py-16 relative bg-zinc-950 text-white border-y border-white/5">
                 <div className="max-w-[1400px] mx-auto px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-white/10 rounded-[2rem] overflow-hidden">
 
