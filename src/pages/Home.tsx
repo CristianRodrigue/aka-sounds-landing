@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { ShoppingCart, Search, Play, ChevronRight, Zap, Instagram, CloudLightning, Music2, Star, Download, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { products } from "../data/products";
-import deatPortrait from "../assets/deat_portrait.png";
+import deatPortrait from "../assets/Picsart_26-02-28_22-33-05-682.jpg.jpeg";
 import htFreeTrialImg from "../assets/HARDTECHNO-ESSENTIALS-VOL.-1-FREE-SAMPLEPACK.jpg";
 import Newsletter from "../components/Newsletter";
 import { CountdownTimer, CountdownSpots, useDiscount } from "../components/Countdown";
@@ -461,7 +461,7 @@ export default function Home() {
                         <div className="relative aspect-square md:aspect-auto border-b md:border-b-0 md:border-r border-white/10 bg-zinc-950 flex flex-col items-center justify-center overflow-hidden p-0 group">
 
                             <div className="relative z-10 w-full h-full grayscale contrast-125 brightness-75 group-hover:grayscale-0 group-hover:contrast-100 transition-all duration-700">
-                                <img src={deatPortrait} alt="DEAT AKA" className="w-full h-full object-cover scale-[1.15]" />
+                                <img src={deatPortrait} alt="DEAT AKA" className="w-full h-full object-cover object-center scale-[1.15]" />
                             </div>
                         </div>
 
