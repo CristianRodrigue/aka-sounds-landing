@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 export const START_DATE = new Date('2026-02-27T17:50:00').getTime();
-export const DISCOUNT_DEADLINE = new Date('2026-03-06T00:00:00').getTime();
+export const DISCOUNT_DEADLINE = new Date('2026-03-13T00:00:00').getTime();
 const TOTAL_DURATION = DISCOUNT_DEADLINE - START_DATE;
 const TOTAL_SPOTS = 50;
 

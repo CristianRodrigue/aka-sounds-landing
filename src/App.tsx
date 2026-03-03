@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import Product from "./pages/Product";
 import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
+import FreeTrial from "./pages/FreeTrial";
 import CookieBanner from "./components/CookieBanner";
 
 // Create an inner component to access router hooks inside HashRouter
@@ -114,6 +115,7 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/product/:slug" element={<Product />} />
           <Route path="/legal/:page" element={<Legal />} />
+          <Route path="/free-trial" element={<FreeTrial />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

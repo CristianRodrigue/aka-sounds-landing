@@ -13,7 +13,7 @@ export const products = [
         genre: "HARD TECHNO",
         image: htEssentialsImg,
         wcProductId: 123, // Placeholder for the actual WooCommerce Product ID
-        paymentUrl: "https://payhip.com/b/ljIN2",
+        paymentUrl: "https://pay.hotmart.com/L104724223L?off=87r77ya9",
         scTrackUrl: "https://soundcloud.com/deat_aka/this-is-a-f-cking-hardtechno",
         previewTracks: [
             { id: 1, name: "DEAT_AKA_RUMBLE_KICK_01_155", type: "Rumble Loop", duration: "0:06", url: "/samples/DEAT_AKA_RUMBLE_KICK_01_155.wav" },

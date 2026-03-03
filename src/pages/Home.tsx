@@ -353,17 +353,15 @@ export default function Home() {
                             </ul>
 
                             <div className="flex flex-col gap-4">
-                                <a
-                                    href={products[1].paymentUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                <Link
+                                    to="/free-trial"
                                     className="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-white text-black font-extrabold text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:bg-white/90 transition-all active:scale-95 group shadow-lg"
                                 >
                                     <Download size={18} className="group-hover:-translate-y-1 transition-transform" />
                                     Free Download
-                                </a>
+                                </Link>
                                 <p className="text-xs text-white/30 font-medium">
-                                    Instant free download link via Payhip.
+                                    Instant free download directly to your inbox.
                                 </p>
                             </div>
                         </div>
