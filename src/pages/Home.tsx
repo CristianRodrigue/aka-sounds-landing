@@ -340,15 +340,15 @@ export default function Home() {
                             <ul className="flex flex-col gap-3 mb-8">
                                 <li className="flex items-start gap-3">
                                     <div className="mt-1 text-red-500 flex-shrink-0"><Check size={16} strokeWidth={3} /></div>
-                                    <span className="text-white/70 text-sm"><strong>01 Kick Builder & Kicks:</strong> 12 surgical samples including Crunches, Punches, Top Kicks, and 155 BPM Rumble Kicks (Loops & One Shots).</span>
+                                    <span className="text-white/70 text-sm"><strong>01 Kick Builder & Kicks:</strong> 14 surgical samples including Crunches, Punches, Top Kicks, and 155 BPM Rumble Kicks (Loops & One Shots).</span>
                                 </li>
                                 <li className="flex items-start gap-3">
                                     <div className="mt-1 text-red-500 flex-shrink-0"><Check size={16} strokeWidth={3} /></div>
-                                    <span className="text-white/70 text-sm"><strong>02 Serum Presets:</strong> 8 elite presets (Leads like Berlin Bunker and Screeches like Biohazard).</span>
+                                    <span className="text-white/70 text-sm"><strong>02 Serum Presets:</strong> 6 elite presets (Leads like Berlin Bunker and Screeches like Biohazard).</span>
                                 </li>
                                 <li className="flex items-start gap-3">
                                     <div className="mt-1 text-red-500 flex-shrink-0"><Check size={16} strokeWidth={3} /></div>
-                                    <span className="text-white/70 text-sm"><strong>03 Vocals & FX:</strong> 21 high-quality files featuring Dry, Wet, and Glitch vocals to add dark textures to your tracks.</span>
+                                    <span className="text-white/70 text-sm"><strong>03 Vocals & FX:</strong> 12 high-quality files featuring Dry, Wet, and Glitch vocals to add dark textures to your tracks.</span>
                                 </li>
                             </ul>
 

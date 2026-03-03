@@ -65,7 +65,7 @@ export default function FreeTrial() {
                             Unlock Free Trial
                         </h1>
                         <p className="text-white/60 text-lg">
-                            Enter your details below to get instant access to 45MB of pure industrial hard techno.
+                            Enter your details below to get instant access to 32MB of pure industrial hard techno.
                         </p>
                     </div>
 
