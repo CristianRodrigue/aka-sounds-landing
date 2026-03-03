@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "motion/react";
 import { ShoppingCart, Search, Play, ChevronRight, Zap, Instagram, CloudLightning, Music2, Star, Download, Check } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -213,7 +214,7 @@ export default function Home() {
                                         className="w-full xl:w-auto inline-flex items-center justify-center gap-3 bg-black text-white font-extrabold text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:bg-black/90 transition-all active:scale-95 group shadow-lg"
                                     >
                                         <Download size={18} className="group-hover:-translate-y-1 transition-transform" />
-                                        Download
+                                        {isActive ? 'Claim Discount' : 'Download'}
                                     </a>
                                 </div>
                             </div>

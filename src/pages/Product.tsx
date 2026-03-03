@@ -195,7 +195,7 @@ export default function Product() {
                             </li>
                         </ul>
 
-                        {/* API ADD TO CART BUTTON (Payhip) */}
+                        {/* API ADD TO CART BUTTON (Payhip Direct Link) */}
                         <a
                             href={product.paymentUrl || "#"}
                             target="_blank"
@@ -203,7 +203,7 @@ export default function Product() {
                             className="w-full flex items-center justify-center gap-3 bg-white text-black font-extrabold text-lg px-8 py-5 rounded-2xl hover:bg-white/90 transition-all active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)] mb-12 group"
                         >
                             <ShoppingCart size={22} className="group-hover:scale-110 transition-transform" />
-                            BUY NOW
+                            {isActive ? 'Claim Discount' : 'Buy Now'}
                         </a>
 
                         {/* Desktop Testimonials */}

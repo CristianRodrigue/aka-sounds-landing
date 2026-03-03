@@ -13,7 +13,7 @@ export const products = [
         genre: "HARD TECHNO",
         image: htEssentialsImg,
         wcProductId: 123, // Placeholder for the actual WooCommerce Product ID
-        paymentUrl: "https://payhip.com/buy?link=ljIN2",
+        paymentUrl: "https://payhip.com/b/ljIN2",
         scTrackUrl: "https://soundcloud.com/deat_aka/this-is-a-f-cking-hardtechno",
         previewTracks: [
             { id: 1, name: "DEAT_AKA_RUMBLE_KICK_01_155", type: "Rumble Loop", duration: "0:06", url: "/samples/DEAT_AKA_RUMBLE_KICK_01_155.wav" },
@@ -46,7 +46,7 @@ export const products = [
         genre: "SAMPLE PACK",
         image: htFreeTrialImg,
         wcProductId: 124,
-        paymentUrl: "https://payhip.com/buy?link=5jDOq",
+        paymentUrl: "https://payhip.com/b/5jDOq",
         scTrackUrl: "https://soundcloud.com/deat_aka/this-is-a-f-cking-hardtechno",
         previewTracks: [
             { id: 1, name: "DEAT_AKA_PUNCH_KICK_01", type: "Kick", duration: "0:02", url: "/samples/DEAT_AKA_PUNCH_KICK_01.wav" },
