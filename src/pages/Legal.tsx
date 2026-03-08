@@ -50,17 +50,11 @@ export default function Legal() {
         "refund-policy": {
             title: "Refund Policy",
             body: `
-                <p><strong>Last Updated:</strong> February 2026</p>
+                <p><strong>Last Updated:</strong> March 2026</p>
                 
-                <h3>3-Day Money-Back Guarantee</h3>
-                <p>We stand behind the quality of our sounds. If you are not completely satisfied with your purchase, we offer a 3-day money-back guarantee under the following conditions:</p>
-                <ul>
-                    <li>You have encountered severe technical issues with the files that cannot be resolved.</li>
-                    <li>The pack fundamentally misrepresents what was advertised on the product page.</li>
-                </ul>
-                
-                <p>Because these are digital goods that cannot be "returned" in the traditional sense, refunds are granted at our discretion. If you simply "don't like" the sounds or purchased the wrong pack by mistake, refund requests may be declined.</p>
-                <p>If you believe you qualify for a refund, please contact us within 3 days of your purchase.</p>
+                <h3>14-Day Money-Back Guarantee</h3>
+                <p>We stand behind the quality of our sounds. If you are not completely satisfied with your purchase, we offer a 14-day, no-questions-asked money-back guarantee.</p>
+                <p>If you would like to request a refund, please contact us within 14 days of your purchase, and we will process it promptly without any qualifiers or exceptions.</p>
             `
         },
         "contact": {
