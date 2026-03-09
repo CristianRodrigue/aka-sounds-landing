@@ -14,6 +14,8 @@ import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import FreeTrial from "./pages/FreeTrial";
 import CookieBanner from "./components/CookieBanner";
+import { initializePaddle, Paddle } from '@paddle/paddle-js';
+import { useEffect, useState as useReactState } from "react";
 
 // Create an inner component to access router hooks inside HashRouter
 function AppContent() {
@@ -180,6 +182,18 @@ function AppContent() {
 }
 
 export default function App() {
+  const [paddle, setPaddle] = useReactState<Paddle>();
+
+  useEffect(() => {
+    initializePaddle({ environment: 'production', token: 'live_84024e2add60d6337f992cc003a' }).then(
+      (paddleInstance: Paddle | undefined) => {
+        if (paddleInstance) {
+          setPaddle(paddleInstance);
+        }
+      },
+    );
+  }, []);
+
   return (
     <HashRouter>
       <AppContent />

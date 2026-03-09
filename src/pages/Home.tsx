@@ -207,15 +207,20 @@ export default function Home() {
                                             )}
                                         </div>
                                     </div>
-                                    <a
-                                        href={products[0].paymentUrl}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            if (typeof window !== 'undefined' && (window as any).Paddle) {
+                                                (window as any).Paddle.Checkout.open({
+                                                    items: [{ priceId: products[0].paddlePriceId, quantity: 1 }]
+                                                });
+                                            }
+                                        }}
                                         className="w-full xl:w-auto inline-flex items-center justify-center gap-3 bg-black text-white font-extrabold text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:bg-black/90 transition-all active:scale-95 group shadow-lg"
                                     >
-                                        <Download size={18} className="group-hover:-translate-y-1 transition-transform" />
-                                        {isActive ? 'Claim Discount' : 'Download'}
-                                    </a>
+                                        <ShoppingCart size={18} className="group-hover:-translate-y-1 transition-transform" />
+                                        {isActive ? 'Claim Discount' : 'Buy Now'}
+                                    </button>
                                 </div>
                             </div>
                         </div>

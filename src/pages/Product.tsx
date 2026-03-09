@@ -195,16 +195,21 @@ export default function Product() {
                             </li>
                         </ul>
 
-                        {/* API ADD TO CART BUTTON (Payhip Direct Link) */}
-                        <a
-                            href={product.paymentUrl || "#"}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        {/* API ADD TO CART BUTTON (Paddle Direct Link) */}
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
+                                if (typeof window !== 'undefined' && (window as any).Paddle) {
+                                    (window as any).Paddle.Checkout.open({
+                                        items: [{ priceId: product.paddlePriceId, quantity: 1 }]
+                                    });
+                                }
+                            }}
                             className="w-full flex items-center justify-center gap-3 bg-white text-black font-extrabold text-lg px-8 py-5 rounded-2xl hover:bg-white/90 transition-all active:scale-95 shadow-[0_0_40px_rgba(255,255,255,0.2)] mb-12 group"
                         >
                             <ShoppingCart size={22} className="group-hover:scale-110 transition-transform" />
                             {isActive ? 'Claim Discount' : 'Buy Now'}
-                        </a>
+                        </button>
 
                         {/* Desktop Testimonials */}
                         {product.testimonials && product.testimonials.length > 0 && (
