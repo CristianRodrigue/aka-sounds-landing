@@ -36,7 +36,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         });
 
         // 1. Verify the Webhook Signature
-        const eventData = paddle.webhooks.unmarshal(rawBody, secretKey, signature);
+        const eventData = await paddle.webhooks.unmarshal(rawBody, secretKey, signature);
 
         // 2. We only care when a transaction is completed (paid)
         if (eventData && eventData.eventType === 'transaction.completed') {
@@ -111,6 +111,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } catch (error: any) {
         console.error('Webhook error:', error.message);
         // We log the error but still return 200 so paddle doesn't lock up or retry indefinitely.
-        return res.status(200).json({ error: \`Webhook Error: \${error.message}\` });
+        return res.status(200).json({ error: `Webhook Error: ${error.message}` });
     }
 }
