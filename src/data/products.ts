@@ -13,7 +13,7 @@ export const products = [
         genre: "HARD TECHNO",
         image: htEssentialsImg,
         wcProductId: 123, // Placeholder for the actual WooCommerce Product ID
-        paddlePriceId: "pro_01kk852aee3nqfj046d1ht4wb5",
+        paddlePriceId: "pri_01kk855x7wk29gv2d4hgz60k63",
         scTrackUrl: "https://soundcloud.com/deat_aka/this-is-a-f-cking-hardtechno",
         previewTracks: [
             { id: 1, name: "DEAT_AKA_RUMBLE_KICK_01_155", type: "Rumble Loop", duration: "0:06", url: "/samples/DEAT_AKA_RUMBLE_KICK_01_155.wav" },
