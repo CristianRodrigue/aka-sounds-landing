@@ -212,7 +212,8 @@ export default function Home() {
                                             e.preventDefault();
                                             if (typeof window !== 'undefined' && (window as any).Paddle) {
                                                 (window as any).Paddle.Checkout.open({
-                                                    items: [{ priceId: products[0].paddlePriceId, quantity: 1 }]
+                                                    items: [{ priceId: products[0].paddlePriceId, quantity: 1 }],
+                                                    ...(isActive ? { discountId: 'dsc_01kkcqpxaca9tc9qtn73dv81bz' } : {})
                                                 });
                                             }
                                         }}
