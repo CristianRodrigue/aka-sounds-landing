@@ -28,11 +28,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const rawBody = await getRawBody(req);
         const signature = req.headers['paddle-signature'] as string || '';
         const secretKey = process.env.PADDLE_WEBHOOK_SECRET || '';
+        const apiKey = process.env.PADDLE_API_KEY || ''; // We now need a real API key to fetch customer details
 
-        // Initialize Paddle with a dummy API key just to access the webhook unmarshalling utils.
-        // We do not need a real Padddle API key if we extract the customer details directly from the payload!
-        const paddle = new Paddle('dummy_key', {
-            environment: Environment.production // or sandbox if testing
+        const paddle = new Paddle(apiKey, {
+            environment: Environment.production 
         });
 
         // 1. Verify the Webhook Signature
@@ -40,14 +39,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         // 2. We only care when a transaction is completed (paid)
         if (eventData && eventData.eventType === 'transaction.completed') {
-            const transaction = eventData.data as any; // Using any because the Paddle types might be complex
+            const transaction = eventData.data as any; 
+            const customerId = transaction.customerId;
 
-            // Extract the customer email directly from the transaction webhook payload
-            const customerEmail = transaction.customer?.email || JSON.parse(rawBody).data?.customer?.email;
+            let customerEmail = '';
+
+            if (customerId) {
+                try {
+                    // Fetch the full customer object to get the email
+                    const customer = await paddle.customers.get(customerId);
+                    customerEmail = customer?.email || '';
+                } catch (e) {
+                    console.error("Failed to fetch customer details from Paddle:", e);
+                }
+            }
 
             if (!customerEmail) {
-                console.error("Could not find customer email in the payload.");
-                // We return 200 so Paddle doesn't keep retrying if it's missing the email for some strange reason
+                console.error("Could not find customer email. Transaction Data:", transaction);
                 return res.status(200).json({ error: 'No email found in event', debug: transaction });
             }
 
