@@ -48,7 +48,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             if (!customerEmail) {
                 console.error("Could not find customer email in the payload.");
                 // We return 200 so Paddle doesn't keep retrying if it's missing the email for some strange reason
-                return res.status(200).json({ error: 'No email found in event' });
+                return res.status(200).json({ error: 'No email found in event', debug: transaction });
             }
 
             console.log(`Processing successful payment for: ${customerEmail}`);
