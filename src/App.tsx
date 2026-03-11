@@ -189,11 +189,13 @@ export default function App() {
       environment: 'production', 
       token: 'live_84024e2add60d6337f992cc003a',
       eventCallback: (event) => {
-        if (typeof window !== 'undefined' && window.fbq) {
+        if (typeof window !== 'undefined') {
           if (event.name === 'checkout.loaded') {
-            window.fbq('track', 'InitiateCheckout');
+            if (window.fbq) window.fbq('track', 'InitiateCheckout');
+            if (window.gtag) window.gtag('event', 'begin_checkout', { value: 14.99, currency: 'USD' });
           } else if (event.name === 'checkout.completed') {
-            window.fbq('track', 'Purchase', { currency: 'USD', value: 14.99 });
+            if (window.fbq) window.fbq('track', 'Purchase', { currency: 'USD', value: 14.99 });
+            if (window.gtag) window.gtag('event', 'purchase', { value: 14.99, currency: 'USD', transaction_id: (event.data as any)?.id || 'TBD' });
           }
         }
       }
