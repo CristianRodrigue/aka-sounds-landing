@@ -127,11 +127,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         <!-- Wrapper table for the email content -->
         <table width="100%" max-width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color:#000000; border: 1px solid #333333; border-radius: 12px; overflow: hidden;">
           
-          <!-- Header (White background, black logo, thinner padding) -->
+          <!-- Header (White background, black typography logo, minimal padding) -->
           <tr>
             <td align="center" style="padding: 25px 20px; background-color: #ffffff; border-bottom: 1px solid #eeeeee;">
-              <!-- Using the favicon.png without inversion so it stays black over white -->
-              <img src="https://akasounds.com/favicon.png" alt="AKA SOUNDS" width="220" style="display: block; width: 220px; max-width: 80%; height: auto;" />
+              <!-- Highly styled text to match a modern typography logo -->
+              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 28px; font-weight: 900; letter-spacing: 8px; color: #000000; text-transform: uppercase;">
+                AKA SOUNDS
+              </div>
             </td>
           </tr>
 
