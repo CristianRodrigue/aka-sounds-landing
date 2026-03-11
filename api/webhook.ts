@@ -61,6 +61,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             console.log(`Processing successful payment for: ${customerEmail}`);
 
+            // Determine which product was purchased based on the Price ID
+            const purchasedPriceId = transaction.items && transaction.items.length > 0 ? transaction.items[0].price.id : null;
+            
+            // Map Price IDs to corresponding Google Cloud ZIP files
+            let fileName = '';
+            let productName = '';
+
+            const PREMIUM_PRICE_ID = 'pri_01kkcjshgdd9p0yqgexv3nrt2f'; // Hardtechno Essentials Vol. 1
+            const FREE_TRIAL_PRICE_ID = 'pri_01kkd2y0pdsxvg234s8zvfshqj'; // Free Trial
+
+            if (purchasedPriceId === PREMIUM_PRICE_ID) {
+                fileName = process.env.GCP_FILE_NAME || ''; 
+                productName = 'Hardtechno Essentials Vol. 1';
+            } else if (purchasedPriceId === FREE_TRIAL_PRICE_ID) {
+                fileName = 'AKA_SOUNDS_HARDTECHNO-ESSENTIALS-VOL.-1-FREE-TRIAL 1.zip';
+                productName = 'Hardtechno Essentials Vol. 1 (Free Trial)';
+            } else {
+                // Fallback in case ID is slightly different or not passed, assuming default product
+                fileName = process.env.GCP_FILE_NAME || ''; 
+                productName = 'Hardtechno Essentials Vol. 1';
+                console.log(`Unknown Price ID (${purchasedPriceId}), defaulting to Premium Pack.`);
+            }
+
             // 3. Generate the Secure Signed URL from Google Cloud
             // Fix literal \n issues in private keys uploaded to environment variables
             const privateKey = (process.env.GCP_PRIVATE_KEY || '').replace(/\\n/g, '\n');
@@ -72,7 +95,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             });
 
             const bucketName = process.env.GCP_BUCKET_NAME || '';
-            const fileName = process.env.GCP_FILE_NAME || '';
 
             const options = {
                 version: 'v4' as const,
@@ -90,13 +112,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             await resend.emails.send({
                 from: 'AKA SOUNDS <contact@akasounds.com>',
                 to: customerEmail,
-                subject: 'Your AKA SOUNDS Download Request!',
+                subject: productName === 'Hardtechno Essentials Vol. 1 (Free Trial)' ? 'Your AKA SOUNDS Free Access!' : 'Your AKA SOUNDS Download Request!',
                 html: `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #000; color: #fff;">
                         <h1 style="color: #fff; text-align: center; text-transform: uppercase; letter-spacing: 2px;">AKA SOUNDS</h1>
-                        <h2 style="color: #666; text-align: center;">Transaction Successful</h2>
+                        <h2 style="color: #666; text-align: center;">${productName}</h2>
                         <p style="font-size: 16px; line-height: 1.5; color: #ddd;">
-                            Thank you for your purchase! Your payment has been confirmed.
+                            Thank you for your order! Your request has been confirmed.
                         </p>
                         <p style="font-size: 16px; line-height: 1.5; color: #ddd;">
                             Click the button below to download your files securely. This link is unique to you and will expire in <strong style="color: #fff;">24 hours</strong>.
