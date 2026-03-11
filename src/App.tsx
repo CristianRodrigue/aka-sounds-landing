@@ -185,7 +185,19 @@ export default function App() {
   const [paddle, setPaddle] = useReactState<Paddle>();
 
   useEffect(() => {
-    initializePaddle({ environment: 'production', token: 'live_84024e2add60d6337f992cc003a' }).then(
+    initializePaddle({ 
+      environment: 'production', 
+      token: 'live_84024e2add60d6337f992cc003a',
+      eventCallback: (event) => {
+        if (typeof window !== 'undefined' && window.fbq) {
+          if (event.name === 'checkout.loaded') {
+            window.fbq('track', 'InitiateCheckout');
+          } else if (event.name === 'checkout.completed') {
+            window.fbq('track', 'Purchase', { currency: 'USD', value: 14.99 });
+          }
+        }
+      }
+    }).then(
       (paddleInstance: Paddle | undefined) => {
         if (paddleInstance) {
           setPaddle(paddleInstance);
