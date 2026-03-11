@@ -124,42 +124,65 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#111111; padding: 40px 10px;">
     <tr>
       <td align="center">
+        <!-- Wrapper table for the email content -->
         <table width="100%" max-width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color:#000000; border: 1px solid #333333; border-radius: 12px; overflow: hidden;">
           
-          <!-- Header -->
+          <!-- Header (White background, black logo) -->
           <tr>
-            <td align="center" style="padding: 50px 20px; background-color: #050505; border-bottom: 1px solid #222222;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 32px; font-weight: 900; letter-spacing: 6px; text-transform: uppercase;">AKA SOUNDS</h1>
+            <td align="center" style="padding: 40px 20px; background-color: #ffffff; border-bottom: 1px solid #eeeeee;">
+              <!-- Using the favicon.png. We add a highly compatible CSS filter to invert it if it is white, OR just use text fallback if inversion fails -->
+              <img src="https://akasounds.com/favicon.png" alt="AKA SOUNDS" width="100" style="display: block; width: 100px; max-width: 100px; height: auto; filter: invert(100%); -webkit-filter: invert(100%);" />
+              <!-- If the logo image fails or filter isn't supported, we hide this text, if it loads, the image pushes it down -->
+              <h1 style="color: #000000; margin: 15px 0 0 0; font-size: 24px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase;">AKA SOUNDS</h1>
             </td>
           </tr>
 
-          <!-- Body -->
+          <!-- Body (Dark, oversized faded logo background) -->
+          <!-- We use a background image for the table cell. For VML compatibility in Outlook we would need extra code, but for modern webmails this syntax works -->
           <tr>
-            <td align="center" style="padding: 50px 40px 30px 40px;">
-              <h2 style="color: #ffffff; margin: 0 0 24px 0; font-size: 22px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">ACCESS GRANTED</h2>
-              <p style="color: #a0a0a0; font-size: 16px; line-height: 1.6; margin: 0 0 35px 0; text-align: center;">
-                Thank you for securing your copy of <br><strong><span style="color:#ffffff;">${productName}</span></strong>. 
-                <br><br>
-                Your high-quality audio files are ready. This private download link is uniquely generated for you and will self-destruct in <strong style="color:#ffffff;">24 hours</strong>.
+            <td align="center" background="https://akasounds.com/favicon.png" style="background-color: #050505; background-image: url('https://akasounds.com/favicon.png'); background-size: 200%; background-position: center; background-repeat: no-repeat; padding: 60px 40px 40px 40px;">
+              <!-- We wrap the text in a div with a semi-transparent black background to ensure high readability over the blurred/huge logo -->
+              <div style="background-color: rgba(0, 0, 0, 0.85); padding: 30px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);">
+                <h2 style="color: #ffffff; margin: 0 0 24px 0; font-size: 22px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">ACCESS GRANTED</h2>
+                <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 35px 0; text-align: center;">
+                  Thank you for securing your copy of <br><strong><span style="color:#ffffff;">${productName}</span></strong>. 
+                  <br><br>
+                  Your high-quality audio files are ready. This private download link is uniquely generated for you and will self-destruct in <strong style="color:#ffffff;">24 hours</strong>.
+                </p>
+
+                <!-- Button -->
+                <table border="0" cellspacing="0" cellpadding="0" align="center">
+                  <tr>
+                    <td align="center" style="border-radius: 6px; background-color: #ffffff;">
+                      <a href="${url}" target="_blank" style="font-size: 16px; font-weight: 800; font-family: sans-serif; color: #000000; text-decoration: none; padding: 18px 45px; border-radius: 6px; display: inline-block; text-transform: uppercase; letter-spacing: 2px;">Download Files Now</a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="color: #777777; font-size: 12px; margin-top: 25px; margin-bottom: 0; text-transform: uppercase; letter-spacing: 1px;">Secure ZIP Archive</p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer (White background, links in dark grey) -->
+          <tr>
+            <td align="center" style="padding: 40px 40px; background-color: #ffffff; border-top: 1px solid #eeeeee;">
+              
+              <!-- Main Link -->
+              <a href="https://www.akasounds.com" style="color: #111111; text-decoration: underline; font-size: 16px; font-weight: 700; display: inline-block; margin-bottom: 25px;">www.akasounds.com</a>
+              
+              <br>
+
+              <!-- Social Links -->
+              <p style="margin: 0 0 35px 0; font-size: 14px; font-weight: 600;">
+                <a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU?si=YTxTLYnIQOmbbj613Kw_AQ" style="color: #000000; text-decoration: none;">Spotify</a> 
+                <span style="color: #cccccc; margin: 0 8px;">|</span> 
+                <a href="https://soundcloud.com/deat_aka" style="color: #000000; text-decoration: none;">Soundcloud</a> 
+                <span style="color: #cccccc; margin: 0 8px;">|</span> 
+                <a href="https://www.instagram.com/aka_sounds" style="color: #000000; text-decoration: none;">Instagram</a>
               </p>
 
-              <!-- Button -->
-              <table border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td align="center" style="border-radius: 6px; background-color: #ffffff;">
-                    <a href="${url}" target="_blank" style="font-size: 16px; font-weight: 800; font-family: sans-serif; color: #000000; text-decoration: none; padding: 18px 45px; border-radius: 6px; display: inline-block; text-transform: uppercase; letter-spacing: 2px;">Download Files Now</a>
-                  </td>
-                </tr>
-              </table>
-              <p style="color: #555555; font-size: 12px; margin-top: 20px; text-transform: uppercase; letter-spacing: 1px;">Secure ZIP Archive</p>
-
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td align="center" style="padding: 30px 40px; background-color: #050505; border-top: 1px solid #222222;">
-              <p style="color: #666666; font-size: 13px; line-height: 1.6; margin: 0;">
+              <!-- Disclaimer text below links -->
+              <p style="color: #666666; font-size: 12px; line-height: 1.6; margin: 0;">
                 If you have any issues with your download, simply reply to this email.<br>
                 Welcome to the underground.<br><br>
                 &copy; ${new Date().getFullYear()} AKA SOUNDS
