@@ -183,6 +183,7 @@ function AppContent() {
 
 export default function App() {
   const [paddle, setPaddle] = useReactState<Paddle>();
+  const [showSuccessModal, setShowSuccessModal] = useReactState(false);
 
   useEffect(() => {
     initializePaddle({ 
@@ -196,6 +197,7 @@ export default function App() {
           } else if (event.name === 'checkout.completed') {
             if (window.fbq) window.fbq('track', 'Purchase', { currency: 'USD', value: 14.99 });
             if (window.gtag) window.gtag('event', 'purchase', { value: 14.99, currency: 'USD', transaction_id: (event.data as any)?.id || 'TBD' });
+            setShowSuccessModal(true);
           }
         }
       }
@@ -209,8 +211,44 @@ export default function App() {
   }, []);
 
   return (
-    <HashRouter>
-      <AppContent />
-    </HashRouter>
+    <>
+      <HashRouter>
+        <AppContent />
+      </HashRouter>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-zinc-950/90 backdrop-blur-xl">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            className="bg-black border border-white/10 p-8 rounded-3xl max-w-md w-full relative overflow-hidden"
+          >
+            {/* Background design */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
+            
+            <div className="text-4xl mb-6">⚡</div>
+            <h2 className="text-2xl font-display font-bold tracking-tight mb-2 uppercase">Access Granted</h2>
+            <p className="text-white/70 mb-6 leading-relaxed">
+              Your transaction was successful. The download link for your high-quality audio files has been generated and sent to your email.
+            </p>
+            
+            <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 mb-8">
+              <p className="text-red-400 font-bold text-sm mb-1 uppercase tracking-wider">⚠️ Important Notice</p>
+              <p className="text-white/80 text-sm">
+                If you don't see the email within the next 2 minutes, <strong>please check your SPAM or Junk folder</strong>.
+              </p>
+            </div>
+
+            <button 
+              onClick={() => setShowSuccessModal(false)}
+              className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-white/90 transition-all active:scale-95"
+            >
+              Understood
+            </button>
+          </motion.div>
+        </div>
+      )}
+    </>
   );
 }
