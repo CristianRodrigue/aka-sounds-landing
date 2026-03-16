@@ -44,7 +44,7 @@ export default function Legal() {
                 </ul>
 
                 <h3>2. Digital Goods</h3>
-                <p>Due to the nature of digital downloads, you are responsible for ensuring your hardware and software are compatible with our products (e.g., having a valid license of Serum for Serum presets).</p>
+                <p>We provide digital audio downloads. While we encourage you to ensure hardware/software compatibility before purchase, this does not affect your right to our unconditional 14-day refund policy.</p>
             `
         },
         "refund-policy": {
@@ -52,9 +52,9 @@ export default function Legal() {
             body: `
                 <p><strong>Last Updated:</strong> March 2026</p>
                 
-                <h3>14-Day Money-Back Guarantee</h3>
-                <p>We stand behind the quality of our sounds. If you are not completely satisfied with your purchase, we offer a 14-day, no-questions-asked money-back guarantee.</p>
-                <p>If you would like to request a refund, please contact us within 14 days of your purchase, and we will process it promptly without any qualifiers or exceptions.</p>
+                <h3>14-Day Unconditional Refund Policy</h3>
+                <p>We offer a full, unconditional refund within 14 days of your purchase date. You can request a refund for any reason.</p>
+                <p>To request a refund, please contact us at contact@akasounds.com with your order details within 14 days of purchase. We will process your return promptly. There are absolutely no qualifiers, conditions, or exceptions to this policy.</p>
             `
         },
         "contact": {
