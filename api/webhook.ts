@@ -63,6 +63,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             // Determine which product was purchased based on the Price ID
             const purchasedPriceId = transaction.items && transaction.items.length > 0 ? transaction.items[0].price.id : null;
+            const purchasedProductId = transaction.items && transaction.items.length > 0 ? transaction.items[0].price.product_id : null;
             
             // Map Price IDs to corresponding Google Cloud ZIP files
             let fileName = '';
@@ -70,18 +71,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             const PREMIUM_PRICE_ID = 'pri_01kkcjshgdd9p0yqgexv3nrt2f'; // Hardtechno Essentials Vol. 1
             const FREE_TRIAL_PRICE_ID = 'pri_01kkd2y0pdsxvg234s8zvfshqj'; // Free Trial
+            const REVERSE_BASS_FREE_ID = 'pro_01kkwhw131933xnm3c8yhcqrps'; // New Free Pack (User provided pro_ ID)
 
-            if (purchasedPriceId === PREMIUM_PRICE_ID) {
+            if (purchasedPriceId === PREMIUM_PRICE_ID || purchasedProductId === PREMIUM_PRICE_ID) {
                 fileName = process.env.GCP_FILE_NAME || ''; 
                 productName = 'Hardtechno Essentials Vol. 1';
-            } else if (purchasedPriceId === FREE_TRIAL_PRICE_ID) {
+            } else if (purchasedPriceId === FREE_TRIAL_PRICE_ID || purchasedProductId === FREE_TRIAL_PRICE_ID) {
                 fileName = 'AKA_SOUNDS_HARDTECHNO-ESSENTIALS-VOL.-1-FREE-TRIAL 1.zip';
                 productName = 'Hardtechno Essentials Vol. 1 (Free Trial)';
+            } else if (purchasedPriceId === REVERSE_BASS_FREE_ID || purchasedProductId === REVERSE_BASS_FREE_ID) {
+                fileName = 'AKA Sounds Free Serum 2 Reverse Bass Kick.zip';
+                productName = 'AKA Sounds Free Serum 2 Reverse Bass Kick';
             } else {
                 // Fallback in case ID is slightly different or not passed, assuming default product
                 fileName = process.env.GCP_FILE_NAME || ''; 
                 productName = 'Hardtechno Essentials Vol. 1';
-                console.log(`Unknown Price ID (${purchasedPriceId}), defaulting to Premium Pack.`);
+                console.log(`Unknown Price/Product ID (${purchasedPriceId} / ${purchasedProductId}), defaulting to Premium Pack.`);
             }
 
             // 3. Generate the Secure Signed URL from Google Cloud

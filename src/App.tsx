@@ -13,6 +13,7 @@ import Product from "./pages/Product";
 import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import FreeTrial from "./pages/FreeTrial";
+import Tutorials from "./pages/Tutorials";
 import CookieBanner from "./components/CookieBanner";
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import { useEffect, useState as useReactState } from "react";
@@ -60,7 +61,8 @@ function AppContent() {
 
               <div className="hidden md:flex items-center gap-6 text-sm font-medium text-white/60">
                 <a href="#featured" onClick={(e) => handleNavClick(e, 'featured')} className="hover:text-white transition-colors">Releases</a>
-                <a href="#free-samples" onClick={(e) => handleNavClick(e, 'free-samples')} className="hover:text-white transition-colors">Free Samples</a>
+                <Link to="/tutorials" onClick={() => window.scrollTo(0,0)} className="hover:text-white transition-colors">Tutorials</Link>
+                <Link to="/free-trial" onClick={() => window.scrollTo(0,0)} className="hover:text-white transition-colors">Free Samples</Link>
                 <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="hover:text-white transition-colors">About</a>
               </div>
             </div>
@@ -79,7 +81,6 @@ function AppContent() {
           </div>
         </nav>
 
-        {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -87,7 +88,8 @@ function AppContent() {
             className="md:hidden bg-zinc-950/95 backdrop-blur-xl border-b border-white/10 px-6 py-6 flex flex-col gap-6 relative z-40"
           >
             <a href="#featured" onClick={(e) => { handleNavClick(e, 'featured'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Releases</a>
-            <a href="#free-samples" onClick={(e) => { handleNavClick(e, 'free-samples'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Free Samples</a>
+            <Link to="/tutorials" onClick={() => { window.scrollTo(0,0); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Tutorials</Link>
+            <Link to="/free-trial" onClick={() => { window.scrollTo(0,0); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Free Samples</Link>
             <a href="#about" onClick={(e) => { handleNavClick(e, 'about'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">About</a>
           </motion.div>
         )}
@@ -118,6 +120,7 @@ function AppContent() {
           <Route path="/product/:slug" element={<Product />} />
           <Route path="/legal/:page" element={<Legal />} />
           <Route path="/free-trial" element={<FreeTrial />} />
+          <Route path="/tutorials" element={<Tutorials />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
