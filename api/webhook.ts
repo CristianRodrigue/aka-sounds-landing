@@ -71,7 +71,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             const PREMIUM_PRICE_ID = 'pri_01kkcjshgdd9p0yqgexv3nrt2f'; // Hardtechno Essentials Vol. 1
             const FREE_TRIAL_PRICE_ID = 'pri_01kkd2y0pdsxvg234s8zvfshqj'; // Free Trial
-            const REVERSE_BASS_FREE_ID = 'pro_01kkwhw131933xnm3c8yhcqrps'; // New Free Pack (User provided pro_ ID)
+            const REVERSE_BASS_FREE_ID = 'pri_01kkwnrqgq7xcd5hhpxg99ae6p'; // New Free Pack (Correct Price ID)
 
             if (purchasedPriceId === PREMIUM_PRICE_ID || purchasedProductId === PREMIUM_PRICE_ID) {
                 fileName = process.env.GCP_FILE_NAME || ''; 

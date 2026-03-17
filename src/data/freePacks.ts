@@ -27,7 +27,7 @@ export const freePacks: FreePack[] = [
         title: "Serum 2 Reverse Bass Kick",
         description: "An exclusive free mini-pack from our latest YouTube tutorial. Master the art of the perfect reverse bass.",
         image: '/PORTADAS DE SAMPLE PACKS/AkasoundsProductCover.jpeg',
-        paddlePriceId: 'pro_01kkwhw131933xnm3c8yhcqrps',
+        paddlePriceId: 'pri_01kkwnrqgq7xcd5hhpxg99ae6p',
         features: [
             "Serum Presets",
             "Reverse Bass Samples",
