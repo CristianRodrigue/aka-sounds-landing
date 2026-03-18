@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Legal from "./pages/Legal";
 import FreeTrial from "./pages/FreeTrial";
 import Tutorials from "./pages/Tutorials";
+import Artist from "./pages/Artist";
 import CookieBanner from "./components/CookieBanner";
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import { useEffect, useState as useReactState } from "react";
@@ -43,6 +44,7 @@ function AppContent() {
       onContextMenu={(e) => e.preventDefault()}
     >
       {/* Fixed Header Group */}
+      {location.pathname !== '/artist' && (
       <div className="fixed top-0 left-0 right-0 z-50">
         {/* Navigation */}
         <nav className="border-b border-white/5 bg-zinc-950/50 backdrop-blur-xl">
@@ -112,6 +114,7 @@ function AppContent() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Page Routes */}
       <div className="flex-1">
@@ -121,12 +124,14 @@ function AppContent() {
           <Route path="/legal/:page" element={<Legal />} />
           <Route path="/free-trial" element={<FreeTrial />} />
           <Route path="/tutorials" element={<Tutorials />} />
+          <Route path="/artist" element={<Artist />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
 
 
       {/* Full Footer */}
+      {location.pathname !== '/artist' && (
       <footer className="border-t border-white/10 py-16 mt-20 bg-black">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-white">
 
@@ -177,6 +182,7 @@ function AppContent() {
           <p className="mt-2 md:mt-0 font-medium">100% Royalty Free Audio</p>
         </div>
       </footer>
+      )}
 
       {/* Global Components */}
       <CookieBanner />

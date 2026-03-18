@@ -11,6 +11,12 @@ interface Tutorial {
 
 const tutorials: Tutorial[] = [
     {
+        id: '2',
+        title: 'Industrial Techno Synths - Free Tutorial',
+        description: 'Discover the secrets to crafting massive, stadium-shaking industrial synths and textures.',
+        youtubeId: 'U2fTh4phhEM'
+    },
+    {
         id: '1',
         title: 'Reverse Bass Kick - Serum Tutorial',
         description: 'Learn how to synthesize a devastating Reverse Bass Kick entirely within Xfer Serum.',

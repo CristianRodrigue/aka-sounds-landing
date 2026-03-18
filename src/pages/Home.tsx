@@ -491,6 +491,14 @@ export default function Home() {
                                     <span className="text-xs uppercase tracking-[0.2em] font-bold text-black/40">Technical Process</span>
                                 </div>
                             </div>
+
+                            <Link 
+                                to="/artist" 
+                                onClick={() => window.scrollTo(0,0)} 
+                                className="mt-8 w-full border border-black/20 text-black px-8 py-4 uppercase tracking-[0.2em] font-bold text-xs text-center hover:bg-black hover:text-white transition-colors rounded-xl"
+                            >
+                                Discover DEAT AKA →
+                            </Link>
                         </div>
 
                     </div>
