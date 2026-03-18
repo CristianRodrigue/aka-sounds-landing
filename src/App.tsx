@@ -44,7 +44,7 @@ function AppContent() {
       onContextMenu={(e) => e.preventDefault()}
     >
       {/* Fixed Header Group */}
-      {location.pathname !== '/artist' && (
+      {location.pathname !== '/deat_aka' && (
       <div className="fixed top-0 left-0 right-0 z-50">
         {/* Navigation */}
         <nav className="border-b border-white/5 bg-zinc-950/50 backdrop-blur-xl">
@@ -124,14 +124,14 @@ function AppContent() {
           <Route path="/legal/:page" element={<Legal />} />
           <Route path="/free-trial" element={<FreeTrial />} />
           <Route path="/tutorials" element={<Tutorials />} />
-          <Route path="/artist" element={<Artist />} />
+          <Route path="/deat_aka" element={<Artist />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
 
 
       {/* Full Footer */}
-      {location.pathname !== '/artist' && (
+      {location.pathname !== '/deat_aka' && (
       <footer className="border-t border-white/10 py-16 mt-20 bg-black">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-white">
 

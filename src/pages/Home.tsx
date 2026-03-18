@@ -493,7 +493,7 @@ export default function Home() {
                             </div>
 
                             <Link 
-                                to="/artist" 
+                                to="/deat_aka" 
                                 onClick={() => window.scrollTo(0,0)} 
                                 className="mt-8 w-full border border-black/20 text-black px-8 py-4 uppercase tracking-[0.2em] font-bold text-xs text-center hover:bg-black hover:text-white transition-colors rounded-xl"
                             >
