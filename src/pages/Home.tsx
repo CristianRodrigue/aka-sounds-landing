@@ -505,6 +505,48 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* FAQ Section (GEO Optimized) */}
+            <section className="py-32 px-6 max-w-4xl mx-auto relative z-10 border-t border-[#111111]/10">
+                <div className="text-center mb-16">
+                    <h2 className="text-4xl md:text-6xl font-display font-black tracking-tighter uppercase mb-4">
+                        FREQUENTLY ASKED QUESTIONS
+                    </h2>
+                    <p className="opacity-60 font-bold tracking-[0.2em] uppercase text-xs">
+                        Everything you need to know about AKA SOUNDS
+                    </p>
+                </div>
+
+                <div className="space-y-4">
+                    {[
+                        {
+                            q: "Are the sample packs 100% royalty-free?",
+                            a: "Yes. All our sample packs, including kicks, synths, and FX, are 100% royalty-free. You can use them in your commercial releases on Spotify, Apple Music, and Beatport without any clearance issues."
+                        },
+                        {
+                            q: "Which DAWs are compatible with your sounds?",
+                            a: "Our samples are high-quality, pre-processed WAV files. This means they are seamlessly compatible with any modern DAW, including FL Studio, Ableton Live, Logic Pro, Cubase, and Studio One."
+                        },
+                        {
+                            q: "Do I need specific plugins to use these packs?",
+                            a: "No third-party plugins are required for the audio files (kicks, kicks punch, vocals). You can drag and drop them straight into your project. For our synth preset packs, the required VST (like Serum or Sylenth1) will be clearly indicated on the product page."
+                        },
+                        {
+                            q: "When will I receive my download link after purchase?",
+                            a: "Instantly. Once your secure checkout is complete, your high-speed download link is provided on the success screen. A backup link is also delivered immediately to your email inbox."
+                        }
+                    ].map((faq, i) => (
+                        <div key={i} className="group border border-[#111111]/20 bg-[#111111]/5 p-6 md:p-8 hover:bg-[#111111] hover:text-white transition-colors duration-300">
+                            <h3 className="text-lg font-display font-bold uppercase mb-4 flex items-start gap-4">
+                                <span className="text-sm opacity-40 mt-1">0{i + 1}</span> <span>{faq.q}</span>
+                            </h3>
+                            <p className="text-sm leading-relaxed opacity-60 group-hover:opacity-80 pl-[1.1rem]">
+                                {faq.a}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
             {/* Global Newsletter Subscription */}
             <div id="community" className="max-w-7xl mx-auto px-6">
                 <Newsletter />
