@@ -10,7 +10,11 @@ import picsartImage from '../assets/Picsart_26-03-01_20-54-57-417.jpg.jpeg';
 const content = {
     en: {
         nav: { back: "BACK TO AKA SOUNDS" },
-        hero: { sub: "THE PRODUCER" },
+        hero: { 
+            sub: "THE PRODUCER",
+            genres: "MAIN GENRE: HARD DANCE",
+            subgenres: "XTRA RAW / RAWSTYLE / HARDTECHNO"
+        },
         journey: {
             title: "OUR JOURNEY",
             items: [
@@ -26,7 +30,11 @@ const content = {
     },
     es: {
         nav: { back: "VOLVER A AKA SOUNDS" },
-        hero: { sub: "EL PRODUCTOR" },
+        hero: { 
+            sub: "EL PRODUCTOR",
+            genres: "GÉNERO PRINCIPAL: HARD DANCE",
+            subgenres: "XTRA RAW / RAWSTYLE / HARDTECHNO"
+        },
         journey: {
             title: "NUESTRA HISTORIA",
             items: [
@@ -135,10 +143,42 @@ export default function Artist() {
                             initial={{ y: 20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.8, delay: 0.4 }}
-                            className="mt-12 text-xs md:text-sm font-bold tracking-[0.4em] uppercase opacity-40"
+                            className="mt-12 text-xs md:text-sm font-bold tracking-[0.4em] uppercase opacity-40 mb-12"
                         >
                             {t.hero.sub}
                         </motion.p>
+
+                        {/* Genres and Socials (Hero) */}
+                        <motion.div
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ duration: 0.8, delay: 0.6 }}
+                            className="flex flex-col items-center gap-6"
+                        >
+                            <div className="flex flex-col items-center gap-2">
+                                <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase bg-black text-white px-4 py-2">
+                                    {t.hero.genres}
+                                </span>
+                                <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase opacity-60">
+                                    {t.hero.subgenres}
+                                </span>
+                            </div>
+
+                            <div className="flex gap-8 mt-6 opacity-40 hover:opacity-100 transition-opacity duration-500 text-[#111111]">
+                                 <a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors scale-125">
+                                     <span className="sr-only">Spotify</span>
+                                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.62 14.4c-.16.27-.52.36-.78.2-.84-.53-1.88-.8-2.92-.8-1.57 0-3.15.54-4.23 1.25-.28.18-.63.1-.81-.18-.18-.28-.1-.63.18-.81 1.25-.8 3.03-1.42 4.86-1.42 1.2 0 2.4.32 3.4.95.28.15.37.52.2.8zM17.4 14c-.2.33-.65.45-1 .25-1-.62-2.3-1-3.6-1-1.76 0-3.5.6-4.9 1.45-.35.2-.8.1-1-.25-.2-.35-.1-.8.25-1 1.6-1 3.55-1.7 5.65-1.7 1.5 0 2.95.45 4.1 1.15.36.2.47.65.25 1zm.14-2.58c-1.25-.78-2.9-1.25-4.64-1.25-2.07 0-4.05.68-5.7 1.7-.42.26-.96.14-1.22-.26-.26-.4-.14-.96.26-1.22 1.83-1.12 4.02-1.88 6.36-1.88 1.95 0 3.8.53 5.25 1.42.4.24.53.78.27 1.2-.24.4-.78.53-1.2.27z"/></svg>
+                                 </a>
+                                 <a href="https://soundcloud.com/deat_aka" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors scale-125">
+                                     <span className="sr-only">SoundCloud</span>
+                                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12h2v6H1zm4-3h2v9H5zm4-2h2v11H9zm4-1h2v12h-2zm4 2h2v10h-2zm4 3h2v7h-2z"/></svg>
+                                 </a>
+                                 <a href="https://instagram.com/deat_aka" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors scale-125">
+                                     <span className="sr-only">Instagram</span>
+                                     <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                 </a>
+                            </div>
+                        </motion.div>
                     </div>
 
                 </div>
@@ -206,16 +246,23 @@ export default function Artist() {
                 </div>
             </section>
 
-            {/* FOOTER */}
+            {/* FOOTER & SOCIALS */}
             <footer className="py-24 mt-20 flex flex-col items-center justify-center relative z-10 border-t border-[#111111]/10">
-                <div className="flex gap-12 mb-16 opacity-40 hover:opacity-100 transition-opacity duration-500">
-                     <a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU" target="_blank" rel="noopener noreferrer" className="text-3xl hover:text-black transition-colors">
+
+                {/* Social Icons using SVGs (Footer) */}
+                <div className="flex gap-8 mb-20 opacity-40 hover:opacity-100 transition-opacity duration-500 text-[#111111]">
+                     <a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors scale-125">
                          <span className="sr-only">Spotify</span>
-                         <i className="fab fa-spotify" />
+                         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.62 14.4c-.16.27-.52.36-.78.2-.84-.53-1.88-.8-2.92-.8-1.57 0-3.15.54-4.23 1.25-.28.18-.63.1-.81-.18-.18-.28-.1-.63.18-.81 1.25-.8 3.03-1.42 4.86-1.42 1.2 0 2.4.32 3.4.95.28.15.37.52.2.8zM17.4 14c-.2.33-.65.45-1 .25-1-.62-2.3-1-3.6-1-1.76 0-3.5.6-4.9 1.45-.35.2-.8.1-1-.25-.2-.35-.1-.8.25-1 1.6-1 3.55-1.7 5.65-1.7 1.5 0 2.95.45 4.1 1.15.36.2.47.65.25 1zm.14-2.58c-1.25-.78-2.9-1.25-4.64-1.25-2.07 0-4.05.68-5.7 1.7-.42.26-.96.14-1.22-.26-.26-.4-.14-.96.26-1.22 1.83-1.12 4.02-1.88 6.36-1.88 1.95 0 3.8.53 5.25 1.42.4.24.53.78.27 1.2-.24.4-.78.53-1.2.27z"/></svg>
                      </a>
-                     <a href="https://soundcloud.com/deat_aka" target="_blank" rel="noopener noreferrer" className="text-3xl hover:text-black transition-colors">
+                     <a href="https://soundcloud.com/deat_aka" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors scale-125">
                          <span className="sr-only">SoundCloud</span>
-                         <i className="fab fa-soundcloud" />
+                         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12h2v6H1zm4-3h2v9H5zm4-2h2v11H9zm4-1h2v12h-2zm4 2h2v10h-2zm4 3h2v7h-2z"/></svg>
+
+                     </a>
+                     <a href="https://instagram.com/deat_aka" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors scale-125">
+                         <span className="sr-only">Instagram</span>
+                         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
                      </a>
                 </div>
                 
