@@ -8,15 +8,13 @@ import { Menu, Zap } from "lucide-react";
 import { useState } from "react";
 import { HashRouter, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import logoImage from './assets/LOGO-AKA-SOUNDS-PNG.png';
-import { lazy, Suspense } from "react";
-
-const Home = lazy(() => import("./pages/Home"));
-const Product = lazy(() => import("./pages/Product"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Legal = lazy(() => import("./pages/Legal"));
-const FreeTrial = lazy(() => import("./pages/FreeTrial"));
-const Tutorials = lazy(() => import("./pages/Tutorials"));
-const Artist = lazy(() => import("./pages/Artist"));
+import Home from "./pages/Home";
+import Product from "./pages/Product";
+import NotFound from "./pages/NotFound";
+import Legal from "./pages/Legal";
+import FreeTrial from "./pages/FreeTrial";
+import Tutorials from "./pages/Tutorials";
+import Artist from "./pages/Artist";
 import CookieBanner from "./components/CookieBanner";
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import { useEffect, useState as useReactState } from "react";
@@ -120,17 +118,15 @@ function AppContent() {
 
       {/* Page Routes */}
       <div className="flex-1">
-        <Suspense fallback={<div className="min-h-screen bg-zinc-950 flex items-center justify-center text-white/40 tracking-[0.2em] font-bold text-xs uppercase">Loading...</div>}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/product/:slug" element={<Product />} />
-            <Route path="/legal/:page" element={<Legal />} />
-            <Route path="/free-trial" element={<FreeTrial />} />
-            <Route path="/tutorials" element={<Tutorials />} />
-            <Route path="/deat_aka" element={<Artist />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/product/:slug" element={<Product />} />
+          <Route path="/legal/:page" element={<Legal />} />
+          <Route path="/free-trial" element={<FreeTrial />} />
+          <Route path="/tutorials" element={<Tutorials />} />
+          <Route path="/deat_aka" element={<Artist />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </div>
 
 
