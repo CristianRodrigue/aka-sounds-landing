@@ -11,6 +11,12 @@ interface Tutorial {
 
 const tutorials: Tutorial[] = [
     {
+        id: '3',
+        title: 'Zaag Kick - Serum Tutorial',
+        description: 'Learn how to synthesize a devastating Zaag Kick entirely within Xfer Serum.',
+        youtubeId: 'F8pNBXN6XH0'
+    },
+    {
         id: '2',
         title: 'Industrial Techno Synths - Free Tutorial',
         description: 'Discover the secrets to crafting massive, stadium-shaking industrial synths and textures.',

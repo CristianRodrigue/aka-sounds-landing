@@ -180,15 +180,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               
               <br>
 
-              <!-- Social Links -->
-              <p style="margin: 0 0 30px 0; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">
-                <a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU?si=YTxTLYnIQOmbbj613Kw_AQ" style="color: #000000; text-decoration: none;">Spotify</a> 
-                <span style="color: #cccccc; margin: 0 10px;">|</span> 
-                <a href="https://soundcloud.com/deat_aka" style="color: #000000; text-decoration: none;">Soundcloud</a> 
-                <span style="color: #cccccc; margin: 0 10px;">|</span> 
-                <a href="https://www.instagram.com/aka_sounds" style="color: #000000; text-decoration: none;">Instagram</a>
-              </p>
-
               <!-- Disclaimer text below links -->
               <p style="color: #555555; font-size: 12px; line-height: 1.6; margin: 0;">
                 If you have any issues with your download, simply reply to this email.<br>
