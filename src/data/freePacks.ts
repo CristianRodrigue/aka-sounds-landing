@@ -11,6 +11,18 @@ export interface FreePack {
 
 export const freePacks: FreePack[] = [
     {
+        id: 3,
+        title: "Serum 2 Zaag Kick",
+        description: "An exclusive free mini-pack for creating massive Zaag Kicks in Serum. Drag, drop, and destroy.",
+        image: '/PORTADAS DE SAMPLE PACKS/AkasoundsProductCover-ZaagKick.jpeg',
+        paddlePriceId: 'pri_01kmnmnp5fr08h43fsfa2qbcqt',
+        features: [
+            "Serum Presets",
+            "Zaag Kick Samples",
+            "Tutorial Project Files"
+        ]
+    },
+    {
         id: 2,
         title: "Serum 2 Reverse Bass Kick",
         description: "An exclusive free mini-pack from our latest YouTube tutorial. Master the art of the perfect reverse bass.",

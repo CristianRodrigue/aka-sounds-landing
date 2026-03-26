@@ -71,7 +71,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             const PREMIUM_PRICE_ID = 'pri_01kkcjshgdd9p0yqgexv3nrt2f'; // Hardtechno Essentials Vol. 1
             const FREE_TRIAL_PRICE_ID = 'pri_01kkd2y0pdsxvg234s8zvfshqj'; // Free Trial
-            const REVERSE_BASS_FREE_ID = 'pri_01kkwnrqgq7xcd5hhpxg99ae6p'; // New Free Pack (Correct Price ID)
+            const REVERSE_BASS_FREE_ID = 'pri_01kkwnrqgq7xcd5hhpxg99ae6p'; // Reverse Bass Kick
+            const ZAAG_KICK_FREE_ID = 'pri_01kmnmnp5fr08h43fsfa2qbcqt'; // Zaag Kick
 
             if (purchasedPriceId === PREMIUM_PRICE_ID || purchasedProductId === PREMIUM_PRICE_ID) {
                 fileName = process.env.GCP_FILE_NAME || ''; 
@@ -82,6 +83,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             } else if (purchasedPriceId === REVERSE_BASS_FREE_ID || purchasedProductId === REVERSE_BASS_FREE_ID) {
                 fileName = 'AKA Sounds Free Serum 2 Reverse Bass Kick.zip';
                 productName = 'AKA Sounds Free Serum 2 Reverse Bass Kick';
+            } else if (purchasedPriceId === ZAAG_KICK_FREE_ID || purchasedProductId === ZAAG_KICK_FREE_ID) {
+                fileName = 'AKA Sounds Free Serum 2 Zaag Kick.zip';
+                productName = 'AKA Sounds Free Serum 2 Zaag Kick';
             } else {
                 // Fallback in case ID is slightly different or not passed, assuming default product
                 fileName = process.env.GCP_FILE_NAME || ''; 
