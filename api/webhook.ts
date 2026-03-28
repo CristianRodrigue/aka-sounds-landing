@@ -202,39 +202,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
             console.log(`Successfully sent download email to ${customerEmail}`);
             
-            // 5. Add to MailerLite if Marketing Consent is given
-            if (hasMarketingConsent) {
-                const mailerLiteKey = process.env.MAILERLITE_API_KEY;
-                if (mailerLiteKey) {
-                    console.log(`Customer ${customerEmail} opted in to marketing. Attempting to add to MailerLite...`);
-                    try {
-                        const mlResponse = await fetch('https://connect.mailerlite.com/api/subscribers', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json',
-                                'Authorization': `Bearer ${mailerLiteKey}`
-                            },
-                            body: JSON.stringify({
-                                email: customerEmail,
-                                status: 'active'
-                            })
-                        });
-                        
-                        if (mlResponse.ok) {
-                            console.log(`✅ Successfully added ${customerEmail} to MailerLite.`);
-                        } else {
-                            const errorText = await mlResponse.text();
-                            console.error(`❌ MailerLite API returned error:`, errorText);
-                        }
-                    } catch (mlError: any) {
-                        console.error('❌ Failed to reach MailerLite API:', mlError.message);
+            // 5. Add to MailerLite (Force standard subscription for all downloads)
+            const mailerLiteKey = process.env.MAILERLITE_API_KEY;
+            if (mailerLiteKey) {
+                console.log(`Attempting to add ${customerEmail} to MailerLite...`);
+                try {
+                    const mlResponse = await fetch('https://connect.mailerlite.com/api/subscribers', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'Authorization': `Bearer ${mailerLiteKey}`
+                        },
+                        body: JSON.stringify({
+                            email: customerEmail,
+                            status: 'active',
+                            groups: ["183137351324665069"]
+                        })
+                    });
+                    
+                    if (mlResponse.ok) {
+                        console.log(`✅ Successfully added ${customerEmail} to MailerLite.`);
+                    } else {
+                        const errorText = await mlResponse.text();
+                        console.error(`❌ MailerLite API returned error:`, errorText);
                     }
-                } else {
-                    console.warn('⚠️ User opted in to marketing, but MAILERLITE_API_KEY is missing in environment variables.');
+                } catch (mlError: any) {
+                    console.error('❌ Failed to reach MailerLite API:', mlError.message);
                 }
             } else {
-                console.log(`User ${customerEmail} did NOT opt in to marketing.`);
+                console.warn('⚠️ MAILERLITE_API_KEY is missing in environment variables.');
             }
         }
 
