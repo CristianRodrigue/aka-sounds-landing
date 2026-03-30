@@ -1,2 +1,5 @@
-Not found
 node_modules
+.env
+.DS_Store
+dist
+tmp

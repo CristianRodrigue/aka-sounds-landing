@@ -45,75 +45,75 @@ function AppContent() {
     >
       {/* Fixed Header Group */}
       {location.pathname !== '/deat_aka' && (
-      <div className="fixed top-0 left-0 right-0 z-50">
-        {/* Navigation */}
-        <nav className="border-b border-white/5 bg-zinc-950/50 backdrop-blur-xl">
-          <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div className="flex items-center gap-8">
-              <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="flex items-center gap-3 text-2xl font-display font-bold tracking-tighter"
-                >
-                  <img src={logoImage} alt="AKA SOUNDS Logo" className="h-8 w-auto object-contain" />
-                  AKA SOUNDS
-                </motion.div>
-              </Link>
+        <div className="fixed top-0 left-0 right-0 z-50">
+          {/* Navigation */}
+          <nav className="border-b border-white/5 bg-zinc-950/50 backdrop-blur-xl">
+            <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+              <div className="flex items-center gap-8">
+                <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-center gap-3 text-2xl font-display font-bold tracking-tighter"
+                  >
+                    <img src={logoImage} alt="AKA SOUNDS Logo" className="h-8 w-auto object-contain" />
+                    AKA SOUNDS
+                  </motion.div>
+                </Link>
 
-              <div className="hidden md:flex items-center gap-6 text-sm font-medium text-white/60">
-                <a href="#featured" onClick={(e) => handleNavClick(e, 'featured')} className="hover:text-white transition-colors">Releases</a>
-                <Link to="/tutorials" onClick={() => window.scrollTo(0,0)} className="hover:text-white transition-colors">Tutorials</Link>
-                <Link to="/free-trial" onClick={() => window.scrollTo(0,0)} className="hover:text-white transition-colors">Free Samples</Link>
-                <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="hover:text-white transition-colors">About</a>
+                <div className="hidden md:flex items-center gap-6 text-sm font-medium text-white/60">
+                  <a href="#featured" onClick={(e) => handleNavClick(e, 'featured')} className="hover:text-white transition-colors">Releases</a>
+                  <Link to="/tutorials" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">Tutorials</Link>
+                  <Link to="/free-trial" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">Free Samples</Link>
+                  <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="hover:text-white transition-colors">About</a>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={(e) => handleNavClick(e as any, 'community')}
+                  className="bg-white text-black text-sm font-bold px-5 py-2.5 rounded-full hover:bg-white/90 transition-all active:scale-95"
+                >
+                  Join Community
+                </button>
+                <button className="p-2 text-white/60 hover:text-white md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                  <Menu size={20} />
+                </button>
               </div>
             </div>
+          </nav>
 
-            <div className="flex items-center gap-4">
-              <button
-                onClick={(e) => handleNavClick(e as any, 'community')}
-                className="bg-white text-black text-sm font-bold px-5 py-2.5 rounded-full hover:bg-white/90 transition-all active:scale-95"
-              >
-                Join Community
-              </button>
-              <button className="p-2 text-white/60 hover:text-white md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                <Menu size={20} />
-              </button>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="md:hidden bg-zinc-950/95 backdrop-blur-xl border-b border-white/10 px-6 py-6 flex flex-col gap-6 relative z-40"
+            >
+              <a href="#featured" onClick={(e) => { handleNavClick(e, 'featured'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Releases</a>
+              <Link to="/tutorials" onClick={() => { window.scrollTo(0, 0); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Tutorials</Link>
+              <Link to="/free-trial" onClick={() => { window.scrollTo(0, 0); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Free Samples</Link>
+              <a href="#about" onClick={(e) => { handleNavClick(e, 'about'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">About</a>
+            </motion.div>
+          )}
+
+          {/* Announcement Bar */}
+          <div className="bg-red-600/10 border-b border-red-500/20 text-red-500 text-[10px] font-bold tracking-[0.25em] uppercase overflow-hidden flex relative w-full items-center backdrop-blur-md h-10">
+            <div className="absolute left-0 w-16 md:w-32 h-full bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-transparent z-10 pointer-events-none"></div>
+            <div className="absolute right-0 w-16 md:w-32 h-full bg-gradient-to-l from-zinc-950 via-zinc-950/80 to-transparent z-10 pointer-events-none"></div>
+
+            <div className="animate-marquee flex gap-12">
+              {[...Array(12)].map((_, i) => (
+                <span key={i} className="flex items-center gap-12 whitespace-nowrap">
+                  <span className="flex items-center gap-2 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]">
+                    <Zap size={12} fill="currentColor" className="animate-pulse" />
+                    NEW RELEASE - ZAAG TUTORIAL OUT NOW!
+                  </span>
+                  <span className="text-red-500/30 font-serif">/</span>
+                </span>
+              ))}
             </div>
           </div>
-        </nav>
-
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden bg-zinc-950/95 backdrop-blur-xl border-b border-white/10 px-6 py-6 flex flex-col gap-6 relative z-40"
-          >
-            <a href="#featured" onClick={(e) => { handleNavClick(e, 'featured'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Releases</a>
-            <Link to="/tutorials" onClick={() => { window.scrollTo(0,0); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Tutorials</Link>
-            <Link to="/free-trial" onClick={() => { window.scrollTo(0,0); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Free Samples</Link>
-            <a href="#about" onClick={(e) => { handleNavClick(e, 'about'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">About</a>
-          </motion.div>
-        )}
-
-        {/* Announcement Bar */}
-        <div className="bg-red-600/10 border-b border-red-500/20 text-red-500 text-[10px] font-bold tracking-[0.25em] uppercase overflow-hidden flex relative w-full items-center backdrop-blur-md h-10">
-          <div className="absolute left-0 w-16 md:w-32 h-full bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-transparent z-10 pointer-events-none"></div>
-          <div className="absolute right-0 w-16 md:w-32 h-full bg-gradient-to-l from-zinc-950 via-zinc-950/80 to-transparent z-10 pointer-events-none"></div>
-
-          <div className="animate-marquee flex gap-12">
-            {[...Array(12)].map((_, i) => (
-              <span key={i} className="flex items-center gap-12 whitespace-nowrap">
-                <span className="flex items-center gap-2 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]">
-                  <Zap size={12} fill="currentColor" className="animate-pulse" />
-                  LIMITED OFFER - 50% DISCOUNT SAMPLE PACK
-                </span>
-                <span className="text-red-500/30 font-serif">/</span>
-              </span>
-            ))}
-          </div>
         </div>
-      </div>
       )}
 
       {/* Page Routes */}
@@ -132,56 +132,56 @@ function AppContent() {
 
       {/* Full Footer */}
       {location.pathname !== '/deat_aka' && (
-      <footer className="border-t border-white/10 py-16 mt-20 bg-black">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-white">
+        <footer className="border-t border-white/10 py-16 mt-20 bg-black">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-white">
 
-          {/* Brand Column */}
-          <div className="flex flex-col gap-6">
-            <Link to="/">
-              <div className="flex items-center gap-3 text-2xl font-display font-bold tracking-tighter">
-                <img src={logoImage} alt="AKA SOUNDS Logo" className="h-8 w-auto object-contain" />
-                AKA SOUNDS
-              </div>
-            </Link>
-            <p className="text-white/50 text-sm leading-relaxed max-w-xs">
-              The sonic architect of a dark, futuristic underworld. Delivering the heaviest industrial sound design for the modern mainstage.
-            </p>
-          </div>
-
-          {/* Quick Links */}
-          <div className="flex flex-col gap-4">
-            <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Navigation</h4>
-            <Link to="/" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Home</Link>
-            <a href="#" className="text-sm text-white/70 hover:text-white transition-colors w-fit">All Packs</a>
-            <a href="#" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Free Samples</a>
-          </div>
-
-          {/* Support & Legal */}
-          <div className="flex flex-col gap-4">
-            <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Support & Legal</h4>
-            <Link to="/legal/contact" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Contact Us</Link>
-            <Link to="/legal/privacy-policy" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Privacy Policy</Link>
-            <Link to="/legal/terms-of-service" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Terms of Service</Link>
-            <Link to="/legal/refund-policy" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Refund Policy</Link>
-          </div>
-
-          {/* Social / Contact Info */}
-          <div className="flex flex-col gap-4">
-            <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Connect</h4>
-            <a href="mailto:contact@akasounds.com" className="text-sm text-white/70 hover:text-white transition-colors w-fit">contact@akasounds.com</a>
-            <div className="flex gap-4 mt-2">
-              <a href="https://soundcloud.com/deat_aka" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-[#ff5500] transition-colors">SoundCloud</a>
-              <a href="https://www.instagram.com/aka_sounds/" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-[#E1306C] transition-colors">Instagram</a>
+            {/* Brand Column */}
+            <div className="flex flex-col gap-6">
+              <Link to="/">
+                <div className="flex items-center gap-3 text-2xl font-display font-bold tracking-tighter">
+                  <img src={logoImage} alt="AKA SOUNDS Logo" className="h-8 w-auto object-contain" />
+                  AKA SOUNDS
+                </div>
+              </Link>
+              <p className="text-white/50 text-sm leading-relaxed max-w-xs">
+                The sonic architect of a dark, futuristic underworld. Delivering the heaviest industrial sound design for the modern mainstage.
+              </p>
             </div>
+
+            {/* Quick Links */}
+            <div className="flex flex-col gap-4">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Navigation</h4>
+              <Link to="/" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Home</Link>
+              <a href="#" className="text-sm text-white/70 hover:text-white transition-colors w-fit">All Packs</a>
+              <a href="#" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Free Samples</a>
+            </div>
+
+            {/* Support & Legal */}
+            <div className="flex flex-col gap-4">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Support & Legal</h4>
+              <Link to="/legal/contact" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Contact Us</Link>
+              <Link to="/legal/privacy-policy" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Privacy Policy</Link>
+              <Link to="/legal/terms-of-service" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Terms of Service</Link>
+              <Link to="/legal/refund-policy" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Refund Policy</Link>
+            </div>
+
+            {/* Social / Contact Info */}
+            <div className="flex flex-col gap-4">
+              <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Connect</h4>
+              <a href="mailto:contact@akasounds.com" className="text-sm text-white/70 hover:text-white transition-colors w-fit">contact@akasounds.com</a>
+              <div className="flex gap-4 mt-2">
+                <a href="https://soundcloud.com/deat_aka" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-[#ff5500] transition-colors">SoundCloud</a>
+                <a href="https://www.instagram.com/aka_sounds/" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-[#E1306C] transition-colors">Instagram</a>
+              </div>
+            </div>
+
           </div>
 
-        </div>
-
-        <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-xs text-white/30">
-          <p>© {new Date().getFullYear()} AKA SOUNDS. All rights reserved.</p>
-          <p className="mt-2 md:mt-0 font-medium">100% Royalty Free Audio</p>
-        </div>
-      </footer>
+          <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between text-xs text-white/30">
+            <p>© {new Date().getFullYear()} AKA SOUNDS. All rights reserved.</p>
+            <p className="mt-2 md:mt-0 font-medium">100% Royalty Free Audio</p>
+          </div>
+        </footer>
       )}
 
       {/* Global Components */}
@@ -195,8 +195,8 @@ export default function App() {
   const [showSuccessModal, setShowSuccessModal] = useReactState(false);
 
   useEffect(() => {
-    initializePaddle({ 
-      environment: 'production', 
+    initializePaddle({
+      environment: 'production',
       token: 'live_84024e2add60d6337f992cc003a',
       eventCallback: (event) => {
         if (typeof window !== 'undefined') {
@@ -228,20 +228,20 @@ export default function App() {
       {/* Success Modal */}
       {showSuccessModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-zinc-950/90 backdrop-blur-xl">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             className="bg-black border border-white/10 p-8 rounded-3xl max-w-md w-full relative overflow-hidden"
           >
             {/* Background design */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
-            
+
             <div className="text-4xl mb-6">⚡</div>
             <h2 className="text-2xl font-display font-bold tracking-tight mb-2 uppercase">Access Granted</h2>
             <p className="text-white/70 mb-6 leading-relaxed">
               Your transaction was successful. The download link for your high-quality audio files has been generated and sent to your email.
             </p>
-            
+
             <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 mb-8">
               <p className="text-red-400 font-bold text-sm mb-1 uppercase tracking-wider">⚠️ Important Notice</p>
               <p className="text-white/80 text-sm">
@@ -249,7 +249,7 @@ export default function App() {
               </p>
             </div>
 
-            <button 
+            <button
               onClick={() => setShowSuccessModal(false)}
               className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-white/90 transition-all active:scale-95"
             >
