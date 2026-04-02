@@ -11,6 +11,18 @@ export interface FreePack {
 
 export const freePacks: FreePack[] = [
     {
+        id: 4,
+        title: "Serum 2 Hardtechno Kick",
+        description: "Unleash pure hardtechno power. A professional-grade kick designed for the heaviest warehouse sessions.",
+        image: '/PORTADAS DE SAMPLE PACKS/AkasoundsProductCover-Hardtechno.jpeg',
+        paddlePriceId: 'pri_01kn7gspy845ttqp6m8mn4jgkr',
+        features: [
+            "Serum Presets",
+            "Hardtechno Kicks",
+            "Tutorial Project Files"
+        ]
+    },
+    {
         id: 3,
         title: "Serum 2 Zaag Kick",
         description: "An exclusive free mini-pack for creating massive Zaag Kicks in Serum. Drag, drop, and destroy.",

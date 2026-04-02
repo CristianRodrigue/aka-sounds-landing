@@ -9,7 +9,13 @@ interface Tutorial {
     youtubeId: string;
 }
 
-const tutorials: Tutorial[] = [
+export const tutorials: Tutorial[] = [
+    {
+        id: '4',
+        title: 'Hardtechno Kick - Serum Tutorial',
+        description: 'Learn how to synthesize a devastating Hardtechno Kick entirely within Xfer Serum.',
+        youtubeId: '5bXTQvDmJY4'
+    },
     {
         id: '3',
         title: 'Zaag Kick - Serum Tutorial',
