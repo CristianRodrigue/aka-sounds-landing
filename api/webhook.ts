@@ -76,6 +76,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             const REVERSE_BASS_FREE_ID = 'pri_01kkwnrqgq7xcd5hhpxg99ae6p'; // Reverse Bass Kick
             const ZAAG_KICK_FREE_ID = 'pri_01kmnmnp5fr08h43fsfa2qbcqt'; // Zaag Kick
             const HARDTECHNO_KICK_FREE_ID = 'pri_01kn7gspy845ttqp6m8mn4jgkr'; // Hardtechno Kick
+            const SCREECHES_FREE_ID = 'pri_01knt149kwqhp35wa0hwb4gwqn'; // Screeches Cyan
 
             if (purchasedPriceId === PREMIUM_PRICE_ID || purchasedProductId === PREMIUM_PRICE_ID) {
                 fileName = process.env.GCP_FILE_NAME || ''; 
@@ -92,6 +93,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             } else if (purchasedPriceId === HARDTECHNO_KICK_FREE_ID || purchasedProductId === HARDTECHNO_KICK_FREE_ID) {
                 fileName = 'AKA Sounds Free Serum 2 Hardtechno Kick.zip';
                 productName = 'AKA Sounds Free Serum 2 Hardtechno Kick';
+            } else if (purchasedPriceId === SCREECHES_FREE_ID || purchasedProductId === SCREECHES_FREE_ID) {
+                fileName = 'AKA Sounds Free Serum 2 Hard Dance Screeches.zip';
+                productName = 'AKA Sounds Free Serum 2 Hard Dance Screeches';
             } else {
                 // Fallback in case ID is slightly different or not passed, assuming default product
                 fileName = process.env.GCP_FILE_NAME || ''; 

@@ -11,6 +11,18 @@ export interface FreePack {
 
 export const freePacks: FreePack[] = [
     {
+        id: 5,
+        title: "Serum 2 Hard Dance Screeches",
+        description: "Master the most aggressive sounds in Hard Dance. An exclusive free pack containing pro-grade screeches and serum presets.",
+        image: '/PORTADAS DE SAMPLE PACKS/Cover_FREE_SCREECH_Cyan.png',
+        paddlePriceId: 'pri_01knt149kwqhp35wa0hwb4gwqn',
+        features: [
+            "Serum Presets",
+            "Hard Dance Screeches",
+            "Tutorial Project Files"
+        ]
+    },
+    {
         id: 4,
         title: "Serum 2 Hardtechno Kick",
         description: "Unleash pure hardtechno power. A professional-grade kick designed for the heaviest warehouse sessions.",

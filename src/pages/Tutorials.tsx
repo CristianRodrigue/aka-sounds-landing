@@ -11,6 +11,12 @@ interface Tutorial {
 
 export const tutorials: Tutorial[] = [
     {
+        id: '5',
+        title: 'Hard Dance Screeches - Serum Tutorial',
+        description: 'Learn how to design aggressive, piercing Screeches for Hardstyle and Rawstyle within Xfer Serum.',
+        youtubeId: '1EmJVlGZBG4'
+    },
+    {
         id: '4',
         title: 'Hardtechno Kick - Serum Tutorial',
         description: 'Learn how to synthesize a devastating Hardtechno Kick entirely within Xfer Serum.',
