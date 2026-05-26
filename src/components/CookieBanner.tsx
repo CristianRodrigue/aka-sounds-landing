@@ -43,7 +43,7 @@ export default function CookieBanner() {
                                 Data for Annihilation.
                             </h3>
                             <p className="text-sm text-white/60 leading-relaxed">
-                                We use cookies to optimize your production experience on this site. No fluff, just the essentials to keep things running heavy.
+                                We use cookies to keep the site fast, stable, and tuned for the AKA SOUNDS experience.
                             </p>
                         </div>
                         <div className="flex gap-4 w-full md:w-auto">

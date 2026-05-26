@@ -40,7 +40,7 @@ function AppContent() {
   return (
 
     <div
-      className="min-h-screen bg-zinc-950 text-white selection:bg-white selection:text-black flex flex-col"
+      className="min-h-screen bg-zinc-950 text-white selection:bg-white selection:text-black flex flex-col overflow-x-hidden"
       onContextMenu={(e) => e.preventDefault()}
     >
       {/* Fixed Header Group */}
@@ -62,9 +62,9 @@ function AppContent() {
                 </Link>
 
                 <div className="hidden md:flex items-center gap-6 text-sm font-medium text-white/60">
-                  <a href="#featured" onClick={(e) => handleNavClick(e, 'featured')} className="hover:text-white transition-colors">Releases</a>
-                  <Link to="/tutorials" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">Tutorials</Link>
-                  <Link to="/free-trial" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">Free Samples</Link>
+                  <a href="#latest-release" onClick={(e) => handleNavClick(e, 'latest-release')} className="hover:text-white transition-colors">Music</a>
+                  <a href="#featured" onClick={(e) => handleNavClick(e, 'featured')} className="hover:text-white transition-colors">Sound Packs</a>
+                  <Link to="/tutorials" onClick={() => window.scrollTo(0, 0)} className="hover:text-white transition-colors">Archive</Link>
                   <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="hover:text-white transition-colors">About</a>
                 </div>
               </div>
@@ -72,11 +72,15 @@ function AppContent() {
               <div className="flex items-center gap-4">
                 <button
                   onClick={(e) => handleNavClick(e as any, 'community')}
-                  className="bg-white text-black text-sm font-bold px-5 py-2.5 rounded-full hover:bg-white/90 transition-all active:scale-95"
+                  className="hidden sm:flex bg-white text-black text-sm font-bold px-5 py-2.5 rounded-full hover:bg-white/90 transition-all active:scale-95"
                 >
-                  Join Community
+                  Join The Signal
                 </button>
-                <button className="p-2 text-white/60 hover:text-white md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                <button
+                  aria-label="Open navigation menu"
+                  className="lg:hidden flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10 transition-colors"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
                   <Menu size={20} />
                 </button>
               </div>
@@ -87,11 +91,11 @@ function AppContent() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="md:hidden bg-zinc-950/95 backdrop-blur-xl border-b border-white/10 px-6 py-6 flex flex-col gap-6 relative z-40"
+            className="lg:hidden bg-zinc-950/95 backdrop-blur-xl border-b border-white/10 px-6 py-6 flex flex-col gap-6 relative z-40"
             >
-              <a href="#featured" onClick={(e) => { handleNavClick(e, 'featured'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Releases</a>
-              <Link to="/tutorials" onClick={() => { window.scrollTo(0, 0); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Tutorials</Link>
-              <Link to="/free-trial" onClick={() => { window.scrollTo(0, 0); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Free Samples</Link>
+              <a href="#latest-release" onClick={(e) => { handleNavClick(e, 'latest-release'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Music</a>
+              <a href="#featured" onClick={(e) => { handleNavClick(e, 'featured'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Sound Packs</a>
+              <Link to="/tutorials" onClick={() => { window.scrollTo(0, 0); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">Archive</Link>
               <a href="#about" onClick={(e) => { handleNavClick(e, 'about'); setIsMenuOpen(false); }} className="text-lg font-medium text-white/80 hover:text-white transition-colors">About</a>
             </motion.div>
           )}
@@ -106,7 +110,7 @@ function AppContent() {
                 <span key={i} className="flex items-center gap-12 whitespace-nowrap">
                   <span className="flex items-center gap-2 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]">
                     <Zap size={12} fill="currentColor" className="animate-pulse" />
-                    NEW RELEASE - ZAAG TUTORIAL OUT NOW!
+                    NEW VISUAL RELEASE - WATCH THE LATEST DROP
                   </span>
                   <span className="text-red-500/30 font-serif">/</span>
                 </span>
@@ -144,7 +148,7 @@ function AppContent() {
                 </div>
               </Link>
               <p className="text-white/50 text-sm leading-relaxed max-w-xs">
-                The sonic architect of a dark, futuristic underworld. Delivering the heaviest industrial sound design for the modern mainstage.
+                The home of DEAT AKA's sound: hard electronic music, visual releases, and selected tools from the archive.
               </p>
             </div>
 
@@ -152,8 +156,8 @@ function AppContent() {
             <div className="flex flex-col gap-4">
               <h4 className="text-[11px] font-bold tracking-widest uppercase text-white/40 mb-2">Navigation</h4>
               <Link to="/" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Home</Link>
-              <a href="#" className="text-sm text-white/70 hover:text-white transition-colors w-fit">All Packs</a>
-              <a href="#" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Free Samples</a>
+              <a href="#latest-release" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Music</a>
+              <a href="#featured" className="text-sm text-white/70 hover:text-white transition-colors w-fit">Sound Packs</a>
             </div>
 
             {/* Support & Legal */}

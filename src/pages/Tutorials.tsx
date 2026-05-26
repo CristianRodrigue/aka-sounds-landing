@@ -58,10 +58,10 @@ export default function Tutorials() {
                         <Play size={28} className="text-white" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-display font-black tracking-tight text-white mb-4 uppercase">
-                        Masterclasses
+                        Archive
                     </h1>
                     <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                        Level up your production with our free YouTube tutorials. Watch the techniques and grab the free sample packs.
+                        Past production videos and tools from the original AKA SOUNDS era. Kept here for anyone still exploring the source material.
                     </p>
                 </div>
 

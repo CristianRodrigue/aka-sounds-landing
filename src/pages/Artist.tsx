@@ -22,7 +22,7 @@ const content = {
                 { year: "2016-2019", title: "ANALOG ERA", desc: "Stepped away from production to embrace the live stage, playing electric guitar, bass, and drums. Explored various genres, shifting from melodic sounds to raw aggression." },
                 { year: "2019-2023", title: "PUNK BEATDOWN", desc: "Formed a Hardcore Punk Beatdown band. Spent 4 years writing, playing, and living the relentless energy of the punk scene." },
                 { year: "2024", title: "DEAT AKA INITIATED", desc: "Originally an experiment in heavy electronic music, it quickly turned into a serious endeavor. Took advanced Hardstyle production masterclasses with Neroz Productions, mastering powerful kicks and complex composition. Found the true calling: Hard Dance and massive electronic music designed strictly for festival arenas." },
-                { year: "PRESENT", title: "AKA SOUNDS", desc: "Built AKA SOUNDS to give back. Sharing the knowledge, techniques, and aggressive sonic world with upcoming producers." }
+                { year: "PRESENT", title: "AKA SOUNDS", desc: "AKA SOUNDS expands into the full DEAT AKA universe: hard electronic music, visual releases, sonic experiments, and selected tools from the archive." }
             ]
         },
         music: { title: "TOP TRACKS", listenOn: "Listen on" },
@@ -42,7 +42,7 @@ const content = {
                 { year: "2016-2019", title: "ERA ANALÓGICA", desc: "Alejamiento de la producción para vivir la etapa artística en vivo tocando guitarra eléctrica, bajo y batería. Transición de géneros melódicos hacia lo más agresivo." },
                 { year: "2019-2023", title: "PUNK BEATDOWN", desc: "Fundación de una banda de Hardcore Punk Beatdown. 4 años inmerso en la energía pura y la brutalidad de la escena punk." },
                 { year: "2024", title: "DEAT AKA INICIADO", desc: "Inició como experimento de música fuerte y se convirtió en un proyecto serio. Clases avanzadas de producción Hardstyle con Neroz Productions, aprendiendo secretos y creación de kicks potentes. El sonido definitivo: Hard Dance y electrónica pesada masiva diseñada para festivales." },
-                { year: "PRESENTE", title: "AKA SOUNDS", desc: "Creación de AKA SOUNDS para aportar a la comunidad, compartiendo este mundo y conocimiento con nuevos productores." }
+                { year: "PRESENTE", title: "AKA SOUNDS", desc: "AKA SOUNDS se expande hacia el universo completo de DEAT AKA: música electrónica pesada, visuales, experimentos sonoros y herramientas seleccionadas del archivo." }
             ]
         },
         music: { title: "MEJORES TRACKS", listenOn: "Escuchar en" },

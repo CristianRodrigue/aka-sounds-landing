@@ -72,15 +72,15 @@ export default function Newsletter() {
                         <div className="relative z-10">
                             <h4 className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/50 mb-4 flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                                Join The Community
+                                Join The Signal
                             </h4>
 
                             <h3 className="text-2xl font-display font-bold text-white mb-3">
-                                Gain The Producer Advantage.
+                                Stay Close To The Source.
                             </h3>
 
                             <p className="text-white/60 text-sm leading-relaxed mb-8">
-                                Receive exclusive tutorials, free sample packs, and next-level sound design secrets directly to your inbox.
+                                Receive new releases, visual drops, free sounds, and selected production tools directly to your inbox.
                             </p>
 
                             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -127,7 +127,7 @@ export default function Newsletter() {
                                         className="mt-4 p-3 bg-white/10 border border-white/20 rounded-xl flex items-start gap-3"
                                     >
                                         <CheckCircle2 size={18} className="text-white shrink-0 mt-0.5" />
-                                        <span className="text-sm text-white/80">Welcome to the underground. You've been successfully added to the list.</span>
+                                        <span className="text-sm text-white/80">Welcome to the signal. You've been successfully added to the list.</span>
                                     </motion.div>
                                 )}
 

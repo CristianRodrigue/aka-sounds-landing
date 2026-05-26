@@ -29,10 +29,10 @@ export default function FreeTrial() {
                         <Download size={28} className="text-white" />
                     </div>
                     <h1 className="text-4xl md:text-5xl font-display font-black tracking-tight text-white mb-4 uppercase">
-                        Free Samples
+                        Free Sounds
                     </h1>
                     <p className="text-white/60 text-lg max-w-2xl mx-auto">
-                        High-quality, 100% royalty-free sounds to upgrade your productions immediately. No strings attached.
+                        Free drops from the AKA SOUNDS archive: sounds, presets, and tools for producers who connect with the project.
                     </p>
                 </div>
 
