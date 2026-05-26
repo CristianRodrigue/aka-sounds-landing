@@ -7,7 +7,6 @@ import { motion } from "motion/react";
 import { Menu, Zap } from "lucide-react";
 import { useState } from "react";
 import { HashRouter, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
-import logoImage from './assets/LOGO-AKA-SOUNDS-PNG.png';
 import Home from "./pages/Home";
 import Product from "./pages/Product";
 import NotFound from "./pages/NotFound";
@@ -18,6 +17,8 @@ import Artist from "./pages/Artist";
 import CookieBanner from "./components/CookieBanner";
 import { initializePaddle, Paddle } from '@paddle/paddle-js';
 import { useEffect, useState as useReactState } from "react";
+
+const logoImage = "/favicon.png";
 
 // Create an inner component to access router hooks inside HashRouter
 function AppContent() {
@@ -56,7 +57,7 @@ function AppContent() {
                     animate={{ opacity: 1, x: 0 }}
                     className="flex items-center gap-3 text-2xl font-display font-bold tracking-tighter"
                   >
-                    <img src={logoImage} alt="AKA SOUNDS Logo" className="h-8 w-auto object-contain" />
+                    <img src={logoImage} alt="" aria-hidden="true" className="h-8 w-auto object-contain shrink-0" />
                     AKA SOUNDS
                   </motion.div>
                 </Link>
@@ -143,7 +144,7 @@ function AppContent() {
             <div className="flex flex-col gap-6">
               <Link to="/">
                 <div className="flex items-center gap-3 text-2xl font-display font-bold tracking-tighter">
-                  <img src={logoImage} alt="AKA SOUNDS Logo" className="h-8 w-auto object-contain" />
+                  <img src={logoImage} alt="" aria-hidden="true" className="h-8 w-auto object-contain shrink-0" />
                   AKA SOUNDS
                 </div>
               </Link>

@@ -52,6 +52,14 @@ const content = {
 
 const tracks = [
     {
+        id: '5',
+        title: 'init',
+        spotify: 'https://open.spotify.com/intl-es/track/1zwJidnmvDWecYlAoq3uEP?si=ad89509d1b31460f',
+        soundcloud: 'https://soundcloud.com/deat_aka/init?si=53593b94ba0c471a956ef171dcc22f87&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing',
+        youtube: 'https://youtu.be/b9OFXRXgnhY?si=r4uzqJpCc8c7Rsuz',
+        image: 'https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0265fbbfe7c6e45cdabd70af52'
+    },
+    {
         id: '1', 
         title: 'This is a... F#cking Hardtechno',
         spotify: 'https://open.spotify.com/intl-es/track/1E52eF1SJPK3V8ymlRjd0h?si=53f27089d6ef427a',

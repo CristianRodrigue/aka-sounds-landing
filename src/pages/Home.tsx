@@ -91,6 +91,33 @@ export default function Home() {
                 </div>
             </main>
 
+            {/* Latest Visual Release Player */}
+            <section className="py-20 relative bg-zinc-950 text-white border-b border-white/5">
+                <div className="max-w-6xl mx-auto px-6">
+                    <div className="mb-10 text-center flex flex-col items-center">
+                        <div className="bg-red-500 text-white text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded-full mb-3 shadow-[0_0_15px_rgba(255,0,0,0.5)]">
+                            Official Visualizer
+                        </div>
+                        <h2 className="text-3xl md:text-5xl font-display font-black tracking-tighter uppercase mb-3">
+                            Watch The Latest Drop
+                        </h2>
+                        <p className="text-white/60 font-medium md:text-lg max-w-2xl">
+                            DEAT AKA - init. The visual statement opening the next direction of AKA SOUNDS.
+                        </p>
+                    </div>
+
+                    <div className="w-full aspect-video rounded-[2rem] overflow-hidden border border-white/10 relative bg-black shadow-[0_0_50px_rgba(255,0,0,0.15)]">
+                        <iframe
+                            className="absolute inset-0 h-full w-full"
+                            src="https://www.youtube.com/embed/b9OFXRXgnhY?rel=0&modestbranding=1&playsinline=1"
+                            title="DEAT AKA - init official visualizer"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                        />
+                    </div>
+                </div>
+            </section>
+
             {/* Community Statement / Demo Submissions */}
             <section className="relative bg-zinc-950 text-white py-24 border-y border-white/5 overflow-hidden">
                 <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
@@ -112,7 +139,7 @@ export default function Home() {
                             </p>
 
                             <p className="text-white/60 text-base md:text-lg leading-relaxed max-w-3xl">
-                                Not only sample packs. A hub for hard electronic music, intense visual identity, and underground creators with a real point of view.
+                                Not a label, not a roster, and not a free upload channel. AKA SOUNDS is a curated visual platform for hard electronic music, underground premieres, and creators with a real point of view.
                             </p>
                         </div>
 
@@ -124,6 +151,8 @@ export default function Home() {
                             <span>Community</span>
                             <span>/</span>
                             <span>Curated Demos</span>
+                            <span>/</span>
+                            <span>Non-Exclusive Features</span>
                         </div>
                     </motion.div>
 
@@ -142,16 +171,21 @@ export default function Home() {
                                 Submit Your Demo
                             </h2>
                             <p className="text-black/60 leading-relaxed mb-6">
-                                If you want your track to be considered for an AKA SOUNDS visual feature, send your demo and concept to the email below.
+                                If you want your track to be considered for an AKA SOUNDS visual premiere, send your demo, artist name, links, and concept to the email below.
                             </p>
                             <div className="border-y border-black/10 py-5 mb-6">
                                 <a href="mailto:contact@akasounds.com" className="text-lg md:text-xl font-display font-black tracking-tight hover:opacity-60 transition-opacity">
                                     contact@akasounds.com
                                 </a>
                             </div>
-                            <p className="text-sm text-black/50 leading-relaxed">
-                                Quality and creativity are required. Generic demos will not be considered.
+                            <p className="text-sm text-black/50 leading-relaxed mb-5">
+                                Quality, originality, and visual direction are required. Generic demos will not be considered.
                             </p>
+                            <div className="grid grid-cols-1 gap-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black/45">
+                                <span>No distribution or label deal implied.</span>
+                                <span>Artists keep their rights.</span>
+                                <span>Selected features require written permission for YouTube, AKA SOUNDS, and social media use.</span>
+                            </div>
                         </div>
 
                         <a
@@ -338,11 +372,11 @@ export default function Home() {
                             </div>
 
                             <Link 
-                                to="/free-trial"
+                                to="/deat_aka"
                                 onClick={() => window.scrollTo(0,0)}
                                 className="mt-8 w-full border border-black/20 text-black px-8 py-4 uppercase tracking-[0.2em] font-bold text-xs text-center hover:bg-black hover:text-white transition-colors rounded-xl"
                             >
-                                Explore Free Sounds →
+                                Enter DEAT AKA Profile →
                             </Link>
                         </div>
 
