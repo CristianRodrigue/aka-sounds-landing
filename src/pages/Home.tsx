@@ -50,7 +50,7 @@ export default function Home() {
 
                         <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-display font-extrabold tracking-tighter leading-[0.9] mb-8 uppercase select-none">
                             AKA SOUNDS <br />
-                            <span className="text-white/40 drop-shadow-[0_0_35px_rgba(255,255,255,0.05)]">Beyond Samples.</span>
+                            <span className="text-white/40 drop-shadow-[0_0_35px_rgba(255,255,255,0.05)]">Visual Signal.</span>
                         </h1>
 
                         <p className="text-base md:text-lg lg:text-xl text-white/70 max-w-2xl mb-12 leading-relaxed">
