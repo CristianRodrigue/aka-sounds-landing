@@ -73,20 +73,6 @@ export default function Home() {
                             </button>
                         </div>
 
-                        <div className="mt-8 flex items-center gap-8 opacity-60 hover:opacity-100 transition-all">
-                            <div className="text-xs font-bold tracking-widest uppercase text-white/40">Signal path:</div>
-                            <div className="flex flex-wrap gap-4 md:gap-6 items-center justify-center">
-                                <span className="font-display font-bold text-base md:text-lg tracking-wider hover:text-red-500 transition-colors cursor-pointer">VIDEO</span>
-                                <span className="text-white/20">/</span>
-                                <span className="font-display font-bold text-base md:text-lg tracking-wider hover:text-red-500 transition-colors cursor-pointer">MUSIC</span>
-                                <span className="text-white/20">/</span>
-                                <span className="font-display font-bold text-base md:text-lg tracking-wider hover:text-red-500 transition-colors cursor-pointer">VISUALS</span>
-                                <span className="text-white/20">/</span>
-                                <span className="font-display font-bold text-base md:text-lg tracking-wider hover:text-red-500 transition-colors cursor-pointer">TUTORIALS</span>
-                                <span className="text-white/20">/</span>
-                                <span className="font-display font-bold text-base md:text-lg tracking-wider hover:text-red-500 transition-colors cursor-pointer">TOOLS</span>
-                            </div>
-                        </div>
                     </motion.div>
                 </div>
             </main>
