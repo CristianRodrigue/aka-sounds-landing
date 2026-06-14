@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ShoppingCart, Search, Play, ChevronRight, Zap, Instagram, CloudLightning, Music2, Mail } from "lucide-react";
+import { ShoppingCart, Search, Play, ChevronRight, Zap, Instagram, CloudLightning, Music2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { products } from "../data/products";
 import deatPortrait from "../assets/deat_portrait.png";
@@ -104,15 +104,15 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Community Statement / Demo Submissions */}
+            {/* Community Statement */}
             <section className="relative bg-zinc-950 text-white py-24 border-y border-white/5 overflow-hidden">
                 <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
-                <div className="max-w-6xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-10 items-stretch">
+                <div className="max-w-5xl mx-auto px-6 relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="border border-white/10 bg-white/[0.03] rounded-[2rem] p-8 md:p-12 flex flex-col justify-between"
+                        className="border border-white/10 bg-white/[0.03] rounded-[2rem] p-8 md:p-12 flex flex-col items-center text-center"
                     >
                         <div>
                             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-400 text-[10px] tracking-[0.2em] font-bold uppercase mb-8">
@@ -125,61 +125,19 @@ export default function Home() {
                             </p>
 
                             <p className="text-white/60 text-base md:text-lg leading-relaxed max-w-3xl">
-                                Not a label, not a roster, and not a free upload channel. AKA SOUNDS is a curated visual platform for hard electronic music, underground premieres, and creators with a real point of view.
+                                AKA SOUNDS is a curated visual platform for hard electronic music, intense visual identity, and selected production tools. The focus is quality, atmosphere, and a consistent underground universe.
                             </p>
                         </div>
 
-                        <div className="mt-10 pt-8 border-t border-white/10 flex flex-wrap gap-3 text-[10px] font-bold tracking-[0.2em] uppercase text-white/40">
+                        <div className="mt-10 pt-8 border-t border-white/10 flex flex-wrap justify-center gap-3 text-[10px] font-bold tracking-[0.2em] uppercase text-white/40">
                             <span>Hard Dance</span>
                             <span>/</span>
                             <span>Visualizers</span>
                             <span>/</span>
-                            <span>Community</span>
+                            <span>Sound Tools</span>
                             <span>/</span>
-                            <span>Curated Demos</span>
-                            <span>/</span>
-                            <span>Non-Exclusive Features</span>
+                            <span>Underground Media</span>
                         </div>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-white text-black rounded-[2rem] p-8 md:p-10 flex flex-col justify-between"
-                    >
-                        <div>
-                            <div className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center mb-8">
-                                <Mail size={20} />
-                            </div>
-                            <h2 className="text-3xl md:text-4xl font-display font-black tracking-tight uppercase mb-5">
-                                Submit Your Demo
-                            </h2>
-                            <p className="text-black/60 leading-relaxed mb-6">
-                                If you want your track to be considered for an AKA SOUNDS visual premiere, send your demo, artist name, links, and concept to the email below.
-                            </p>
-                            <div className="border-y border-black/10 py-5 mb-6">
-                                <a href="mailto:contact@akasounds.com" className="text-lg md:text-xl font-display font-black tracking-tight hover:opacity-60 transition-opacity">
-                                    contact@akasounds.com
-                                </a>
-                            </div>
-                            <p className="text-sm text-black/50 leading-relaxed mb-5">
-                                Quality, originality, and visual direction are required. Generic demos will not be considered.
-                            </p>
-                            <div className="grid grid-cols-1 gap-2 text-[11px] font-bold uppercase tracking-[0.12em] text-black/45">
-                                <span>No distribution or label deal implied.</span>
-                                <span>Artists keep their rights.</span>
-                                <span>Selected features require written permission for YouTube, AKA SOUNDS, and social media use.</span>
-                            </div>
-                        </div>
-
-                        <a
-                            href="mailto:contact@akasounds.com?subject=AKA%20SOUNDS%20Demo%20Submission"
-                            className="mt-8 w-full inline-flex items-center justify-center gap-3 bg-black text-white font-extrabold text-sm uppercase tracking-widest px-8 py-4 rounded-xl hover:bg-black/90 transition-all active:scale-95"
-                        >
-                            Send Demo
-                        </a>
                     </motion.div>
                 </div>
             </section>
@@ -307,7 +265,7 @@ export default function Home() {
                                     <span className="w-8 h-[1px] bg-white/20"></span> The Direction
                                 </h4>
                                 <p className="text-white/60 text-sm leading-relaxed mb-8">
-                                    AKA SOUNDS is becoming a curated space for the hard dance universe: heavy electronic music, visual releases, selected demos, and production tools for artists who care about identity as much as impact.
+                                    AKA SOUNDS is becoming a curated space for the hard dance universe: heavy electronic music, visual releases, and production tools for artists who care about identity as much as impact.
                                 </p>
                                 <p className="text-white/50 text-sm leading-relaxed">
                                     Founded and curated by DEAT AKA, the platform keeps the original sample-pack archive alive while opening the door to a wider community of producers and visual-minded creators.
@@ -339,7 +297,7 @@ export default function Home() {
                         <div className="p-12 md:p-16 flex flex-col justify-between bg-zinc-100 text-black">
                             <div className="mb-12 text-right md:text-left">
                                 <p className="text-black/70 text-sm leading-relaxed font-medium">
-                                    The standard is simple: hard sound, strong visual direction, real creative intention. Demo submissions are welcome, but only quality and originality move forward.
+                                    The standard is simple: hard sound, strong visual direction, and a consistent creative universe.
                                 </p>
                             </div>
 
