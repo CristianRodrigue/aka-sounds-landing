@@ -43,9 +43,9 @@ flowchart LR
 
 | Area | Current implementation | Observation / boundary |
 |---|---|---|
-| Public frontend | `src/`, Vite, React Router hash routes | Published by GitHub Actions over FTP; `dist/` is tracked. |
-| Public domain | `akasounds.com` A records and `www` CNAME to the current CDN host were read-only resolved | DNS was inspected only; no record was changed. |
-| Backend | `api/webhook.ts` on a separate Vercel project | This is the live Paddle delivery endpoint, not evidence that the public frontend is served by Vercel. |
+| Public frontend | `src/`, Vite, React Router hash routes | Published by GitHub Actions over FTP to Hostinger; `akasounds.com` is the current frontend production. `dist/` is tracked. |
+| Public domain | `akasounds.com` A records and `www` CNAME to the current Hostinger CDN host were read-only resolved | DNS was inspected only; no record was changed. |
+| Backend | `api/webhook.ts` on the existing Vercel project | This is current backend production for Paddle delivery, not the public frontend host. |
 | Checkout fulfillment | Paddle event → customer lookup → GCS signed URL → Resend and MailerLite | Server-only responsibilities; credentials must remain outside source. |
 | Newsletter | Browser posts to Google Apps Script using `no-cors` | The browser cannot inspect the final service response; this should be replaced behind a server boundary in G2, not in G1A. |
 | Measurement | `src/utils/analytics.ts`, invoked after cookie-consent flow | Browser-only and consent-gated; identifiers must remain configuration, not source literals. |
@@ -241,3 +241,7 @@ Delete neither the Vite application nor the tracked legacy deployment artifacts 
 **G1A STATUS: PASS**
 
 The approved architectural direction is an isolated `v2/` Next.js App Router migration, previewed separately and cut over only through a future human-approved gate. G1B may begin only after human review of this document. G2, UI redesign, Next.js installation, deployment, DNS, Vercel production changes, and any commerce-side modification were **not** started by G1A.
+
+## Human Review Amendment — Gate Governance
+
+G1A architecture has been approved by human review. The AKA SOUNDS V2 MASTER PLAN remains the authoritative gate sequence; the migration table above is implementation guidance only and does not redefine it. G2 remains **Commerce / Backend P0**, G3 remains **Brand Foundation**, and visual design is explicitly outside G1B. G1B is architecture scaffold only.
