@@ -2,9 +2,9 @@
 
 ## Result
 
-**G1B STATUS: BLOCKED — PREVIEW INVESTIGATION COMPLETE**
+**G1B STATUS: PASS**
 
-The isolated local scaffold is complete and validates successfully. The external preview portion is blocked: the new isolated Vercel project was created without domains or environment variables, but its first deployment is `ERROR`. Vercel reports its target as `production` for that new project because the CLI deployment used the project's default production target; this is not the Hostinger frontend or the existing Vercel backend. No retry, promotion, domain operation, or existing-project change was made. Human review is required before any follow-up.
+The isolated local scaffold and corrected Vercel Preview both validate successfully. The first deployment failed, was investigated, and was recovered without affecting Hostinger or the existing Vercel backend.
 
 ## Starting baseline
 
@@ -90,15 +90,28 @@ Next emits a non-fatal local warning because the repository intentionally has tw
 - Environment variables: none configured by this gate
 - Paddle, MailerLite, Resend, GCS: not connected or configured
 - First deployment ID: `dpl_46v1hqxs3Een8B2yykuqx16YFdjN`
-- Deployment result: **ERROR**
-- Preview URL: unavailable as a valid preview; do not use the failed deployment URL
+- Deployment result: **ERROR** — historical first attempt
+- Preview URL: unavailable for the historical failed attempt; do not use that failed URL
 
-Root cause: the new project had `framework: null` and no explicit build/output settings. The remote Next build completed, but Vercel then applied static output handling and failed with `STATIC_BUILD_NO_OUT_DIR`: it looked for an output directory named `public`, which this Next App Router project does not produce. The deployment was also classified as `target: production` because the CLI command used the new project's default target; it did not touch Hostinger or the existing backend Vercel project. No route checks were accepted from the failed deployment and no retry, promotion, settings change, or cleanup action was attempted.
+Root cause: the new project had `framework: null` and no explicit build/output settings. The remote Next build completed, but Vercel then applied static output handling and failed with `STATIC_BUILD_NO_OUT_DIR`: it looked for an output directory named `public`, which this Next App Router project does not produce. The failed deployment was classified as `target: production` inside the new isolated project; it did not touch Hostinger or the existing backend Vercel project. At that point no route checks were accepted and no retry or promotion had yet been attempted.
 
 ### Production-impact checks
 
 HOSTINGER AKA SOUNDS MODIFIED: NO  
 EXISTING VERCEL BACKEND MODIFIED: NO
+
+## G1B-R — Vercel Preview Recovery
+
+- First failure root cause: the new Vercel project had `framework: null`; after the Next build completed, Vercel applied static output handling and raised `STATIC_BUILD_NO_OUT_DIR` while looking for `public`.
+- Fix: added `v2/vercel.json` with the Next.js framework declaration: `"framework": "nextjs"`.
+- Successful deployment ID: `dpl_Dmzu1DpqMNGQTJz78sVxoYGXdkzM`
+- Successful preview URL: `https://aka-sounds-v2-preview-d0uy7r7ac-rodriguezcami09-6937s-projects.vercel.app`
+- Target: `preview`
+- State: `READY`
+- Route validation: **PASS** — requested static routes, dynamic fixtures, Lab, legal routes, and 404.
+- HOSTINGER AKA SOUNDS MODIFIED: **NO**
+- EXISTING VERCEL BACKEND MODIFIED: **NO**
+- MAIN MODIFIED: **NO**
 
 ## Files changed outside `v2/`
 
@@ -107,6 +120,10 @@ EXISTING VERCEL BACKEND MODIFIED: NO
 
 No existing production runtime file was modified: `src/**`, `api/webhook.ts`, `public/**`, `dist/**`, `.github/workflows/deploy.yml`, root dependencies, DNS, the existing Vercel project, Paddle, MailerLite, Resend, and GCS remain untouched. Hostinger and `akasounds.com` were not deployed to or changed.
 
-## Recommendation
+## Final conclusion
 
-Do not begin G2, G3, design, or another subgate. Human review must decide how to handle the failed new-project deployment before G1B can be closed. The local scaffold itself is ready for review; no production-facing action should be retried automatically.
+G1B STATUS: PASS
+
+SAFE FOR HUMAN G1B REVIEW
+
+G2 and G3 were not started. No additional deployment was performed after the successful isolated preview recovery.
