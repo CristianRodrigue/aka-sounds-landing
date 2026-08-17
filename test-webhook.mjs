@@ -1,9 +1,13 @@
 import crypto from 'crypto';
 
-const webhookSecret = 'pdl_wh_sec_ca7b2ece41c7b889db4c8eb5b62bafb6028638b2dd295c2ecde0a9c80d507b9a'; // From previous context 
-const vercelApiUrl = 'https://aka-sounds-landing.vercel.app/api/webhook'; // Assuming this is the vercel app URL
-// Let's use the user's email or a test email
-const testEmail = 'support@akasounds.com';
+const webhookSecret = process.env.PADDLE_WEBHOOK_SECRET;
+const vercelApiUrl = process.env.PADDLE_WEBHOOK_TEST_URL;
+const testEmail = process.env.PADDLE_WEBHOOK_TEST_EMAIL || 'test@example.invalid';
+
+if (!webhookSecret || !vercelApiUrl) {
+    console.error('PADDLE_WEBHOOK_SECRET and PADDLE_WEBHOOK_TEST_URL are required.');
+    process.exit(1);
+}
 
 const payload = {
     event_id: 'evt_test_123',
