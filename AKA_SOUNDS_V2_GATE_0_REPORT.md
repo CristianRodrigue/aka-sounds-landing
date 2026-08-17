@@ -218,3 +218,53 @@ The local security work is committed and backed up remotely. It is safe to revie
 **G0A STATUS: PASS**
 
 **SAFE TO REVIEW G0A BEFORE CONTINUING GATE 0**
+
+## G0B — PRE-V2 BASELINE FINALIZATION
+
+### Immutable production baseline
+
+| Item | Result |
+|---|---|
+| Production main SHA | `f98a2a2bf41d13c1698d350ec70755932cddb0ad` |
+| PRE-V2 backup tag | `backup/aka-sounds-production-pre-v2-20260817` |
+| Tag target | Exact production SHA above |
+| Tag remote backup | PASS — pushed to `origin` |
+| Security-preserved V2 base SHA | `90e4255860ecbc27035572430c39dedab7151fc0` |
+
+The production backup tag is annotated as `ORIGINAL AKA SOUNDS PRODUCTION BEFORE V2 REDESIGN`. No existing tag was overwritten.
+
+### Official V2 branch
+
+| Item | Result |
+|---|---|
+| Branch | `redesign/aka-sounds-v2` |
+| Created from | Exactly `90e4255860ecbc27035572430c39dedab7151fc0` |
+| Remote branch | `origin/redesign/aka-sounds-v2` |
+| Upstream tracking | PASS |
+| Baseline V2 HEAD | `90e4255860ecbc27035572430c39dedab7151fc0` before this documentation-only closure commit |
+
+The approved security-preserved baseline is two commits ahead of production `main`, with no divergence. It contains the original source, security test remediation, audit documentation, and CodeGraph ignore policy; it contains no V2 redesign work.
+
+### Validation on V2 baseline
+
+| Check | Result |
+|---|---|
+| `npm run build` | PASS — TypeScript and Vite build complete |
+| CodeGraph | PASS — 27 files, 188 nodes, 266 edges; index up to date |
+| `.codegraph/` handling | PASS — local index remains ignored |
+| `main` modified | NO |
+| Production deployment | NO |
+| Vercel Production settings modified | NO |
+| G1 started | NO |
+
+No UI, runtime application behavior, Vercel production configuration, or production deployment was modified during G0B.
+
+### Gate closure
+
+G0B created the immutable production recovery point and the official V2 development line. This report update is documentation-only on `redesign/aka-sounds-v2`; it does not alter the frozen baseline content.
+
+**GATE 0 STATUS: PASS**
+
+**SAFE TO START GATE 1 AFTER HUMAN REVIEW**
+
+STOP. G1 has not been started.
