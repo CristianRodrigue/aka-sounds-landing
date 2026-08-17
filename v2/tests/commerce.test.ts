@@ -10,20 +10,8 @@ import { verifyPaddleSignature } from "../lib/commerce/signature";
 import { canTransition, isDuplicateReceipt } from "../lib/commerce/state";
 import { validateNewsletterRequest } from "../lib/commerce/newsletter";
 import { submitNewsletter } from "../lib/commerce/newsletter";
-import type { CommerceModel, NormalizedTransaction, Offer } from "../lib/commerce/types";
+import type { NormalizedTransaction, Offer } from "../lib/commerce/types";
 
-function verifiedModel(): CommerceModel {
-  return {
-    products: canonicalCommerceModel.products,
-    offers: canonicalOffers.map((offer, index): Offer => ({
-      ...offer,
-      paddleProductId: "pro_test_" + index,
-      verification: "verified",
-      availability: "active",
-    })),
-    fulfillmentPolicies: canonicalCommerceModel.fulfillmentPolicies,
-  };
-}
 
 function transactionFor(offer: Offer, productId: string | null = offer.paddleProductId): NormalizedTransaction {
   return {
@@ -44,6 +32,15 @@ function signatureFor(rawBody: string, secret: string, timestamp = 1_700_000_000
   return "ts=" + timestamp + ";h1=" + hash;
 }
 
+const verifiedRelations = [
+  { priceId: "pri_01kk855x7wk29gv2d4hgz60k63", productId: "pro_01kk852aee3nqfj046d1ht4wb5" },
+  { priceId: "pri_01kkd2y0pdsxvg234s8zvfshqj", productId: "pro_01kkd2v46gh17agp418540s9b7" },
+  { priceId: "pri_01kkwnrqgq7xcd5hhpxg99ae6p", productId: "pro_01kkwhw131933xnm3c8yhcqrps" },
+  { priceId: "pri_01kmnmnp5fr08h43fsfa2qbcqt", productId: "pro_01kmnmhnth6nz30geqrfrfvj82" },
+  { priceId: "pri_01kn7gspy845ttqp6m8mn4jgkr", productId: "pro_01kn7gqyc33erxrypv628qak5t" },
+  { priceId: "pri_01knt149kwqhp35wa0hwb4gwqn", productId: "pro_01knt11by8qqzskg701zgd7k2c" },
+] as const;
+
 describe("G2A canonical commerce model", () => {
   it("contains a valid policy for every current offer", () => {
     assert.deepEqual(validateCommerceModel(canonicalCommerceModel), []);
@@ -53,9 +50,16 @@ describe("G2A canonical commerce model", () => {
     }
   });
 
-  it("fulfills every current offer exactly once when a verified product relation is supplied", () => {
-    const model = verifiedModel();
-    for (const offer of model.offers) {
+  it("fulfills every current offer exactly once against live Price/Product pairs", () => {
+    const model = canonicalCommerceModel;
+    assert.equal(model.offers.length, verifiedRelations.length);
+    for (const relation of verifiedRelations) {
+      const offer = model.offers.find((candidate) => candidate.paddlePriceId === relation.priceId);
+      assert.ok(offer);
+      assert.equal(offer.paddlePriceId, relation.priceId);
+      assert.equal(offer.paddleProductId, relation.productId);
+      assert.equal(offer.verification, "verified");
+      assert.equal(offer.availability, "active");
       const result = decideFulfillment(transactionFor(offer), model);
       assert.equal(result.decision, "FULFILL");
       if (result.decision === "FULFILL") assert.equal(result.offerId, offer.id);
@@ -63,7 +67,7 @@ describe("G2A canonical commerce model", () => {
   });
 
   it("rejects unknown prices without falling back to premium", () => {
-    const model = verifiedModel();
+    const model = canonicalCommerceModel;
     const result = decideFulfillment(
       { ...transactionFor(model.offers[0]), items: [{ priceId: "pri_unknown", productId: "pro_unknown", quantity: 1 }] },
       model,
@@ -72,7 +76,7 @@ describe("G2A canonical commerce model", () => {
   });
 
   it("rejects the historical premium webhook price instead of treating it as premium", () => {
-    const model = verifiedModel();
+    const model = canonicalCommerceModel;
     const offer = model.offers[0];
     const result = decideFulfillment(
       { ...transactionFor(offer), items: [{ priceId: "pri_01kkcjshgdd9p0yqgexv3nrt2f", productId: offer.paddleProductId, quantity: 1 }] },
@@ -81,8 +85,8 @@ describe("G2A canonical commerce model", () => {
     assert.deepEqual(result, { decision: "REJECT", reason: "UNKNOWN_PRICE" });
   });
 
-  it("rejects product/price mismatches, missing products, and blocked production relations", () => {
-    const model = verifiedModel();
+  it("rejects product/price mismatches and missing products for verified offers", () => {
+    const model = canonicalCommerceModel;
     const offer = model.offers[0];
     assert.deepEqual(
       decideFulfillment(transactionFor(offer, "pro_wrong"), model),
@@ -92,9 +96,16 @@ describe("G2A canonical commerce model", () => {
       decideFulfillment(transactionFor(offer, null), model),
       { decision: "REJECT", reason: "MISSING_PRODUCT", offerId: offer.id },
     );
+    const blockedOffer: Offer = {
+      ...offer,
+      paddleProductId: null,
+      verification: "blocked",
+      availability: "unverified",
+    };
+    const blockedModel = { ...model, offers: [blockedOffer, ...model.offers.slice(1)] };
     assert.deepEqual(
-      decideFulfillment(transactionFor(canonicalOffers[0], null), canonicalCommerceModel),
-      { decision: "REJECT", reason: "UNVERIFIED_PRODUCT_MAPPING", offerId: canonicalOffers[0].id },
+      decideFulfillment(transactionFor(blockedOffer, null), blockedModel),
+      { decision: "REJECT", reason: "UNVERIFIED_PRODUCT_MAPPING", offerId: blockedOffer.id },
     );
   });
 });

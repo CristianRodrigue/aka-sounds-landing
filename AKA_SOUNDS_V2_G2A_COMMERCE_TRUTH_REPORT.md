@@ -25,7 +25,7 @@ VERIFIED:
 - Hostinger remains the current public frontend host.
 - The existing Vercel project remains the backend host for the legacy /api/webhook.
 
-VERIFIED: CodeGraph was used before and after the implementation. Final index status: 62 files, 378 nodes, 619 edges, index up to date.
+VERIFIED: CodeGraph was used before and after the implementation. Final index status: 61 files, 374 nodes, 620 edges, index up to date.
 
 ## 2. Production topology preserved
 
@@ -55,7 +55,7 @@ VERIFIED: The legacy webhook has no durable event-id receipt. Unknown price/prod
 
 ## 4. Product / Price ID matrix
 
-Paddle Product ID values are marked BLOCKED because the available production API key returned 403 on the read-only price lookups needed to resolve the product relationship. No Product ID has been invented.
+HISTORICAL G2A SNAPSHOT (preserved): Paddle Product ID values were marked BLOCKED because the previously available production API key returned 403 on the read-only price lookups needed to resolve the product relationship. No Product ID was invented. See G2A-R below for the verified live matrix.
 
 | Offer / internal slug | Display title | Kind | Current frontend Price ID | Legacy webhook mapping ID | Paddle Product ID | Fulfillment object | Email subject | Status / route |
 |---|---|---|---|---|---|---|---|---|
@@ -72,7 +72,7 @@ VERIFIED from legacy source: The premium object key is only determinable as the 
 
 ## 5. Paddle live verification
 
-BLOCKED: A read-only GET request was attempted for each current frontend Price ID and the historical premium webhook Price ID through the production environment already configured on the existing Vercel backend. No secret or response body was printed.
+HISTORICAL BLOCKED STATE (preserved): A read-only GET request was attempted for each current frontend Price ID and the historical premium webhook Price ID through the production environment already configured on the existing Vercel backend. No secret or response body was printed.
 
 Observed safe result summary:
 
@@ -80,7 +80,7 @@ Observed safe result summary:
 - Historical premium webhook Price ID: HTTP 404 from the same lookup.
 - Product ID, price status, product status, and product name could not be safely resolved from the available API permission.
 
-BLOCKED: PADDLE LIVE VERIFICATION remains BLOCKED. The source mismatch is enough to keep the premium risk open; this report does not claim which ID is the expected production offer, nor whether the historical ID ever represented a legitimate offer.
+HISTORICAL BLOCKED STATE (preserved): PADDLE LIVE VERIFICATION remained BLOCKED. The source mismatch kept the premium risk open; the later G2A-R evidence is recorded below and does not infer historical legitimacy.
 
 Official references:
 
@@ -100,7 +100,7 @@ VERIFIED implementation in v2/lib/commerce:
 
 VERIFIED: The model contains six current offers and six fulfillment policies. No duplicated switch/case mapping was added. The old webhook switch remains untouched and is explicitly treated as legacy risk.
 
-BLOCKED: Because live Product ID relations were not readable, the production model stores null Product IDs, verification blocked, and availability unverified. A real transaction cannot fulfill through this model until a verified Product/Price relationship is supplied.
+HISTORICAL BLOCKED STATE (preserved): Because live Product ID relations were not readable at the time, the production model stored null Product IDs, verification blocked, and availability unverified. G2A-R now records the verified current relations below.
 
 VERIFIED: No V2 app page, client component, or public route imports the server fulfillment policy module. No V2 checkout integration or active provider SDK path was added.
 
@@ -349,7 +349,7 @@ VERIFIED:
 
 ## 21. Open risks
 
-BLOCKED: Production Paddle Product/Price verification remains open because the available production API credential did not permit the required read-only catalog lookup.
+HISTORICAL BLOCKED STATE (preserved): Production Paddle Product/Price verification was open because the previously available production API credential did not permit the required read-only catalog lookup. G2A-R supersedes this current-state finding for the six verified offers.
 
 VERIFIED: The premium frontend Price ID and legacy webhook Price ID differ.
 
@@ -371,13 +371,48 @@ PROPOSED G2B only:
 
 G2B must not merge or cut over the legacy production webhook without a separate human approval.
 
+## G2A-R — Paddle Live Catalog Verification
+
+VERIFIED: On 2026-08-17, the six current frontend Price IDs and the historical legacy premium Price ID were queried with the temporary Paddle API key supplied for this recovery. The key was passed through stdin to an ephemeral process, held only in memory, and never printed, written to a file, added to Vercel, added to Git, or used after the read-only queries.
+
+VERIFIED: Only GET requests to Paddle Prices and Products endpoints were used. No Paddle write endpoint, checkout, notification-setting mutation, or production integration was performed.
+
+### Verified live Product / Price matrix
+
+| Current offer | Price ID | Price status | Product ID | Product status | Price details | Product name | Classification |
+|---|---|---|---|---|---|---|---|
+| Hardtechno Essentials Vol. 1 | pri_01kk855x7wk29gv2d4hgz60k63 | active | pro_01kk852aee3nqfj046d1ht4wb5 | active | USD 2999, one-time, Base Price | AKA Sounds - Hardtechno Essentials Vol. 1 | ACTIVE CURRENT |
+| Hardtechno Essentials Vol. 1 Free Trial | pri_01kkd2y0pdsxvg234s8zvfshqj | active | pro_01kkd2v46gh17agp418540s9b7 | active | USD 0, one-time, FREE TRIAL | AKA Sounds - Hardtechno Essentials Vol. 1 Free Trial. | ACTIVE CURRENT |
+| Serum 2 Reverse Bass Kick | pri_01kkwnrqgq7xcd5hhpxg99ae6p | active | pro_01kkwhw131933xnm3c8yhcqrps | active | USD 0, one-time, Free Lead Magnet - Reverse Bass Expansion Vol. 1 | AKA Sounds - Free Serum 2 Reverse Bass Kick | ACTIVE CURRENT |
+| Serum 2 Zaag Kick | pri_01kmnmnp5fr08h43fsfa2qbcqt | active | pro_01kmnmhnth6nz30geqrfrfvj82 | active | USD 0, one-time, Free Lead Magnet - Zaag Expansion Vol. 1 | AKA Sounds - Free Serum 2 Zaag Kick | ACTIVE CURRENT |
+| Serum 2 Hardtechno Kick | pri_01kn7gspy845ttqp6m8mn4jgkr | active | pro_01kn7gqyc33erxrypv628qak5t | active | USD 0, one-time, Free Lead Magnet - Hardtechno Expansion Vol. 1 | AKA Sounds - Free Serum 2 Hardtechno Kick | ACTIVE CURRENT |
+| Serum 2 Hard Dance Screeches | pri_01knt149kwqhp35wa0hwb4gwqn | active | pro_01knt11by8qqzskg701zgd7k2c | active | USD 0, one-time, Free Lead Magnet - Hard Dance Screech Expansion Vol. 1 | AKA Sounds - Free Serum 2 Hard Dance Screech | ACTIVE CURRENT |
+| Historical legacy premium mapping | pri_01kkcjshgdd9p0yqgexv3nrt2f | NOT FOUND, HTTP 404 | not returned | not queried | no live Price object returned | not queried | NOT FOUND |
+
+VERIFIED: Each of the six current Price objects returned its requested Price ID, an active status, USD currency, a one-time billing shape, and a Product ID. Each distinct returned Product ID was then queried directly and returned HTTP 200, the same Product ID, an active status, and the product name shown above.
+
+VERIFIED: The current frontend premium Price ID is active and belongs to the active product pro_01kk852aee3nqfj046d1ht4wb5. The historical legacy webhook Price ID is not found by the live Prices endpoint.
+
+RESOLVED FOR CURRENT PRODUCTION BEHAVIOR: the active current offer is the frontend Price ID pri_01kk855x7wk29gv2d4hgz60k63. The historical ID remains metadata only and is not an active V2 fulfillment alias.
+
+BLOCKED HISTORICAL QUESTION: the 404 result does not establish whether the historical ID was ever legitimate in the past. No historical legitimacy is inferred from the current response.
+
+### G2A-R model and test outcome
+
+VERIFIED: The canonical V2 model now contains all six live Product IDs, verification: verified, and availability: active. Historical premium mapping remains in historicalPriceIds only.
+
+VERIFIED: Commerce tests now assert every real current Price ID against its corresponding real Product ID, then run fulfillment with that exact pair. A correct Price ID with a wrong Product ID rejects with PRICE_PRODUCT_MISMATCH.
+
+VERIFIED: G2A-R did not modify api/webhook.ts, Hostinger, the existing Vercel backend, production Paddle settings, MailerLite, Resend, GCP, or Vercel Preview.
+
+
 ## Final gate result
 
-PADDLE LIVE VERIFICATION: BLOCKED
+PADDLE LIVE VERIFICATION: PASS
 
-CANONICAL PRODUCT MODEL: PASS — implementation complete; live Product IDs remain blocked
+CANONICAL PRODUCT MODEL: PASS — all six current Price/Product relations verified live
 
-PREMIUM ID MISMATCH STATUS: BLOCKED / OPEN
+PREMIUM ID MISMATCH STATUS: RESOLVED FOR CURRENT PRODUCTION BEHAVIOR
 
 UNKNOWN PRODUCT FALLBACK: PASS — explicit REJECT, no premium fallback
 
@@ -419,8 +454,8 @@ MAIN MODIFIED: NO
 
 G3 STARTED: NO
 
-G2A STATUS: BLOCKED
+G2A STATUS: PASS
 
-Reason: the production Paddle catalog read required to close Product/Price truth and the premium mismatch was blocked by the available API permission. No answer was invented and no production mutation was attempted.
+G2A-R completed with read-only Paddle evidence. The historical ID remains NOT FOUND and metadata-only; no historical legitimacy was inferred and no production mutation was attempted.
 
-Do not start G2B or G3 until human review and the missing Paddle read permission are resolved.
+SAFE FOR HUMAN G2A REVIEW

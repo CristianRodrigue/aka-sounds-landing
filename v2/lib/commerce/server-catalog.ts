@@ -47,6 +47,12 @@ export function validateCommerceModel(model: CommerceModel): string[] {
     if (!productBySlug.has(offer.catalogProductSlug)) {
       errors.push(`UNKNOWN_CATALOG_PRODUCT:${offer.catalogProductSlug}`);
     }
+    if (offer.verification === "verified" && !offer.paddleProductId) {
+      errors.push(`VERIFIED_OFFER_WITHOUT_PRODUCT:${offer.id}`);
+    }
+    if (offer.verification === "verified" && offer.availability !== "active") {
+      errors.push(`VERIFIED_OFFER_NOT_ACTIVE:${offer.id}`);
+    }
     offerIds.add(offer.id);
     priceIds.add(offer.paddlePriceId);
   }
