@@ -186,6 +186,7 @@ describe("G2A idempotency, retry, and newsletter boundaries", () => {
       valid: false,
       reason: "INVALID_EMAIL",
     });
+  });
   it("tests newsletter adapter success, existing subscriber, rejection, and timeout", async () => {
     const validInput = { email: "customer@example.test", consent: true };
     const successAdapter = {
@@ -220,7 +221,7 @@ describe("G2A idempotency, retry, and newsletter boundaries", () => {
     });
     assert.deepEqual(await submitNewsletter(validInput, rejectionAdapter), {
       accepted: false,
-      outcome: "REJECTED",
+      outcome: "PROVIDER_FAILURE",
       reason: "VALIDATION",
     });
     assert.deepEqual(await submitNewsletter(validInput, timeoutAdapter), {
@@ -228,6 +229,5 @@ describe("G2A idempotency, retry, and newsletter boundaries", () => {
       outcome: "RETRYABLE_FAILURE",
       reason: "TIMEOUT",
     });
-  });
   });
 });

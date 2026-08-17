@@ -20,7 +20,7 @@ export function validateNewsletterRequest(input: unknown): NewsletterValidation 
 
 export type NewsletterSubmission =
   | { readonly accepted: true; readonly outcome: "SUBSCRIBED" | "ALREADY_SUBSCRIBED" }
-  | { readonly accepted: false; readonly outcome: "REJECTED" | "RETRYABLE_FAILURE"; readonly reason: string };
+  | { readonly accepted: false; readonly outcome: "REJECTED" | "PROVIDER_FAILURE" | "RETRYABLE_FAILURE"; readonly reason: string };
 
 export async function submitNewsletter(
   input: unknown,
@@ -49,6 +49,6 @@ export async function submitNewsletter(
   ) {
     return { accepted: false, outcome: "RETRYABLE_FAILURE", reason: failure.code };
   }
-  return { accepted: false, outcome: "REJECTED", reason: failure?.code ?? "PROVIDER_REJECTED" };
+  return { accepted: false, outcome: "PROVIDER_FAILURE", reason: failure?.code ?? "PROVIDER_REJECTED" };
 }
 export type NewsletterAdapter = MailerLiteAdapter;
