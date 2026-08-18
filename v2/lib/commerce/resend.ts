@@ -48,10 +48,17 @@ export function createResendAdapter(options: ResendAdapterOptions = {}): ResendA
       readonly policy: FulfillmentPolicy;
       readonly downloadUrl: string;
     }): Promise<ProviderResult> {
+      const configuredTestRecipient = testRecipient?.trim();
+      if (safeTestMode && !configuredTestRecipient) {
+        return {
+          accepted: false,
+          failure: { provider: "resend", code: "SAFE_TEST_RECIPIENT_REQUIRED", retryable: false },
+        };
+      }
       if (!apiKey || !from) {
         return { accepted: false, failure: { provider: "resend", code: "RESEND_NOT_CONFIGURED", retryable: false } };
       }
-      const recipient = safeTestMode && testRecipient ? testRecipient : input.email;
+      const recipient = safeTestMode ? configuredTestRecipient! : input.email;
       try {
         const response = await fetchImpl("https://api.resend.com/emails", {
           method: "POST",

@@ -471,3 +471,70 @@ describe("G2B official Paddle verifier and route boundary", () => {
     }
   });
 });
+describe("Resend safe test mode", () => {
+  const input = {
+    email: "customer@example.test",
+    transaction: transactionFor(),
+    policy: canonicalCommerceModel.fulfillmentPolicies[0],
+    downloadUrl: "https://storage.example.test/signed",
+  };
+
+  it("fails closed without a safe test recipient and never calls Resend", async () => {
+    let resendCalls = 0;
+    const adapter = createResendAdapter({
+      apiKey: "test-api-key",
+      from: "test@example.test",
+      safeTestMode: true,
+      fetchImpl: async () => {
+        resendCalls += 1;
+        return new Response(null, { status: 202 });
+      },
+    });
+
+    const result = await adapter.sendTransactionEmail(input);
+
+    assert.deepEqual(result, {
+      accepted: false,
+      failure: { provider: "resend", code: "SAFE_TEST_RECIPIENT_REQUIRED", retryable: false },
+    });
+    assert.equal(resendCalls, 0);
+  });
+
+  it("uses only the configured safe test recipient", async () => {
+    let requestBody: { to?: string[] } | undefined;
+    const adapter = createResendAdapter({
+      apiKey: "test-api-key",
+      from: "test@example.test",
+      safeTestMode: true,
+      testRecipient: "safe-recipient@example.test",
+      fetchImpl: async (_url, init) => {
+        requestBody = JSON.parse(String(init?.body)) as { to?: string[] };
+        return new Response(null, { status: 202 });
+      },
+    });
+
+    const result = await adapter.sendTransactionEmail(input);
+
+    assert.equal(result.accepted, true);
+    assert.deepEqual(requestBody?.to, ["safe-recipient@example.test"]);
+  });
+
+  it("uses the transaction email when safe test mode is disabled", async () => {
+    let requestBody: { to?: string[] } | undefined;
+    const adapter = createResendAdapter({
+      apiKey: "test-api-key",
+      from: "test@example.test",
+      safeTestMode: false,
+      testRecipient: "safe-recipient@example.test",
+      fetchImpl: async (_url, init) => {
+        requestBody = JSON.parse(String(init?.body)) as { to?: string[] };
+        return new Response(null, { status: 202 });
+      },
+    });
+
+    const result = await adapter.sendTransactionEmail(input);
+
+    assert.equal(result.accepted, true);
+    assert.deepEqual(requestBody?.to, ["customer@example.test"]);
+  });
+});
