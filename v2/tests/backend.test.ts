@@ -44,6 +44,10 @@ function receiptEvent(eventId = "evt_claim_001"): ReceiptEvent {
     notificationId: "ntf_claim_001",
     transactionId: "txn_claim_001",
     customerId: "ctm_claim_001",
+    priceId: null,
+    productId: null,
+    quantity: 0,
+    itemCount: 0,
     occurredAt: "2026-08-17T00:00:00Z",
   };
 }
@@ -326,15 +330,16 @@ describe("G2B Resend and MailerLite adapters", () => {
   });
 
   it("classifies MailerLite existing subscriber, permanent, and transient outcomes", async () => {
-    const call = (status: number) => createMailerLiteAdapter({
+    const call = (status: number, subscriberStatus = "active") => createMailerLiteAdapter({
       apiKey: "synthetic-mailerlite-key",
       groupId: "synthetic-group",
-      fetchImpl: async () => new Response(null, { status }),
+      fetchImpl: async () => new Response(JSON.stringify({ data: { status: subscriberStatus } }), { status, headers: { "content-type": "application/json" } }),
     }).upsertMarketingSubscriber({ email: "customer@example.test", transactionId: "txn" });
-    assert.deepEqual(await call(200), { accepted: true });
-    const existing = await call(409);
+    assert.deepEqual(await call(200), { accepted: true, outcome: "EXISTING_ACTIVE", subscriberStatus: "active" });
+    const existing = await call(200, "unsubscribed");
     assert.equal(existing.accepted, false);
-    if (!existing.accepted) assert.equal(existing.failure!.code, "ALREADY_SUBSCRIBED");
+    assert.equal(existing.outcome, "EXISTING_NONACTIVE");
+    if (!existing.accepted) assert.equal(existing.failure!.code, "NON_ACTIVE_SUBSCRIBER");
     const permanent = await call(422);
     assert.equal(permanent.accepted, false);
     if (!permanent.accepted) assert.equal(permanent.failure!.retryable, false);

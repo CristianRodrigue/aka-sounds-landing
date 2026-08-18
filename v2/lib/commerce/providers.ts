@@ -1,7 +1,7 @@
 import type { DeliveryState } from "./state";
 import type { FulfillmentPolicy, NormalizedTransaction } from "./types";
 
-export type ProviderName = "paddle" | "gcs" | "resend" | "mailerlite" | "receipt-store";
+export type ProviderName = "paddle" | "paddle-customer" | "gcs" | "resend" | "mailerlite" | "receipt-store";
 export type FailureClass = "retryable" | "permanent";
 
 export interface ProviderFailure {
@@ -14,7 +14,17 @@ export interface ProviderFailure {
 export interface ProviderResult {
   readonly accepted: boolean;
   readonly failure?: ProviderFailure;
+  readonly outcome?: MailerLiteOutcome;
+  readonly subscriberStatus?: MailerLiteSubscriberStatus;
 }
+
+export type MailerLiteSubscriberStatus = "active" | "unsubscribed" | "unconfirmed" | "bounced" | "junk" | "unknown";
+export type MailerLiteOutcome =
+  | "CREATED_ACTIVE"
+  | "EXISTING_ACTIVE"
+  | "EXISTING_NONACTIVE"
+  | "REJECTED"
+  | "RETRYABLE_FAILURE";
 
 export interface PaddleCustomer {
   readonly id: string;
@@ -22,8 +32,8 @@ export interface PaddleCustomer {
   readonly marketingConsent: boolean | null;
 }
 
-export interface PaddleAdapter {
-  getCustomer(customerId: string): Promise<PaddleCustomer>;
+export interface PaddleCustomerAdapter {
+  getCustomer(customerId: string): Promise<ProviderValue<PaddleCustomer>>;
 }
 
 export interface GcsAdapter {
@@ -51,6 +61,10 @@ export interface ReceiptRecord {
   readonly notificationId: string | null;
   readonly transactionId: string;
   readonly customerId: string | null;
+  readonly priceId: string | null;
+  readonly productId: string | null;
+  readonly quantity: number;
+  readonly itemCount: number;
   readonly occurredAt: string | null;
   readonly state: DeliveryState;
   readonly attemptCount: number;
@@ -63,6 +77,9 @@ export interface ReceiptRecord {
   readonly transactionalEmailCompletedAt: string | null;
   readonly marketingRequested: boolean;
   readonly marketingCompletedAt: string | null;
+  readonly customerHydratedAt: string | null;
+  readonly marketingConsentSnapshot: boolean | null;
+  readonly processingLeaseUntil: string | null;
 }
 
 export interface ReceiptEvent {
@@ -70,6 +87,10 @@ export interface ReceiptEvent {
   readonly notificationId: string | null;
   readonly transactionId: string;
   readonly customerId: string | null;
+  readonly priceId: string | null;
+  readonly productId: string | null;
+  readonly quantity: number;
+  readonly itemCount: number;
   readonly occurredAt: string | null;
   readonly fulfillmentOfferId?: string | null;
 }
@@ -83,8 +104,11 @@ export interface ReceiptClaim {
 export interface ReceiptStore {
   get(eventId: string): Promise<ReceiptRecord | null>;
   claimEvent(input: ReceiptEvent): Promise<ReceiptClaim>;
+  claimProcessing(eventId: string): Promise<ReceiptClaim>;
+  releaseProcessing(eventId: string): Promise<void>;
   transition(eventId: string, state: DeliveryState, failure?: ProviderFailure): Promise<void>;
   recordProviderFailure(eventId: string, failure: ProviderFailure): Promise<void>;
+  markCustomerHydrated(eventId: string, marketingConsent: boolean | null): Promise<void>;
   markTransactionalEmailCompleted(eventId: string): Promise<void>;
   markMarketingRequested(eventId: string, requested: boolean): Promise<void>;
   markMarketingCompleted(eventId: string): Promise<void>;

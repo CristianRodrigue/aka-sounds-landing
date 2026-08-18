@@ -136,7 +136,8 @@ describe("G2A consent and normalized transaction boundaries", () => {
     if (result.ok) {
       assert.equal(result.transaction.items[0].priceId, canonicalOffers[0].paddlePriceId);
       assert.equal(result.transaction.items[0].productId, "pro_001");
-      assert.equal(result.transaction.marketingConsent, true);
+      assert.equal(result.transaction.marketingConsent, null);
+      assert.equal(result.transaction.customerEmail, null);
     }
   });
 });
@@ -216,8 +217,9 @@ describe("G2A idempotency, retry, and newsletter boundaries", () => {
       outcome: "SUBSCRIBED",
     });
     assert.deepEqual(await submitNewsletter(validInput, existingAdapter), {
-      accepted: true,
-      outcome: "ALREADY_SUBSCRIBED",
+      accepted: false,
+      outcome: "PROVIDER_FAILURE",
+      reason: "ALREADY_SUBSCRIBED",
     });
     assert.deepEqual(await submitNewsletter(validInput, rejectionAdapter), {
       accepted: false,

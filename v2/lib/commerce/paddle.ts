@@ -1,4 +1,4 @@
-import type { MarketingConsent, NormalizedTransaction, NormalizedTransactionItem } from "./types";
+import type { NormalizedTransaction, NormalizedTransactionItem } from "./types";
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -8,10 +8,6 @@ function asRecord(value: unknown): UnknownRecord | null {
 
 function stringValue(value: unknown): string | null {
   return typeof value === "string" && value.length > 0 ? value : null;
-}
-
-function booleanValue(value: unknown): MarketingConsent {
-  return typeof value === "boolean" ? value : null;
 }
 
 function firstString(...values: unknown[]): string | null {
@@ -60,11 +56,6 @@ export function normalizeTransactionCompleted(payload: unknown): NormalizationRe
     };
   });
 
-  const customer = asRecord(data.customer);
-  const consent = booleanValue(
-    data.marketing_consent ?? data.marketingConsent ?? customer?.marketing_consent ?? customer?.marketingConsent,
-  );
-
   return {
     ok: true,
     transaction: {
@@ -73,9 +64,9 @@ export function normalizeTransactionCompleted(payload: unknown): NormalizationRe
       occurredAt: firstString(root.occurred_at, root.occurredAt),
       transactionId,
       status: firstString(data.status) ?? "unknown",
-      customerId: firstString(data.customer_id, data.customerId, customer?.id),
-      customerEmail: firstString(data.customer_email, data.customerEmail, customer?.email),
-      marketingConsent: consent,
+      customerId: firstString(data.customer_id, data.customerId),
+      customerEmail: null,
+      marketingConsent: null,
       items,
     },
   };

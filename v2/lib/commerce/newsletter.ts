@@ -24,7 +24,7 @@ export type NewsletterSubmission =
 
 export async function submitNewsletter(
   input: unknown,
-  adapter: NewsletterAdapter,
+  adapter: MailerLiteAdapter,
 ): Promise<NewsletterSubmission> {
   const validation = validateNewsletterRequest(input);
   if (!validation.valid) {
@@ -35,20 +35,18 @@ export async function submitNewsletter(
     email: validation.request.email,
     transactionId: "newsletter-request",
   });
-  if (result.accepted) return { accepted: true, outcome: "SUBSCRIBED" };
+  if (result.accepted) {
+    return { accepted: true, outcome: result.outcome === "EXISTING_ACTIVE" ? "ALREADY_SUBSCRIBED" : "SUBSCRIBED" };
+  }
 
   const failure = result.failure;
-  if (failure?.status === 409 || failure?.code === "ALREADY_SUBSCRIBED") {
-    return { accepted: true, outcome: "ALREADY_SUBSCRIBED" };
-  }
   if (
     failure?.retryable === true ||
     failure?.status === 408 ||
     failure?.status === 429 ||
     (failure?.status !== undefined && failure.status >= 500)
   ) {
-    return { accepted: false, outcome: "RETRYABLE_FAILURE", reason: failure.code };
+    return { accepted: false, outcome: "RETRYABLE_FAILURE", reason: failure?.code ?? "PROVIDER_RETRYABLE" };
   }
   return { accepted: false, outcome: "PROVIDER_FAILURE", reason: failure?.code ?? "PROVIDER_REJECTED" };
 }
-export type NewsletterAdapter = MailerLiteAdapter;

@@ -448,3 +448,165 @@ G2B STATUS: PASS
 SAFE FOR HUMAN G2B REVIEW
 
 STOP.
+---
+
+## G2B-R — Human Review Corrections
+
+G2B-R was executed from the reviewed G2B HEAD:
+
+- Starting HEAD: `392ce416e2b4b64491bd371e1d8629558254730a`
+- Scope: `v2/**` and this report only
+- `api/webhook.ts`: untouched
+- Production systems: untouched
+
+### Paddle ACK model
+
+The V2 webhook now has two explicit stages:
+
+1. Ingestion reads the raw body, verifies the Paddle signature, parses and normalizes the event, then atomically persists the normalized receipt.
+2. Processing runs independently from the durable receipt and performs Customer hydration, fulfillment decision, GCS, Resend, and optional MailerLite work.
+
+The HTTP response is returned only after durable receipt acceptance. GCS, Resend, MailerLite, and Customer hydration are not awaited by the Paddle HTTP ingress. Durable-store failure returns HTTP 503 so Paddle can retry. Paddle's official webhook guidance requires a 200 response within five seconds and recommends responding before downstream processing: [Paddle webhook delivery](https://developer.paddle.com/webhooks/about/respond-to-webhooks/).
+
+### Durable inbox and recovery boundary
+
+Implemented:
+
+- `v2/db/migrations/0001_webhook_receipts.sql`
+- `v2/db/migrations/0002_g2b_r_receipt_inbox.sql`
+- normalized event, notification, transaction, customer, price, product, quantity, item count, state, attempt, error, hydration snapshot, marketing decision, and processing lease fields
+- no raw Paddle body, API secret, GCS signed URL, or unnecessary Customer payload
+- `NeonReceiptStore.claimProcessing()` and `releaseProcessing()` use database predicates and a processing lease
+- `processReceiptEvent()` is an independent worker/recovery boundary and can process a previously stored receipt without the original request
+
+### Next.js `after()`
+
+The route uses stable Next.js `after()` only as a Preview convenience trigger after durable acceptance. Its callback catches downstream errors, and the receipt remains recoverable through `processReceiptEvent()`; `after()` is not treated as a durable queue. This matches the current Next.js behavior for post-response work: [Next.js `after`](https://nextjs.org/docs/app/api-reference/functions/after).
+
+No Vercel Queue or paid/external queue was provisioned. Production async options remain a G2C decision.
+
+### Paddle Customer hydration
+
+Implemented server-only `PaddleCustomerAdapter` using the official Paddle Node SDK `customers.get(customerId)`.
+
+The adapter returns only:
+
+- Customer ID
+- Customer email
+- `marketing_consent`
+
+Customer hydration occurs before the fulfillment decision. Webhook normalization no longer extracts email or marketing consent from the transaction payload. The realistic fixture contains `customer_id` but no email or marketing consent.
+
+Required future permission: `customer.read`. No live Customer API call or credential change was made in G2B-R. Paddle documents both the `customer.read` requirement and the email/marketing consent fields: [Get a customer](https://developer.paddle.com/api-reference/customers/get-customer/) and [Paddle permissions](https://developer.paddle.com/api-reference/about/permissions/).
+
+### Consent snapshot
+
+After successful Customer hydration, the receipt stores only:
+
+- hydration timestamp
+- marketing consent snapshot
+- marketing requested/completed audit fields
+
+Transactional fulfillment remains independent of marketing consent. MailerLite is called only when hydrated `marketing_consent === true`. False or absent consent makes no marketing call.
+
+### MailerLite semantics
+
+The adapter now preserves HTTP/result semantics:
+
+- 201 + active: `CREATED_ACTIVE`
+- 200 + active: `EXISTING_ACTIVE`
+- 200 + unsubscribed, bounced, junk, or unknown: `EXISTING_NONACTIVE`, not accepted
+- 422: `REJECTED`
+- 429, 5xx, and network timeout: `RETRYABLE_FAILURE`
+
+No `resubscribe=true` is sent. Non-active subscribers are never silently reactivated or reported as successful subscriptions. Reference: [MailerLite Subscribers API](https://developers.mailerlite.com/api/subscribers).
+
+### Signed URL policy
+
+The V2 customer download policy is restored to:
+
+- V4 signed read URL
+- exact canonical private object
+- 24-hour lifetime
+- no client-selected object path
+- no signed URL persisted in the receipt database
+
+The 24-hour duration is an intentional AKA SOUNDS customer-experience decision.
+
+### Expanded validation
+
+- ACK returns HTTP 200 after durable acceptance without waiting for blocked downstream work
+- durable-store failure returns non-2xx
+- invalid signature performs no durable write
+- duplicate processing has no duplicate fulfillment side effect
+- previously stored receipts process independently
+- retryable worker failures remain recoverable
+- realistic Paddle `transaction.completed` fixture has no assumed email/consent
+- Customer 404 is permanent; 429 is retryable
+- MailerLite 201/200, active/non-active, 422, 429, 5xx, and timeout outcomes
+- exact 24-hour GCS expiry
+- unknown/rejected offers do not invoke GCS
+
+G2B-R validation result:
+
+- TypeScript: PASS
+- V2 tests: PASS, 49/49
+- Customer and MailerLite tests: PASS
+- ACK/recovery tests: PASS
+- GCS policy tests: PASS
+- Security scan: PASS, no temporary Paddle key or value persisted
+- CodeGraph: PASS, 73 files, 559 nodes, 1,319 edges, index up to date
+
+### Scope and provisioning
+
+- Neon provisioned: NO
+- `DATABASE_URL` added to Vercel: NO
+- Production Paddle modified: NO
+- Existing Vercel backend modified: NO
+- Hostinger modified: NO
+- Production GCS data modified: NO
+- Production Resend modified: NO
+- Production MailerLite modified: NO
+- `main` modified: NO
+- G2C started: NO
+- G3 started: NO
+
+G2B-R changes are not a claim that production is cut over. Live Customer permission, isolated Neon provisioning, Preview configuration, synthetic webhook execution, and production async queue selection remain future human-reviewed work.
+
+## G2B-R Final Result
+
+PADDLE ACK MODEL: PASS
+DURABLE INBOX: PASS
+BACKGROUND PROCESSOR: PASS
+PADDLE CUSTOMER ADAPTER: PASS WITH SYNTHETIC FIXTURES
+CUSTOMER.READ REQUIRED: YES — FUTURE, NOT CONFIGURED
+MAILERLITE 201/200 SEMANTICS: PASS
+NONACTIVE SUBSCRIBER POLICY: PASS
+SIGNED URL POLICY: PASS — 24 HOURS / V4 READ
+TEST COUNT: 49/49
+SECURITY SCAN: PASS
+
+LEGACY BUILD: PASS
+V2 LINT: PASS — one pre-existing warning in v2/postcss.config.mjs
+V2 BUILD: PASS
+V2 TESTS: PASS
+CODEGRAPH: PASS — 73 files, 559 nodes, 1,319 edges, index up to date
+
+NEON PROVISIONED: NO
+PRODUCTION WEBHOOK MODIFIED: NO
+HOSTINGER MODIFIED: NO
+EXISTING VERCEL BACKEND MODIFIED: NO
+PADDLE PRODUCTION MODIFIED: NO
+GCS PRODUCTION MODIFIED: NO
+MAILERLITE PRODUCTION MODIFIED: NO
+RESEND PRODUCTION MODIFIED: NO
+MAIN MODIFIED: NO
+G2C STARTED: NO
+G3 STARTED: NO
+
+G2B-R STATUS: PASS
+
+G2B STATUS: PASS
+SAFE FOR HUMAN G2B REVIEW
+
+STOP.

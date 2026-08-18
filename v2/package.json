@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "tsx --test tests/commerce.test.ts tests/backend.test.ts"
+    "test": "tsx --test tests/commerce.test.ts tests/backend.test.ts tests/g2b-r.test.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.22.0",

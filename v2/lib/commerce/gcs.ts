@@ -2,7 +2,7 @@ import { Storage } from "@google-cloud/storage";
 import type { GcsAdapter, ProviderValue } from "./providers";
 import type { FulfillmentPolicy } from "./types";
 
-export const SIGNED_URL_TTL_SECONDS = 15 * 60;
+export const SIGNED_URL_TTL_SECONDS = 24 * 60 * 60;
 
 type GcsFile = {
   getSignedUrl(options: { version: "v4"; action: "read"; expires: Date }): Promise<[string]>;
