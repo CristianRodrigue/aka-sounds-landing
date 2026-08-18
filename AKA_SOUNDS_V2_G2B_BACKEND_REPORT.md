@@ -610,3 +610,14 @@ G2B STATUS: PASS
 SAFE FOR HUMAN G2B REVIEW
 
 STOP.
+
+## G2B-R2 — Paddle Environment Safety
+
+- Human review identified that `new Paddle(apiKey)` uses the SDK production default when no environment is provided.
+- `PADDLE_ENVIRONMENT` now resolves explicitly to the official `Environment.sandbox` or `Environment.production` value. An absent or empty value retains a documented production default for backward compatibility; any other value fails in a controlled way without initializing the SDK client.
+- The isolated V2 Preview configuration must be `PADDLE_ENVIRONMENT=sandbox`.
+- The future production configuration must be `PADDLE_ENVIRONMENT=production`.
+- Sandbox API keys and live API keys must never be mixed.
+- No credentials, Vercel variables, Paddle production systems, legacy production code, Hostinger, Neon, or deployments were changed.
+
+G2B-R2 STATUS: PASS

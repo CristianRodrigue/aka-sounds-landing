@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { Environment } from "@paddle/paddle-node-sdk";
 import { createGcsAdapter, SIGNED_URL_TTL_SECONDS } from "../lib/commerce/gcs";
 import { processReceiptEvent } from "../lib/commerce/fulfillment-service";
 import { createMailerLiteAdapter } from "../lib/commerce/mailerlite";
-import { createPaddleCustomerAdapter } from "../lib/commerce/paddle-customer";
+import { createPaddleCustomerAdapter, resolvePaddleEnvironment } from "../lib/commerce/paddle-customer";
 import { normalizeTransactionCompleted } from "../lib/commerce/paddle";
 import type {
   GcsAdapter,
@@ -229,6 +230,70 @@ describe("G2B-R asynchronous ACK and durable recovery", () => {
 });
 
 describe("G2B-R realistic Paddle and Customer hydration fixtures", () => {
+  function withPaddleEnvironment(value: string | undefined, run: () => void | Promise<void>): Promise<void> {
+    const previous = process.env.PADDLE_ENVIRONMENT;
+    if (value === undefined) delete process.env.PADDLE_ENVIRONMENT;
+    else process.env.PADDLE_ENVIRONMENT = value;
+    return Promise.resolve().then(run).finally(() => {
+      if (previous === undefined) delete process.env.PADDLE_ENVIRONMENT;
+      else process.env.PADDLE_ENVIRONMENT = previous;
+    });
+  }
+
+  it("resolves sandbox to the official sandbox environment", async () => {
+    await withPaddleEnvironment("sandbox", async () => {
+      let captured: Environment | undefined;
+      const adapter = createPaddleCustomerAdapter({
+        apiKey: "synthetic-key",
+        paddleFactory: (_apiKey, environment) => {
+          captured = environment;
+          return { get: async (customerId) => ({ id: customerId, email: "customer@example.test" }) };
+        },
+      });
+      assert.equal((await adapter.getCustomer("ctm_sandbox")).accepted, true);
+      assert.equal(captured, Environment.sandbox);
+    });
+  });
+
+  it("resolves production to the official production environment", async () => {
+    await withPaddleEnvironment("production", async () => {
+      let captured: Environment | undefined;
+      const adapter = createPaddleCustomerAdapter({
+        apiKey: "synthetic-key",
+        paddleFactory: (_apiKey, environment) => {
+          captured = environment;
+          return { get: async (customerId) => ({ id: customerId, email: "customer@example.test" }) };
+        },
+      });
+      assert.equal((await adapter.getCustomer("ctm_production")).accepted, true);
+      assert.equal(captured, Environment.production);
+    });
+  });
+
+  it("defaults an absent environment to documented production", () => {
+    assert.deepEqual(resolvePaddleEnvironment(undefined), {
+      valid: true,
+      name: "production",
+      sdkEnvironment: Environment.production,
+    });
+  });
+
+  it("rejects an invalid environment without initializing the SDK", async () => {
+    await withPaddleEnvironment("staging", async () => {
+      let factoryCalls = 0;
+      const adapter = createPaddleCustomerAdapter({
+        paddleFactory: () => {
+          factoryCalls += 1;
+          return { get: async () => ({ id: "ctm_invalid", email: "customer@example.test" }) };
+        },
+      });
+      assert.deepEqual(await adapter.getCustomer("ctm_invalid"), {
+        accepted: false,
+        failure: { provider: "paddle-customer", code: "INVALID_PADDLE_ENVIRONMENT", retryable: false },
+      });
+      assert.equal(factoryCalls, 0);
+    });
+  });
   it("does not assume email or marketing consent in transaction.completed", () => {
     const result = normalizeTransactionCompleted(fixture());
     assert.equal(result.ok, true);
