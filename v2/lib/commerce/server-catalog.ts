@@ -1,6 +1,7 @@
 import { canonicalOffers, catalogProducts } from "./catalog";
 import { fulfillmentPolicies } from "./fulfillment";
 import type { CommerceModel, FulfillmentPolicy, Offer } from "./types";
+import { resolvePaddleEnvironment } from "./paddle-customer";
 
 export { canonicalOffers, catalogProducts };
 
@@ -13,9 +14,11 @@ export const canonicalCommerceModel: CommerceModel = {
 export function findOfferByPriceId(
   priceId: string | null,
   model: CommerceModel = canonicalCommerceModel,
+  environment = resolvePaddleEnvironment(),
 ): Offer | null {
-  if (!priceId) return null;
-  return model.offers.find((offer) => offer.paddlePriceId === priceId) ?? null;
+  if (!priceId || !environment.valid) return null;
+  const mappingKey = environment.name === "production" ? "live" : "sandbox";
+  return model.offers.find((offer) => offer.paddle[mappingKey]?.priceId === priceId) ?? null;
 }
 
 export function findFulfillmentPolicy(
@@ -41,20 +44,34 @@ export function validateCommerceModel(model: CommerceModel): string[] {
 
   for (const offer of model.offers) {
     if (!offer.id || offerIds.has(offer.id)) errors.push(`DUPLICATE_OR_EMPTY_OFFER:${offer.id}`);
-    if (!offer.paddlePriceId || priceIds.has(offer.paddlePriceId)) {
-      errors.push(`DUPLICATE_OR_EMPTY_PRICE:${offer.paddlePriceId}`);
+    if (offer.paddle.live.priceId !== offer.paddlePriceId) {
+      errors.push(`LIVE_PRICE_ALIAS_MISMATCH:${offer.id}`);
+    }
+    if (offer.paddle.live.productId !== offer.paddleProductId) {
+      errors.push(`LIVE_PRODUCT_ALIAS_MISMATCH:${offer.id}`);
     }
     if (!productBySlug.has(offer.catalogProductSlug)) {
       errors.push(`UNKNOWN_CATALOG_PRODUCT:${offer.catalogProductSlug}`);
     }
-    if (offer.verification === "verified" && !offer.paddleProductId) {
+
+    for (const [environment, mapping] of [["live", offer.paddle.live], ["sandbox", offer.paddle.sandbox]] as const) {
+      if (!mapping) continue;
+      if (!mapping.priceId || priceIds.has(mapping.priceId)) {
+        errors.push(`DUPLICATE_OR_EMPTY_PRICE:${environment}:${mapping.priceId}`);
+      }
+      if (!mapping.productId) {
+        errors.push(`MISSING_PRODUCT_MAPPING:${environment}:${offer.id}`);
+      }
+      priceIds.add(mapping.priceId);
+    }
+
+    if (offer.verification === "verified" && !offer.paddle.live.productId) {
       errors.push(`VERIFIED_OFFER_WITHOUT_PRODUCT:${offer.id}`);
     }
     if (offer.verification === "verified" && offer.availability !== "active") {
       errors.push(`VERIFIED_OFFER_NOT_ACTIVE:${offer.id}`);
     }
     offerIds.add(offer.id);
-    priceIds.add(offer.paddlePriceId);
   }
 
   const policyIds = new Set<string>();

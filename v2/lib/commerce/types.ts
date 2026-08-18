@@ -9,9 +9,20 @@ export interface CatalogProduct {
   readonly source: "legacy-products" | "legacy-free-packs";
 }
 
+export interface PaddleCatalogMapping {
+  readonly priceId: string;
+  readonly productId: string;
+}
+
+export interface PaddleEnvironmentMappings {
+  readonly live: PaddleCatalogMapping;
+  readonly sandbox: PaddleCatalogMapping | null;
+}
+
 export interface Offer {
   readonly id: string;
   readonly catalogProductSlug: string;
+  readonly paddle: PaddleEnvironmentMappings;
   readonly paddlePriceId: string;
   readonly paddleProductId: string | null;
   readonly historicalPriceIds: readonly string[];

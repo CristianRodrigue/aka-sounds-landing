@@ -23,6 +23,8 @@ export interface PaddleCustomerAdapterOptions {
   readonly apiKey?: string;
   readonly client?: PaddleCustomerClient;
   readonly paddleFactory?: PaddleCustomerClientFactory;
+  /** Test-only injection; production callers resolve process.env.PADDLE_ENVIRONMENT. */
+  readonly environment?: string;
 }
 
 export function resolvePaddleEnvironment(value = process.env.PADDLE_ENVIRONMENT): PaddleEnvironmentConfig {
@@ -72,7 +74,7 @@ function officialClient(apiKey: string, environment: Environment): PaddleCustome
 export function createPaddleCustomerAdapter(
   options: PaddleCustomerAdapterOptions = {},
 ): PaddleCustomerAdapter {
-  const environment = resolvePaddleEnvironment();
+  const environment = resolvePaddleEnvironment(options.environment);
   const client = environment.valid
     ? options.client ?? (options.paddleFactory ?? officialClient)(options.apiKey ?? process.env.PADDLE_API_KEY ?? "", environment.sdkEnvironment)
     : undefined;

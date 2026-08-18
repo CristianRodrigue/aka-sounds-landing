@@ -4,13 +4,14 @@ import { describe, it } from "node:test";
 import { canonicalCommerceModel, canonicalOffers, validateCommerceModel } from "../lib/commerce/server-catalog";
 import { decideConsent } from "../lib/commerce/consent";
 import { decideFulfillment } from "../lib/commerce/decision";
+import { resolvePaddleEnvironment } from "../lib/commerce/paddle-customer";
 import { classifyProviderFailure } from "../lib/commerce/providers";
 import { normalizeTransactionCompleted } from "../lib/commerce/paddle";
 import { verifyPaddleSignature } from "../lib/commerce/signature";
 import { canTransition, isDuplicateReceipt } from "../lib/commerce/state";
 import { validateNewsletterRequest } from "../lib/commerce/newsletter";
 import { submitNewsletter } from "../lib/commerce/newsletter";
-import type { NormalizedTransaction, Offer } from "../lib/commerce/types";
+import type { CommerceModel, NormalizedTransaction, Offer } from "../lib/commerce/types";
 
 
 function transactionFor(offer: Offer, productId: string | null = offer.paddleProductId): NormalizedTransaction {
@@ -24,6 +25,22 @@ function transactionFor(offer: Offer, productId: string | null = offer.paddlePro
     customerEmail: "customer@example.test",
     marketingConsent: null,
     items: [{ priceId: offer.paddlePriceId, productId, quantity: 1 }],
+  };
+}
+
+function sandboxFixture(): { model: CommerceModel; transaction: NormalizedTransaction } {
+  const sandboxMapping = { priceId: "pri_sandbox_fixture_001", productId: "pro_sandbox_fixture_001" };
+  const offer: Offer = {
+    ...canonicalOffers[0],
+    paddle: { ...canonicalOffers[0].paddle, sandbox: sandboxMapping },
+  };
+  const model: CommerceModel = { ...canonicalCommerceModel, offers: [offer] };
+  return {
+    model,
+    transaction: {
+      ...transactionFor(offer),
+      items: [{ priceId: sandboxMapping.priceId, productId: sandboxMapping.productId, quantity: 1 }],
+    },
   };
 }
 
@@ -66,6 +83,41 @@ describe("G2A canonical commerce model", () => {
     }
   });
 
+  it("isolates Live and Sandbox Price/Product mappings by environment", () => {
+    const live = canonicalOffers[0];
+    const production = decideFulfillment(
+      transactionFor(live),
+      canonicalCommerceModel,
+      resolvePaddleEnvironment("production"),
+    );
+    assert.equal(production.decision, "FULFILL");
+
+    const liveInSandbox = decideFulfillment(
+      transactionFor(live),
+      canonicalCommerceModel,
+      resolvePaddleEnvironment("sandbox"),
+    );
+    assert.deepEqual(liveInSandbox, { decision: "REJECT", reason: "UNKNOWN_PRICE" });
+
+    const { model, transaction } = sandboxFixture();
+    const sandbox = decideFulfillment(transaction, model, resolvePaddleEnvironment("sandbox"));
+    assert.equal(sandbox.decision, "FULFILL");
+
+    const sandboxInProduction = decideFulfillment(
+      transaction,
+      model,
+      resolvePaddleEnvironment("production"),
+    );
+    assert.deepEqual(sandboxInProduction, { decision: "REJECT", reason: "UNKNOWN_PRICE" });
+
+    const invalid = decideFulfillment(
+      transactionFor(live),
+      canonicalCommerceModel,
+      resolvePaddleEnvironment("invalid"),
+    );
+    assert.deepEqual(invalid, { decision: "REJECT", reason: "INVALID_PADDLE_ENVIRONMENT" });
+  });
+
   it("rejects unknown prices without falling back to premium", () => {
     const model = canonicalCommerceModel;
     const result = decideFulfillment(
@@ -75,14 +127,17 @@ describe("G2A canonical commerce model", () => {
     assert.deepEqual(result, { decision: "REJECT", reason: "UNKNOWN_PRICE" });
   });
 
-  it("rejects the historical premium webhook price instead of treating it as premium", () => {
+  it("rejects the historical premium webhook price in every environment", () => {
     const model = canonicalCommerceModel;
     const offer = model.offers[0];
-    const result = decideFulfillment(
-      { ...transactionFor(offer), items: [{ priceId: "pri_01kkcjshgdd9p0yqgexv3nrt2f", productId: offer.paddleProductId, quantity: 1 }] },
-      model,
-    );
-    assert.deepEqual(result, { decision: "REJECT", reason: "UNKNOWN_PRICE" });
+    for (const environment of ["production", "sandbox"] as const) {
+      const result = decideFulfillment(
+        { ...transactionFor(offer), items: [{ priceId: "pri_01kkcjshgdd9p0yqgexv3nrt2f", productId: offer.paddleProductId, quantity: 1 }] },
+        model,
+        resolvePaddleEnvironment(environment),
+      );
+      assert.deepEqual(result, { decision: "REJECT", reason: "UNKNOWN_PRICE" });
+    }
   });
 
   it("rejects product/price mismatches and missing products for verified offers", () => {

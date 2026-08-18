@@ -44,6 +44,10 @@ export const canonicalOffers = [
   {
     id: "offer-hardtechno-essentials-v1",
     catalogProductSlug: "hardtechno-essentials-vol-1",
+    paddle: {
+      live: { priceId: "pri_01kk855x7wk29gv2d4hgz60k63", productId: "pro_01kk852aee3nqfj046d1ht4wb5" },
+      sandbox: null,
+    },
     paddlePriceId: "pri_01kk855x7wk29gv2d4hgz60k63",
     paddleProductId: "pro_01kk852aee3nqfj046d1ht4wb5",
     historicalPriceIds: ["pri_01kkcjshgdd9p0yqgexv3nrt2f"],
@@ -53,6 +57,10 @@ export const canonicalOffers = [
   {
     id: "offer-hardtechno-essentials-free-trial",
     catalogProductSlug: "hardtechno-essentials-vol-1-free-trial",
+    paddle: {
+      live: { priceId: "pri_01kkd2y0pdsxvg234s8zvfshqj", productId: "pro_01kkd2v46gh17agp418540s9b7" },
+      sandbox: null,
+    },
     paddlePriceId: "pri_01kkd2y0pdsxvg234s8zvfshqj",
     paddleProductId: "pro_01kkd2v46gh17agp418540s9b7",
     historicalPriceIds: [],
@@ -62,6 +70,10 @@ export const canonicalOffers = [
   {
     id: "offer-serum-2-reverse-bass-kick",
     catalogProductSlug: "serum-2-reverse-bass-kick",
+    paddle: {
+      live: { priceId: "pri_01kkwnrqgq7xcd5hhpxg99ae6p", productId: "pro_01kkwhw131933xnm3c8yhcqrps" },
+      sandbox: null,
+    },
     paddlePriceId: "pri_01kkwnrqgq7xcd5hhpxg99ae6p",
     paddleProductId: "pro_01kkwhw131933xnm3c8yhcqrps",
     historicalPriceIds: [],
@@ -71,6 +83,10 @@ export const canonicalOffers = [
   {
     id: "offer-serum-2-zaag-kick",
     catalogProductSlug: "serum-2-zaag-kick",
+    paddle: {
+      live: { priceId: "pri_01kmnmnp5fr08h43fsfa2qbcqt", productId: "pro_01kmnmhnth6nz30geqrfrfvj82" },
+      sandbox: null,
+    },
     paddlePriceId: "pri_01kmnmnp5fr08h43fsfa2qbcqt",
     paddleProductId: "pro_01kmnmhnth6nz30geqrfrfvj82",
     historicalPriceIds: [],
@@ -80,6 +96,10 @@ export const canonicalOffers = [
   {
     id: "offer-serum-2-hardtechno-kick",
     catalogProductSlug: "serum-2-hardtechno-kick",
+    paddle: {
+      live: { priceId: "pri_01kn7gspy845ttqp6m8mn4jgkr", productId: "pro_01kn7gqyc33erxrypv628qak5t" },
+      sandbox: null,
+    },
     paddlePriceId: "pri_01kn7gspy845ttqp6m8mn4jgkr",
     paddleProductId: "pro_01kn7gqyc33erxrypv628qak5t",
     historicalPriceIds: [],
@@ -89,6 +109,10 @@ export const canonicalOffers = [
   {
     id: "offer-serum-2-hard-dance-screeches",
     catalogProductSlug: "serum-2-hard-dance-screeches",
+    paddle: {
+      live: { priceId: "pri_01knt149kwqhp35wa0hwb4gwqn", productId: "pro_01knt11by8qqzskg701zgd7k2c" },
+      sandbox: null,
+    },
     paddlePriceId: "pri_01knt149kwqhp35wa0hwb4gwqn",
     paddleProductId: "pro_01knt11by8qqzskg701zgd7k2c",
     historicalPriceIds: [],
