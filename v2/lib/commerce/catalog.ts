@@ -85,7 +85,7 @@ export const canonicalOffers = [
     catalogProductSlug: "serum-2-zaag-kick",
     paddle: {
       live: { priceId: "pri_01kmnmnp5fr08h43fsfa2qbcqt", productId: "pro_01kmnmhnth6nz30geqrfrfvj82" },
-      sandbox: null,
+      sandbox: { priceId: "pri_01m09cpsvaftce0wygj4ajca9v", productId: "pro_01m09cm112ntxnw63dexgkndkb" },
     },
     paddlePriceId: "pri_01kmnmnp5fr08h43fsfa2qbcqt",
     paddleProductId: "pro_01kmnmhnth6nz30geqrfrfvj82",
