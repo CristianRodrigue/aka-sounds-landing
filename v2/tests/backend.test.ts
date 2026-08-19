@@ -291,8 +291,14 @@ describe("G2B Resend and MailerLite adapters", () => {
     assert.deepEqual(result, { accepted: true });
     const body = requestBody as Record<string, unknown>;
     assert.deepEqual(body.to, ["safe@example.test"]);
+    assert.match(String(body.html), /ACCESS GRANTED/);
+    assert.match(String(body.html), /Download Files Now/);
+    assert.match(String(body.html), /Secure ZIP Archive/);
+    assert.match(String(body.html), /www\.akasounds\.com/);
+    assert.match(String(body.html), /Welcome to the underground/);
     assert.match(String(body.html), /Hardtechno Essentials/);
     assert.match(String(body.html), /storage\.example\.test/);
+    assert.doesNotMatch(String(body.html), /<p>Your product:/);
     assert.doesNotMatch(String(body.html), /marketing|newsletter/i);
   });
 

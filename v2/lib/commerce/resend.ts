@@ -59,6 +59,8 @@ export function createResendAdapter(options: ResendAdapterOptions = {}): ResendA
         return { accepted: false, failure: { provider: "resend", code: "RESEND_NOT_CONFIGURED", retryable: false } };
       }
       const recipient = safeTestMode ? configuredTestRecipient! : input.email;
+      const productName = escapeHtml(input.policy.productName);
+      const downloadUrl = escapeHtml(input.downloadUrl);
       try {
         const response = await fetchImpl("https://api.resend.com/emails", {
           method: "POST",
@@ -71,12 +73,80 @@ export function createResendAdapter(options: ResendAdapterOptions = {}): ResendA
             from,
             to: [recipient],
             subject: input.policy.emailSubject,
-            html:
-              "<p>Your product: <strong>" +
-              escapeHtml(input.policy.productName) +
-              "</strong></p><p><a href=\"" +
-              escapeHtml(input.downloadUrl) +
-              "\">Download your files</a></p>",
+            html: `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0; padding:0; background-color:#111111; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#111111; padding: 40px 10px;">
+    <tr>
+      <td align="center">
+        <!-- Wrapper table for the email content -->
+        <table width="100%" max-width="600" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color:#000000; border: 1px solid #333333; border-radius: 12px; overflow: hidden;">
+
+          <!-- Header (White background, black typography logo, minimal padding) -->
+          <tr>
+            <td align="center" style="padding: 25px 20px; background-color: #ffffff; border-bottom: 1px solid #eeeeee;">
+              <!-- Highly styled text to match a modern typography logo -->
+              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-size: 28px; font-weight: 900; letter-spacing: 8px; color: #000000; text-transform: uppercase;">
+                AKA SOUNDS
+              </div>
+            </td>
+          </tr>
+
+          <!-- Body (Dark, oversized faded logo background) -->
+          <tr>
+            <td align="center" background="https://akasounds.com/favicon.png" style="background-color: #050505; background-image: url('https://akasounds.com/favicon.png'); background-size: 150%; background-position: center; background-repeat: no-repeat; padding: 60px 40px 40px 40px;">
+              <!-- We wrap the text in a div with a semi-transparent black background to ensure high readability -->
+              <div style="background-color: rgba(5, 5, 5, 0.90); padding: 30px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                <h2 style="color: #ffffff; margin: 0 0 24px 0; font-size: 22px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">ACCESS GRANTED</h2>
+                <p style="color: #cccccc; font-size: 16px; line-height: 1.6; margin: 0 0 35px 0; text-align: center;">
+                  Thank you for securing your copy of <br><strong><span style="color:#ffffff;">${productName}</span></strong>.
+                  <br><br>
+                  Your high-quality audio files are ready. This private download link is uniquely generated for you and will self-destruct in <strong style="color:#ffffff;">24 hours</strong>.
+                </p>
+
+                <!-- Button -->
+                <table border="0" cellspacing="0" cellpadding="0" align="center">
+                  <tr>
+                    <td align="center" style="border-radius: 6px; background-color: #ffffff;">
+                      <a href="${downloadUrl}" target="_blank" style="font-size: 16px; font-weight: 800; font-family: sans-serif; color: #000000; text-decoration: none; padding: 18px 45px; border-radius: 6px; display: inline-block; text-transform: uppercase; letter-spacing: 2px;">Download Files Now</a>
+                    </td>
+                  </tr>
+                </table>
+                <p style="color: #777777; font-size: 12px; margin-top: 25px; margin-bottom: 0; text-transform: uppercase; letter-spacing: 1px;">Secure ZIP Archive</p>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Footer (White background, links in dark grey) -->
+          <tr>
+            <td align="center" style="padding: 40px 40px; background-color: #ffffff; border-top: 1px solid #eeeeee;">
+
+              <!-- Main Link -->
+              <a href="https://www.akasounds.com" style="color: #000000; text-decoration: underline; font-size: 18px; font-weight: 800; display: inline-block; margin-bottom: 25px; letter-spacing: 1px;">www.akasounds.com</a>
+
+              <br>
+
+              <!-- Disclaimer text below links -->
+              <p style="color: #555555; font-size: 12px; line-height: 1.6; margin: 0;">
+                If you have any issues with your download, simply reply to this email.<br>
+                Welcome to the underground.<br><br>
+                &copy; ${new Date().getFullYear()} AKA SOUNDS
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+                `
           }),
         });
         return response.ok ? { accepted: true } : classifyStatus(response.status);
