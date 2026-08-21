@@ -1092,3 +1092,234 @@ img { display: block; max-width: 100%; }
   font-weight: 700;
   letter-spacing: 1.35px;
 }
+
+
+/* G4.4 — Tutorials A2 exact reconstruction */
+.tutorials-exact-section {
+  position: relative;
+  height: 1150px;
+  min-height: 1150px;
+  overflow: hidden;
+  background: #f1f1ed;
+  color: #111111;
+}
+
+.tutorials-exact-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.tutorials-exact-index,
+.tutorials-exact-heading,
+.tutorials-exact-description,
+.tutorials-exact-feature-label,
+.tutorials-exact-feature-title,
+.tutorials-exact-feature-meta,
+.tutorials-exact-feature-action,
+.tutorials-exact-archive-label,
+.tutorials-exact-footer-meta {
+  position: absolute;
+  margin: 0;
+}
+
+.tutorials-exact-index {
+  top: 45px;
+  left: 72px;
+  color: #60605c;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  line-height: 1;
+}
+
+.tutorials-exact-heading {
+  top: 72px;
+  left: 72px;
+  color: #111111;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 60px;
+  font-weight: 700;
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+
+.tutorials-exact-description {
+  top: 148px;
+  left: 72px;
+  color: #5a5a56;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.tutorials-exact-feature-label,
+.tutorials-exact-archive-label {
+  color: #60605c;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  line-height: 1;
+}
+
+.tutorials-exact-feature-label {
+  top: 200px;
+  left: 72px;
+}
+
+.tutorials-exact-feature-thumbnail {
+  position: absolute;
+  top: 230px;
+  left: 72px;
+  display: block;
+  width: 720px;
+  height: 405px;
+}
+
+.tutorials-exact-feature-thumbnail img,
+.tutorials-exact-row-thumbnail img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tutorials-exact-feature-rule,
+.tutorials-exact-footer-rule {
+  position: absolute;
+  height: 1px;
+  background: #b7b7b1;
+}
+
+.tutorials-exact-feature-rule {
+  top: 660px;
+  left: 72px;
+  width: 720px;
+}
+
+.tutorials-exact-feature-title {
+  top: 682px;
+  left: 72px;
+  color: #111111;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 0.95;
+  white-space: nowrap;
+}
+
+.tutorials-exact-feature-meta {
+  top: 758px;
+  left: 72px;
+  color: #60605c;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.35px;
+  line-height: 1;
+}
+
+.tutorials-exact-feature-action {
+  top: 790px;
+  left: 72px;
+  color: #111111;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.tutorials-exact-archive {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tutorials-exact-archive-label {
+  top: 200px;
+  left: 880px;
+}
+
+.tutorials-exact-row {
+  position: absolute;
+  left: 880px;
+  width: 488px;
+  height: 96px;
+}
+
+.tutorials-exact-row-1 {
+  top: 230px;
+}
+
+.tutorials-exact-row-2 {
+  top: 365px;
+}
+
+.tutorials-exact-row-3 {
+  top: 500px;
+}
+
+.tutorials-exact-row-4 {
+  top: 635px;
+}
+
+.tutorials-exact-row-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 170px;
+  height: 96px;
+}
+
+.tutorials-exact-row-title {
+  position: absolute;
+  top: 2px;
+  left: 190px;
+  max-width: 298px;
+  color: #111111;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.05;
+  text-decoration: none;
+}
+
+.tutorials-exact-row-action {
+  position: absolute;
+  top: 62px;
+  left: 190px;
+  color: #60605c;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.tutorials-exact-footer-rule {
+  top: 940px;
+  left: 72px;
+  width: 1296px;
+}
+
+.tutorials-exact-footer-meta {
+  top: 970px;
+  left: 72px;
+  color: #60605c;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  line-height: 1;
+}

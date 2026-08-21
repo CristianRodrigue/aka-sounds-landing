@@ -1,36 +1,10 @@
 import type { ReactNode } from "react";
+import { TutorialsA2Section } from "./sections/tutorials-section";
 import { FreeSoundsH1Section } from "./sections/free-sounds-section";
 import { SamplePacksSection } from "./sections/sample-packs-section";
 
 const ASSET_ROOT = "/assets";
 
-const tutorials = [
-  {
-    title: "Hard Dance Screeches - Serum Tutorial",
-    video: "https://www.youtube.com/watch?v=1EmJVlGZBG4",
-    thumbnail: "https://i.ytimg.com/vi/1EmJVlGZBG4/hqdefault.jpg",
-  },
-  {
-    title: "Hardtechno Kick - Serum Tutorial",
-    video: "https://www.youtube.com/watch?v=5bXTQvDmJY4",
-    thumbnail: "https://i.ytimg.com/vi/5bXTQvDmJY4/hqdefault.jpg",
-  },
-  {
-    title: "Zaag Kick - Serum Tutorial",
-    video: "https://www.youtube.com/watch?v=F8pNBXN6XH0",
-    thumbnail: "https://i.ytimg.com/vi/F8pNBXN6XH0/hqdefault.jpg",
-  },
-  {
-    title: "Industrial Techno Synths - Free Tutorial",
-    video: "https://www.youtube.com/watch?v=U2fTh4phhEM",
-    thumbnail: "https://i.ytimg.com/vi/U2fTh4phhEM/hqdefault.jpg",
-  },
-  {
-    title: "Reverse Bass Kick - Serum Tutorial",
-    video: "https://www.youtube.com/watch?v=KCUqnmGBiF0",
-    thumbnail: "https://i.ytimg.com/vi/KCUqnmGBiF0/hqdefault.jpg",
-  },
-];
 
 const shapeColumns = {
   even: [50, 60.83, 71.67, 82.5, 93.33],
@@ -136,30 +110,7 @@ export function AkaHomepage() {
 
       <FreeSoundsH1Section />
 
-      <section className="tutorials-section section-light" id="tutorials">
-        <div className="section-shell tutorials-layout">
-          <div className="tutorial-feature">
-            <SectionLabel>04 / TUTORIALS</SectionLabel>
-            <a href={tutorials[0].video} target="_blank" rel="noreferrer" className="tutorial-feature-link">
-              <img src={tutorials[0].thumbnail} alt={tutorials[0].title} />
-              <div className="tutorial-play">WATCH <span>↗</span></div>
-            </a>
-            <span className="product-kicker">FEATURED CONTENT</span>
-            <h2>HARD DANCE SCREECHES<br />/ SERUM TUTORIAL</h2>
-          </div>
-          <div className="tutorial-index">
-            <SectionLabel>QUICK CONTENT INDEX</SectionLabel>
-            <p className="tutorial-intro">Past production videos and tools from the AKA SOUNDS archive.</p>
-            {tutorials.slice(1).map((tutorial) => (
-              <a className="tutorial-row" href={tutorial.video} target="_blank" rel="noreferrer" key={tutorial.title}>
-                <img src={tutorial.thumbnail} alt="" />
-                <span>{tutorial.title}</span>
-                <b>↗</b>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TutorialsA2Section />
 
       <section className="brand-section section-dark" id="brand">
         <div className="section-shell brand-layout">
