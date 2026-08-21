@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap");
+
 
 
 :root {
@@ -14,7 +14,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: auto; }
-body { margin: 0; min-width: 320px; background: var(--black); color: #f5f5f5; font-family: "Inter", Arial, sans-serif; }
+body { margin: 0; min-width: 320px; background: var(--black); color: #f5f5f5; font-family: "Inter", sans-serif; }
 a { color: inherit; text-decoration: none; }
 button, input { font: inherit; }
 img { display: block; max-width: 100%; }
@@ -56,7 +56,7 @@ img { display: block; max-width: 100%; }
 .artwork-frame { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; }
 .hero-artwork img { width: min(100%, 620px); aspect-ratio: 1; object-fit: cover; }
 .hero-copy { position: relative; z-index: 2; max-width: 540px; }
-.hero-copy h1, .sample-intro h2, .free-intro h2, .tutorial-feature h2, .brand-copy h2, .newsletter-layout h2, .footer-brand h2 { font-family: "Space Grotesk", Arial, sans-serif; }
+.hero-copy h1, .sample-intro h2, .free-intro h2, .tutorial-feature h2, .brand-copy h2, .newsletter-layout h2, .footer-brand h2 { font-family: "Space Grotesk", sans-serif; }
 .hero-copy h1 { margin: 18px 0 24px; max-width: 560px; font-size: clamp(54px, 5.4vw, 88px); line-height: 0.9; letter-spacing: -0.065em; text-transform: uppercase; }
 .hero-copy h1 span { display: block; color: #a8a8a2; }
 .hero-copy > p:not(.hero-meta) { max-width: 310px; margin: 0 0 38px; color: #b4b4ae; font-size: 15px; line-height: 1.6; }
@@ -86,9 +86,9 @@ img { display: block; max-width: 100%; }
 .free-product img { width: min(100%, 340px); aspect-ratio: 1; object-fit: cover; }
 .free-product-copy { max-width: 340px; padding-top: 18px; border-top: 1px solid var(--rule-dark); }
 .free-product-copy > span { color: #85857f; font-size: 9px; letter-spacing: 0.14em; font-weight: 600; }
-.free-product h3 { max-width: 260px; min-height: 38px; margin: 10px 0 18px; color: #f1f1ed; font-family: "Space Grotesk", Arial, sans-serif; font-size: 17px; line-height: 1.03; letter-spacing: -0.035em; text-transform: uppercase; }
+.free-product h3 { max-width: 260px; min-height: 38px; margin: 10px 0 18px; color: #f1f1ed; font-family: "Space Grotesk", sans-serif; font-size: 17px; line-height: 1.03; letter-spacing: -0.035em; text-transform: uppercase; }
 .kinetic-type { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; color: #fff; }
-.kinetic-word { position: absolute; display: block; font-family: "Space Grotesk", Arial, sans-serif; font-weight: 700; line-height: 0.75; letter-spacing: -0.1em; white-space: nowrap; user-select: none; }
+.kinetic-word { position: absolute; display: block; font-family: "Space Grotesk", sans-serif; font-weight: 700; line-height: 0.75; letter-spacing: -0.1em; white-space: nowrap; user-select: none; }
 .kinetic-hard { top: -100px; left: -120px; font-size: 330px; color: rgba(255,255,255,0.045); }
 .kinetic-sound { top: 210px; right: -250px; font-size: 190px; color: rgba(255,255,255,0.035); }
 .kinetic-free { top: 620px; left: 45%; font-size: 260px; color: rgba(255,255,255,0.035); }
@@ -306,7 +306,7 @@ img { display: block; max-width: 100%; }
   max-width: none;
   margin: 42px 0 0 4px;
   color: #d6d6d6;
-  font-family: "Space Grotesk", Arial, sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 26px;
   line-height: 1;
   letter-spacing: 0.054em;
@@ -402,4 +402,253 @@ img { display: block; max-width: 100%; }
   .hero-section .nav-links a { font-size: 8px; text-align: left; }
   .hero-section .hero-inner { padding-top: 156px; }
   .hero-artwork { width: min(100%, 320px); align-self: center; }
+}
+
+/* HERO B2.3 — exact desktop reconstruction from Pen measurements */
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-400.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-500.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: block; }
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-600.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: block; }
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-700.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: block; }
+@font-face { font-family: "Inter"; src: url("/fonts/Inter-800.ttf") format("truetype"); font-weight: 800; font-style: normal; font-display: block; }
+@font-face { font-family: "Space Grotesk"; src: url("/fonts/Space-Grotesk-500.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: block; }
+@font-face { font-family: "Space Grotesk"; src: url("/fonts/Space-Grotesk-600.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: block; }
+@font-face { font-family: "Space Grotesk"; src: url("/fonts/Space-Grotesk-700.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: block; }
+
+.hero-exact-section {
+  height: 900px;
+  background: #070707;
+}
+.hero-exact-shape-grid {
+  position: absolute;
+  z-index: 0;
+  top: 86px;
+  left: 0;
+  width: 100%;
+  height: 814px;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hero-exact-section .home-nav {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  bottom: auto;
+  left: 0;
+  width: 100%;
+  max-width: none;
+  height: 86px;
+  margin: 0;
+  padding: 0;
+  background: #050505;
+  border-bottom: 1px solid #262626;
+}
+.hero-exact-section .brand-lockup {
+  position: absolute;
+  top: 18px;
+  left: 48px;
+  width: 190px;
+  height: 52px;
+}
+.hero-exact-section .brand-lockup img { width: 190px; height: 52px; object-fit: contain; }
+.hero-exact-section .nav-links {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: auto;
+  margin: 0;
+}
+.hero-exact-section .nav-links a,
+.hero-exact-section .nav-cta {
+  position: absolute;
+  top: 34px;
+  height: 12px;
+  display: inline-flex;
+  align-items: flex-start;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+}
+.hero-exact-section .nav-links a:nth-child(1) { left: 360px; width: 128px; }
+.hero-exact-section .nav-links a:nth-child(2) { left: 520px; width: 112px; }
+.hero-exact-section .nav-links a:nth-child(3) { left: 660px; width: 94px; }
+.hero-exact-section .nav-links a:nth-child(4) { left: 782px; width: 62px; }
+.hero-exact-section .nav-cta {
+  left: 1232px;
+  width: 160px;
+  color: #f1f1ed;
+  font-weight: 700;
+  letter-spacing: 1.25px;
+}
+.hero-exact-section .nav-cta span { font-size: inherit; }
+.hero-exact-section .hero-inner {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 900px;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+.hero-exact-section .hero-inner::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 120px;
+  left: 828px;
+  width: 1px;
+  height: 700px;
+  background: #383838;
+}
+.hero-exact-section .hero-artwork {
+  position: absolute;
+  z-index: 2;
+  top: 120px;
+  left: 64px;
+  width: 700px;
+  height: 700px;
+  display: block;
+  overflow: hidden;
+  border: 1px solid #3e3e3e;
+}
+.hero-exact-section .hero-artwork::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.0706);
+  pointer-events: none;
+}
+.hero-exact-section .hero-artwork img {
+  width: 700px;
+  height: 700px;
+  max-width: none;
+  object-fit: cover;
+}
+.hero-exact-section .artwork-caption {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 700px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  padding: 0 28px;
+  background: rgba(7, 7, 7, 0.7216);
+  color: #d0d0d0;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+.hero-exact-section .hero-copy {
+  position: absolute;
+  z-index: 2;
+  top: 196px;
+  left: 880px;
+  width: 386px;
+  max-width: none;
+  padding: 0;
+}
+.hero-exact-section .hero-copy .section-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 360px;
+  height: 12px;
+  margin: 0;
+  color: #c2c2c2;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 1.9px;
+}
+.hero-exact-section .hero-copy h1 {
+  position: absolute;
+  top: 54px;
+  left: 0;
+  width: 386px;
+  height: auto;
+  margin: 0;
+  color: #ffffff;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 62px;
+  line-height: 0.85;
+  font-weight: 800;
+  letter-spacing: -3.1px;
+}
+.hero-exact-section .hero-copy h1 span { display: inline; }
+.hero-exact-section .hero-copy .hero-volume {
+  position: absolute;
+  top: 206px;
+  left: 4px;
+  width: 220px;
+  height: 26px;
+  margin: 0;
+  color: #d6d6d6;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 26px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+.hero-exact-section .hero-copy .hero-volume + p {
+  position: absolute;
+  top: 278px;
+  left: 4px;
+  width: 330px;
+  height: auto;
+  max-width: none;
+  margin: 0;
+  color: #9a9a9a;
+  font-family: "Inter", sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+.hero-exact-section .hero-copy .hero-primary-cta {
+  position: absolute;
+  top: 394px;
+  left: 0;
+  width: 236px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 3px;
+  background: #f1f1ed;
+  color: #080808;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+}
+.hero-exact-section .hero-copy .hero-primary-cta span { color: #080808; font-size: inherit; }
+.hero-exact-section .hero-copy .hero-meta {
+  position: absolute;
+  top: 502px;
+  left: 0;
+  width: 300px;
+  height: 11px;
+  margin: 0;
+  color: #767676;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 1.7px;
 }
