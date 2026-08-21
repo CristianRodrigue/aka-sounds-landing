@@ -1,2 +1,5 @@
-import { RouteHarness } from "@/components/route-harness";
-export default function HomePage() { return <RouteHarness route="/" />; }
+import { AkaHomepage } from "@/components/homepage";
+
+export default function HomePage() {
+  return <AkaHomepage />;
+}
