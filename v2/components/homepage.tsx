@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SamplePacksSection } from "./sections/sample-packs-section";
 
 const ASSET_ROOT = "/assets";
 
@@ -150,34 +151,7 @@ export function AkaHomepage() {
         </div>
       </section>
 
-      <section className="sample-section section-light" id="sample-packs">
-        <ShapeGrid variant="light" layout="sample" />
-        <div className="section-shell sample-layout">
-          <div className="sample-intro">
-            <SectionLabel>02 / SAMPLE PACKS</SectionLabel>
-            <h2>SAMPLE PACKS</h2>
-            <p>One premium pack, one related free trial.</p>
-          </div>
-          <div className="sample-products">
-            <article className="premium-product">
-              <img src={`${ASSET_ROOT}/HARDTECHNO-ESSENTIALS-VOL.-1.jpg`} alt="Hardtechno Essentials Vol. 01" />
-              <div>
-                <span className="product-kicker">PREMIUM PACK</span>
-                <h3>HARDTECHNO ESSENTIALS<br />VOL. 01</h3>
-                <a className="dark-cta" href="#top">EXPLORE PACK <span>→</span></a>
-              </div>
-            </article>
-            <article className="trial-product">
-              <img src={`${ASSET_ROOT}/HARDTECHNO-ESSENTIALS-VOL.-1-FREE-SAMPLEPACK.jpg`} alt="Hardtechno Essentials Vol. 01 Free Trial" />
-              <div>
-                <span className="product-kicker">RELATED FREE TRIAL</span>
-                <h3>HARDTECHNO ESSENTIALS<br />VOL. 01 FREE TRIAL</h3>
-                <a className="dark-cta" href="#free-sounds">GET FREE TRIAL <span>→</span></a>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
+      <SamplePacksSection />
 
       <section className="free-section section-dark" id="free-sounds">
         <ShapeGrid variant="dark" reduced layout="free" />
