@@ -1097,8 +1097,8 @@ img { display: block; max-width: 100%; }
 /* G4.4 — Tutorials A2 exact reconstruction */
 .tutorials-exact-section {
   position: relative;
-  height: 1150px;
-  min-height: 1150px;
+  height: 850px;
+  min-height: 850px;
   overflow: hidden;
   background: #f1f1ed;
   color: #111111;
@@ -1308,15 +1308,263 @@ img { display: block; max-width: 100%; }
 }
 
 .tutorials-exact-footer-rule {
-  top: 940px;
+  top: 790px;
   left: 72px;
   width: 1296px;
 }
 
 .tutorials-exact-footer-meta {
-  top: 970px;
+  top: 820px;
   left: 72px;
   color: #60605c;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  line-height: 1;
+}
+
+
+/* G4.5 — Brand + Community A2 compact reconstruction */
+.brand-a2-section {
+  position: relative;
+  width: 100%;
+  height: 950px;
+  min-height: 950px;
+  overflow: hidden;
+  background: #070707;
+  color: #f1f1ed;
+}
+
+.brand-a2-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.brand-a2-lockup {
+  position: absolute;
+  top: 35px;
+  left: 72px;
+  display: block;
+  width: 310px;
+  height: 62px;
+}
+
+.brand-a2-lockup img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.brand-a2-divider {
+  position: absolute;
+  top: 135px;
+  left: 960px;
+  width: 1px;
+  height: 600px;
+  background: #292929;
+}
+
+.brand-a2-symbol-field {
+  position: absolute;
+  top: 150px;
+  left: 1000px;
+  width: 340px;
+  height: 340px;
+}
+
+.brand-a2-symbol-field img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.brand-a2-index,
+.brand-a2-genre,
+.brand-a2-offer,
+.brand-a2-support,
+.brand-a2-community-label,
+.brand-a2-footer-meta {
+  position: absolute;
+  margin: 0;
+}
+
+.brand-a2-index {
+  top: 170px;
+  left: 72px;
+  color: #8f8f8f;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  line-height: 1;
+}
+
+.brand-a2-manifesto-line {
+  position: absolute;
+  left: 72px;
+  color: #f1f1ed;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 72px;
+  font-weight: 700;
+  letter-spacing: -3px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.brand-a2-manifesto-line-one {
+  top: 225px;
+}
+
+.brand-a2-manifesto-line-two {
+  top: 298px;
+}
+
+.brand-a2-genre,
+.brand-a2-offer {
+  color: #9f9f9f;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.45px;
+  line-height: 1;
+}
+
+.brand-a2-genre {
+  top: 410px;
+  left: 72px;
+}
+
+.brand-a2-offer {
+  top: 450px;
+  left: 72px;
+}
+
+.brand-a2-support {
+  top: 575px;
+  left: 72px;
+  color: #f1f1ed;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.brand-a2-community {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.brand-a2-community-label {
+  top: 670px;
+  left: 72px;
+  color: #8f8f8f;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  line-height: 1;
+}
+
+.brand-a2-channel {
+  position: absolute;
+  display: block;
+  width: 560px;
+  height: 24px;
+  color: #f1f1ed;
+  text-decoration: none;
+}
+
+.brand-a2-channel-youtube {
+  top: 715px;
+  left: 72px;
+}
+
+.brand-a2-channel-soundcloud {
+  top: 715px;
+  left: 760px;
+}
+
+.brand-a2-channel-instagram {
+  top: 820px;
+  left: 72px;
+}
+
+.brand-a2-channel-spotify {
+  top: 820px;
+  left: 760px;
+}
+
+.brand-a2-channel-name,
+.brand-a2-channel-action {
+  position: absolute;
+  display: block;
+  white-space: nowrap;
+}
+
+.brand-a2-channel-name {
+  top: 0;
+  left: 0;
+  color: #f1f1ed;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.brand-a2-channel-action {
+  top: 3px;
+  color: #f1f1ed;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  line-height: 1;
+}
+
+.brand-a2-channel-youtube .brand-a2-channel-action,
+.brand-a2-channel-instagram .brand-a2-channel-action {
+  left: 488px;
+}
+
+.brand-a2-channel-soundcloud .brand-a2-channel-action,
+.brand-a2-channel-spotify .brand-a2-channel-action {
+  left: 480px;
+}
+
+.brand-a2-community-rule,
+.brand-a2-footer-rule {
+  position: absolute;
+  left: 72px;
+  width: 1296px;
+  height: 1px;
+  background: #303030;
+}
+
+.brand-a2-community-rule-one {
+  top: 775px;
+}
+
+.brand-a2-community-rule-two {
+  top: 880px;
+}
+
+.brand-a2-footer-rule {
+  display: none;
+}
+
+.brand-a2-footer-meta {
+  top: 920px;
+  left: 72px;
+  color: #8f8f8f;
   font-family: "Inter", sans-serif;
   font-size: 10px;
   font-weight: 700;

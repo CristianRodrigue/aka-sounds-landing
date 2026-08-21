@@ -16,7 +16,7 @@
 
 ## NEXT IMPLEMENTATION SECTION
 
-- TUTORIALS A2 ONLY
+- TUTORIALS A2 COMPACT ONLY
 
 Navbar + Hero implementation files and presentation styles are READ ONLY for subsequent section gates unless human approval explicitly reopens them.
 
@@ -28,4 +28,7 @@ Motion is not implemented.
 - FREE SOUNDS H1 / HORIZONTAL RAIL: APPROVED / FROZEN
 - Previous Free Sounds 2×2 layout: SUPERSEDED / DO NOT IMPLEMENT
 - Free Sounds React implementation: APPROVED / FROZEN
-- TUTORIALS A2: NEXT IMPLEMENTATION SECTION
+- TUTORIALS A2 COMPACT: PENDING HUMAN APPROVAL
+- BRAND + COMMUNITY COMPACT: APPROVED / FROZEN
+- Brand + Community Compact browser baseline: `v2/design/baselines/brand-community-a2-compact-approved-1440x4410.png`
+- NEXT CLOSING SECTION AFTER TUTORIALS APPROVAL: NEWSLETTER B2

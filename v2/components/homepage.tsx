@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { TutorialsA2Section } from "./sections/tutorials-section";
+import { BrandCommunityA2Section } from "./sections/brand-community-section";
 import { FreeSoundsH1Section } from "./sections/free-sounds-section";
 import { SamplePacksSection } from "./sections/sample-packs-section";
 
@@ -112,26 +113,7 @@ export function AkaHomepage() {
 
       <TutorialsA2Section />
 
-      <section className="brand-section section-dark" id="brand">
-        <div className="section-shell brand-layout">
-          <div className="brand-copy">
-            <SectionLabel>05 / BRAND + COMMUNITY</SectionLabel>
-            <h2>BUILT FOR<br />HARD DANCE.</h2>
-            <p>Sound design for the harder side of music.</p>
-            <p className="brand-meta">RAWSTYLE&nbsp; / &nbsp;HARDTECHNO&nbsp; / &nbsp;SOUND DESIGN</p>
-          </div>
-          <div className="brand-symbol">
-            <img src={`${ASSET_ROOT}/aka-logo-symbol-white-official.png`} alt="AKA Sounds symbol" />
-          </div>
-          <div className="community-index">
-            <SectionLabel>COMMUNITY / LIVE CHANNELS</SectionLabel>
-            <a href="https://www.youtube.com/@Aka_sounds" target="_blank" rel="noreferrer"><span>YOUTUBE</span><b>WATCH →</b></a>
-            <a href="https://soundcloud.com/deat_aka" target="_blank" rel="noreferrer"><span>SOUNDCLOUD</span><b>LISTEN →</b></a>
-            <a href="https://www.instagram.com/aka_sounds/" target="_blank" rel="noreferrer"><span>INSTAGRAM</span><b>FOLLOW →</b></a>
-            <a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU?si=e1WUj9Z6TfOckAKzqED8hg" target="_blank" rel="noreferrer"><span>SPOTIFY</span><b>LISTEN →</b></a>
-          </div>
-        </div>
-      </section>
+      <BrandCommunityA2Section />
 
       <section className="newsletter-section section-light" id="newsletter">
         <ShapeGrid variant="light" layout="sample" />

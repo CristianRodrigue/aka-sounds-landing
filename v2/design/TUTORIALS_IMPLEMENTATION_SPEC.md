@@ -1,6 +1,6 @@
 # TUTORIALS A2 — IMPLEMENTATION SPEC
 
-Source of truth: `APPROVED / FROZEN — TUTORIALS A2` (`C7qFII`) in `AKA_SOUNDS_V2_MASTER.pen`.
+Source of truth for implementation: `TUTORIALS A2 COMPACT` (`eCSxO`, surface `Q7Tbi2`) in `AKA_SOUNDS_V2_MASTER.pen`. Previous A2 remains preserved in `C7qFII` for comparison.
 
 This is a measurement record only. Pen coordinates below are converted to the Tutorials section local origin by subtracting the approved surface y-position `1450`.
 
@@ -73,6 +73,16 @@ This is a measurement record only. Pen coordinates below are converted to the Tu
 - Rule: local x `72`, y `940`, width `1296`, height `1`, color `#B7B7B1`.
 - Footer label: local x `72`, y `970`; `WATCH  /  TUTORIAL ARCHIVE`; Inter `10px`, weight `700`, letter spacing `1.5px`, color `#60605C`.
 
+## A2 Compact revision — pending human approval
+
+- Pen frame: `TUTORIALS A2 COMPACT` (`eCSxO`), x `10920`, y `15900`, width `1440`, height `2300`.
+- Compact surface: `04A light editorial surface` (`Q7Tbi2`), local origin within the frame at y `1450`, width `1440`, height `850`.
+- Implementation section: width `1440px`, height `850px`.
+- Content layout, typography, thumbnails, titles and URLs are unchanged from the approved A2 record above.
+- Bottom rule: local x `72`, y `790`, width `1296`, height `1`, color `#B7B7B1`.
+- Footer label: local x `72`, y `820`; `WATCH  /  TUTORIAL ARCHIVE`.
+- Reduction from approved A2: `300px` / `26.1%`.
+- Intent: remove only the dead lower whitespace and keep a short breathing space before the Brand + Community Compact section.
 ## Static implementation boundary
 
 - No overlays, play icons, gradients, Shape Grid, motion, hover movement, responsive behavior, or embedded YouTube players are present in the approved A2 frame.
