@@ -1,14 +1,8 @@
 import type { ReactNode } from "react";
+import { FreeSoundsH1Section } from "./sections/free-sounds-section";
 import { SamplePacksSection } from "./sections/sample-packs-section";
 
 const ASSET_ROOT = "/assets";
-
-const freeSounds = [
-  { title: "Serum 2 Hard Dance Screeches", art: "Cover_FREE_SCREECH_Cyan.png" },
-  { title: "Serum 2 Hardtechno Kick", art: "AkasoundsProductCover-Hardtechno.jpeg" },
-  { title: "Serum 2 Zaag Kick", art: "AkasoundsProductCover-ZaagKick.jpeg" },
-  { title: "Serum 2 Reverse Bass Kick", art: "AkasoundsProductCover.jpeg" },
-];
 
 const tutorials = [
   {
@@ -100,19 +94,6 @@ function ShapeGrid({ variant, reduced = false, layout = "section" }: { variant: 
     </div>
   );
 }
-
-function KineticType() {
-  return (
-    <div className="kinetic-type" aria-hidden="true">
-      <span className="kinetic-word kinetic-hard kinetic-hard-offset">HARD</span>
-      <span className="kinetic-word kinetic-hard">HARD</span>
-      <span className="kinetic-word kinetic-sound">SOUND</span>
-      <span className="kinetic-word kinetic-free">FREE</span>
-      <span className="kinetic-word kinetic-aka">AKA</span>
-    </div>
-  );
-}
-
 function SectionLabel({ children }: { children: ReactNode }) {
   return <p className="section-label">{children}</p>;
 }
@@ -153,29 +134,7 @@ export function AkaHomepage() {
 
       <SamplePacksSection />
 
-      <section className="free-section section-dark" id="free-sounds">
-        <ShapeGrid variant="dark" reduced layout="free" />
-        <KineticType />
-        <div className="section-shell free-layout">
-          <div className="free-intro">
-            <SectionLabel>03 / FREE SOUNDS</SectionLabel>
-            <h2>FREE SOUNDS</h2>
-            <p>Sound design tools from the AKA SOUNDS archive.</p>
-          </div>
-          <div className="free-grid">
-            {freeSounds.map((sound) => (
-              <article className="free-product" key={sound.title}>
-                <img src={`${ASSET_ROOT}/${sound.art}`} alt={`${sound.title} artwork`} />
-                <div className="free-product-copy">
-                  <span>FREE SOUND</span>
-                  <h3>{sound.title}</h3>
-                  <a className="text-cta" href="#free-sounds">GET FREE SOUND <span>→</span></a>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FreeSoundsH1Section />
 
       <section className="tutorials-section section-light" id="tutorials">
         <div className="section-shell tutorials-layout">

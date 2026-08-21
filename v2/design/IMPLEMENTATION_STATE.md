@@ -16,7 +16,7 @@
 
 ## NEXT IMPLEMENTATION SECTION
 
-- SAMPLE PACKS ONLY
+- FREE SOUNDS H1 ONLY
 
 Navbar + Hero implementation files and presentation styles are READ ONLY for subsequent section gates unless human approval explicitly reopens them.
 
@@ -24,6 +24,7 @@ Motion is not implemented.
 
 ## DESIGN STATE
 
-- FREE SOUNDS H1 / HORIZONTAL RAIL: APPROVED / FROZEN IN PEN
-- Previous Free Sounds 2×2 layout: superseded for future implementation.
-- Free Sounds React implementation: deferred; not part of the current gate.
+- SAMPLE PACKS: APPROVED / FROZEN
+- FREE SOUNDS H1 / HORIZONTAL RAIL: APPROVED / FROZEN IN PEN; NEXT REACT SECTION
+- Previous Free Sounds 2×2 layout: SUPERSEDED / DO NOT IMPLEMENT
+- Free Sounds React implementation: current gate only
