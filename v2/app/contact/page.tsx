@@ -1,4 +1,11 @@
 import { SupportPage, SupportSection } from "@/components/support-page";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Contact AKA Sounds",
+  description: "Contact AKA Sounds for support with sample packs, downloads and the AKA Sounds archive.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (

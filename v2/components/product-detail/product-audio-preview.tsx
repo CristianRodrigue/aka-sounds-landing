@@ -33,7 +33,11 @@ function formatTime(value: number) {
   if (!Number.isFinite(value) || value < 0) return "0:00";
   const minutes = Math.floor(value / 60);
   const seconds = Math.floor(value % 60);
-  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+  if (value < 1) {
+    const milliseconds = Math.round((value % 1) * 1000);
+    return minutes + ":" + String(seconds).padStart(2, "0") + "." + String(milliseconds).padStart(3, "0");
+  }
+  return minutes + ":" + String(seconds).padStart(2, "0");
 }
 
 function parseLegacyDuration(value: string) {

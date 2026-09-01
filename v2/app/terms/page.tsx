@@ -1,4 +1,11 @@
 import { SupportPage, SupportSection } from "@/components/support-page";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Terms of Service | AKA Sounds",
+  description: "The usage terms for AKA Sounds digital audio products and this website.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

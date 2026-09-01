@@ -1,5 +1,6 @@
+import Image from "next/image";
 import { ProductAudioPreview } from "./product-audio-preview";
-import { hardtechnoEssentialsProduct as product } from "./product-data";
+import type { ProductDetailModel } from "./product-data";
 import { ProductPurchaseButton } from "./product-purchase-button";
 import { MotionOrchestrator } from "../motion-orchestrator";
 
@@ -27,7 +28,7 @@ function ProductSignalTicker() {
       <div className="signal-ticker-viewport">
         <div className="signal-ticker-track">
           <div className="signal-ticker-sequence">
-            <a href="/#sample-packs">NEW RELEASE <span>—</span> HARDTECHNO ESSENTIALS VOL. 01</a>
+            <a href="/#sample-packs">NEW RELEASE <span>—</span> MODERN RAW KICK ARSENAL VOL. 1</a>
             <i aria-hidden="true">/</i>
             <a href="/#free-sounds">FREE SOUNDS <span>—</span> SERUM 2 HARD DANCE SCREECHES</a>
             <i aria-hidden="true">/</i>
@@ -35,7 +36,7 @@ function ProductSignalTicker() {
             <i aria-hidden="true">/</i>
           </div>
           <div className="signal-ticker-sequence" aria-hidden="true">
-            <a href="/#sample-packs" tabIndex={-1}>NEW RELEASE <span>—</span> HARDTECHNO ESSENTIALS VOL. 01</a>
+            <a href="/#sample-packs" tabIndex={-1}>NEW RELEASE <span>—</span> MODERN RAW KICK ARSENAL VOL. 1</a>
             <i aria-hidden="true">/</i>
             <a href="/#free-sounds" tabIndex={-1}>FREE SOUNDS <span>—</span> SERUM 2 HARD DANCE SCREECHES</a>
             <i aria-hidden="true">/</i>
@@ -74,6 +75,38 @@ function ProductShapeGrid() {
   );
 }
 
+function ProductImage({
+  src,
+  alt,
+  optimized = false,
+  priority = false,
+  className,
+  sizes,
+}: {
+  src: string;
+  alt: string;
+  optimized?: boolean;
+  priority?: boolean;
+  className?: string;
+  sizes: string;
+}) {
+  if (optimized) {
+    return (
+      <Image
+        className={className}
+        src={src}
+        alt={alt}
+        width={6000}
+        height={6000}
+        quality={100}
+        priority={priority}
+        sizes={sizes}
+      />
+    );
+  }
+
+  return <img className={className} src={src} alt={alt} />;
+}
 type ProductAmbientTone = "dark" | "light";
 type ProductAmbientVariant = "triangles" | "rails" | "wave" | "cross";
 
@@ -128,7 +161,7 @@ function ProductAmbientFigure({ tone, variant }: { tone: ProductAmbientTone; var
     </svg>
   );
 }
-function ProductValueProposition() {
+function ProductValueProposition({ product }: { product: ProductDetailModel }) {
   const { valueProposition } = product;
 
   return (
@@ -183,7 +216,7 @@ function ProductFooter() {
   );
 }
 
-export function ProductDetailPage() {
+export function ProductDetailPage({ product }: { product: ProductDetailModel }) {
   return (
     <main className="product-v2-page">
       <MotionOrchestrator reversible />
@@ -193,8 +226,14 @@ export function ProductDetailPage() {
         <ProductSignalTicker />
         <div className="product-v2-hero-inner">
           <div className="product-v2-artwork-frame" data-motion-reveal data-motion-delay="90">
-            <img src={product.artwork} alt="Hardtechno Essentials Vol. 01 artwork" />
-            <div className="product-v2-artwork-caption">HARDTECHNO ESSENTIALS <span>/</span> VOL. 01</div>
+            <ProductImage
+              src={product.artwork}
+              alt={product.displayName + " artwork"}
+              optimized={product.optimizedArtwork}
+              priority
+              sizes="(max-width: 760px) 100vw, 48vw"
+            />
+            <div className="product-v2-artwork-caption">{product.artworkCaption.title} <span>/</span> {product.artworkCaption.detail}</div>
           </div>
           <div className="product-v2-hero-copy" data-motion-reveal data-motion-delay="140">
             <a className="product-v2-back-link" href="/#sample-packs">← BACK TO SAMPLE PACKS</a>
@@ -205,11 +244,12 @@ export function ProductDetailPage() {
             <div className="product-v2-price-block">
               <span className="product-v2-price-label">CURRENT PRODUCT PRICE</span>
               <strong>{product.currentPrice}</strong>
+              {product.referencePrice ? <del className="product-v2-reference-price">{product.referencePrice}</del> : null}
             </div>
             <ProductPurchaseButton priceId={product.paddlePriceId} />
           </div>
         </div>
-        <div className="product-v2-hero-meta" data-motion-reveal data-motion-delay="260">AKA SOUNDS <span>/</span> HARDTECHNO SAMPLE PACK</div>
+        <div className="product-v2-hero-meta" data-motion-reveal data-motion-delay="260">{product.heroMeta.title} <span>/</span> {product.heroMeta.detail}</div>
       </section>
 
       <section className="product-v2-content section-light">
@@ -231,7 +271,7 @@ export function ProductDetailPage() {
         </div>
       </section>
 
-      <ProductValueProposition />
+      <ProductValueProposition product={product} />
 
       <section className="product-v2-preview section-dark">
         <ProductAmbientFigure tone="dark" variant="wave" />
@@ -239,38 +279,50 @@ export function ProductDetailPage() {
           <div className="product-v2-preview-heading">
             <p className="product-v2-section-index">04 / AUDIO PREVIEW</p>
             <h2>SELECT<br />A SOUND.</h2>
+            {product.previewContext ? <p className="product-v2-preview-context">{product.previewContext}</p> : null}
           </div>
           <ProductAudioPreview tracks={product.previewTracks} />
-          <div className="product-v2-soundcloud">
-            <div>
-              <p className="product-v2-section-index">SOUNDCLOUD DEMO</p>
-              <p>THIS IS A F*CKING HARDTECHNO</p>
+          {product.soundCloudTrackUrl ? (
+            <div className="product-v2-soundcloud">
+              <div>
+                <p className="product-v2-section-index">SOUNDCLOUD DEMO</p>
+                <p>THIS IS A F*CKING HARDTECHNO</p>
+              </div>
+              <iframe
+                title={product.displayName + " SoundCloud demo"}
+                src={"https://w.soundcloud.com/player/?url=" + encodeURIComponent(product.soundCloudTrackUrl) + "&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"}
+                allow="autoplay"
+              />
             </div>
-            <iframe
-              title="Hardtechno SoundCloud demo"
-              src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(product.soundCloudTrackUrl)}&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false`}
-              allow="autoplay"
-            />
-          </div>
+          ) : null}
         </div>
       </section>
 
-      <section id="free-trial" className="product-v2-related section-light">
+      <section id="free-trial" className={"product-v2-related section-light" + (product.relatedTrial.sectionTitle === "FREE EDITION" ? " product-v2-related-free-edition" : "")}>
         <ProductAmbientFigure tone="light" variant="rails" />
         <div className="product-v2-section-shell" data-motion-reveal>
           <div>
             <p className="product-v2-section-index">05 / RELATED PRODUCT</p>
-            <h2>FREE TRIAL</h2>
+            <h2>{product.relatedTrial.sectionTitle}</h2>
             <p className="product-v2-related-copy">{product.relatedTrial.title}</p>
           </div>
           <div className="product-v2-trial-module">
-            <img src={product.relatedTrial.artwork} alt="Hardtechno Essentials Vol. 01 Free Trial artwork" />
+            <ProductImage
+                src={product.relatedTrial.artwork}
+                alt={product.relatedTrial.title + " artwork"}
+                optimized={product.relatedTrial.optimizedArtwork}
+                sizes="(max-width: 760px) 120px, 190px"
+              />
             <div>
-              <p className="product-v2-section-index">RELATED FREE TRIAL</p>
-              <h3>HARDTECHNO ESSENTIALS<br />VOL. 01 FREE TRIAL</h3>
+              <p className="product-v2-section-index">{product.relatedTrial.label}</p>
+              <h3>
+                {product.relatedTrial.titleLines.map((line) => (
+                  <span className="product-v2-related-title-line" key={line}>{line}</span>
+                ))}
+              </h3>
               <ProductPurchaseButton
                 priceId={product.relatedTrial.paddlePriceId}
-                label="GET FREE TRIAL"
+                label={product.relatedTrial.sectionTitle === "FREE EDITION" ? "GET FREE EDITION" : "GET FREE TRIAL"}
                 variant="text"
               />
             </div>
@@ -283,9 +335,10 @@ export function ProductDetailPage() {
         <div className="product-v2-section-shell" data-motion-reveal>
           <p className="product-v2-section-index">06 / PURCHASE</p>
           <div className="product-v2-final-row">
-            <h2>HARDTECHNO ESSENTIALS<br /><span>{product.volume}</span></h2>
+            <h2>{product.title}<br /><span>{product.volume}</span></h2>
             <div className="product-v2-final-buy">
               <strong>{product.currentPrice}</strong>
+              {product.referencePrice ? <del className="product-v2-reference-price">{product.referencePrice}</del> : null}
               <ProductPurchaseButton priceId={product.paddlePriceId} compact />
             </div>
           </div>

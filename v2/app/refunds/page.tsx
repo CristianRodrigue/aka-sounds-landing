@@ -1,4 +1,11 @@
 import { SupportPage, SupportSection } from "@/components/support-page";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Refund Policy | AKA Sounds",
+  description: "The AKA Sounds 14-day unconditional refund policy for digital sample pack purchases.",
+  path: "/refunds",
+});
 
 export default function RefundsPage() {
   return (

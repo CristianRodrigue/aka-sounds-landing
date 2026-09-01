@@ -1,29 +1,29 @@
 const featuredTutorial = {
   title: "HARD DANCE SCREECHES / SERUM 2 TUTORIAL",
   video: "https://www.youtube.com/watch?v=1EmJVlGZBG4",
-  thumbnail: "https://i.ytimg.com/vi/1EmJVlGZBG4/hqdefault.jpg",
+  thumbnail: "https://i.ytimg.com/vi/1EmJVlGZBG4/maxresdefault.jpg",
 };
 
 const archiveTutorials = [
   {
     title: "HARDTECHNO KICK / SERUM 2 TUTORIAL",
     video: "https://www.youtube.com/watch?v=5bXTQvDmJY4",
-    thumbnail: "https://i.ytimg.com/vi/5bXTQvDmJY4/hqdefault.jpg",
+    thumbnail: "https://i.ytimg.com/vi/5bXTQvDmJY4/maxresdefault.jpg",
   },
   {
     title: "ZAAG KICK / SERUM 2 TUTORIAL",
     video: "https://www.youtube.com/watch?v=F8pNBXN6XH0",
-    thumbnail: "https://i.ytimg.com/vi/F8pNBXN6XH0/hqdefault.jpg",
+    thumbnail: "https://i.ytimg.com/vi/F8pNBXN6XH0/maxresdefault.jpg",
   },
   {
     title: "REVERSE BASS KICK / SERUM 2 TUTORIAL",
     video: "https://www.youtube.com/watch?v=U2fTh4phhEM",
-    thumbnail: "https://i.ytimg.com/vi/U2fTh4phhEM/hqdefault.jpg",
+    thumbnail: "https://i.ytimg.com/vi/U2fTh4phhEM/maxresdefault.jpg",
   },
   {
     title: "RAWSTYLE KICK / SERUM 2 TUTORIAL",
     video: "https://www.youtube.com/watch?v=KCUqnmGBiF0",
-    thumbnail: "https://i.ytimg.com/vi/KCUqnmGBiF0/hqdefault.jpg",
+    thumbnail: "https://i.ytimg.com/vi/KCUqnmGBiF0/maxresdefault.jpg",
   },
 ] as const;
 
@@ -47,13 +47,14 @@ export function TutorialsA2Section() {
         <p className="tutorials-exact-description" data-motion-reveal data-motion-delay="120">Past production videos and tools from the AKA SOUNDS archive.</p>
 
         <p className="tutorials-exact-feature-label" data-motion-reveal data-motion-delay="170">FEATURED TUTORIAL</p>
-        <a className="tutorials-exact-feature-thumbnail" data-motion-reveal data-motion-delay="220" href={featuredTutorial.video} target="_blank" rel="noreferrer">
+        <a className="tutorials-exact-feature-thumbnail" data-motion-reveal data-motion-delay="220" href={featuredTutorial.video} aria-label={`Watch ${featuredTutorial.title}`}>
           <img src={featuredTutorial.thumbnail} alt={featuredTutorial.title} />
+          <span className="tutorials-play-indicator" aria-hidden="true">▶</span>
         </a>
         <div className="tutorials-exact-feature-rule" aria-hidden="true" />
         <h3 className="tutorials-exact-feature-title" data-motion-reveal data-motion-delay="290">{featuredTutorial.title}</h3>
         <p className="tutorials-exact-feature-meta" data-motion-reveal data-motion-delay="350">SERUM&nbsp; / &nbsp;HARDSTYLE&nbsp; / &nbsp;RAWSTYLE</p>
-        <a className="tutorials-exact-feature-action motion-cta" data-motion-reveal data-motion-delay="400" href={featuredTutorial.video} target="_blank" rel="noreferrer">
+        <a className="tutorials-exact-feature-action motion-cta" data-motion-reveal data-motion-delay="400" href={featuredTutorial.video}>
           WATCH TUTORIAL <span className="motion-cta-arrow">→</span>
         </a>
 
@@ -61,13 +62,14 @@ export function TutorialsA2Section() {
           <p className="tutorials-exact-archive-label" data-motion-reveal data-motion-delay="460">ARCHIVE INDEX</p>
           {archiveTutorials.map((tutorial, index) => (
             <article className={`tutorials-exact-row tutorials-exact-row-${index + 1}`} data-motion-reveal data-motion-delay={String(index * 70 + 520)} key={tutorial.video}>
-              <a className="tutorials-exact-row-thumbnail" href={tutorial.video} target="_blank" rel="noreferrer">
+              <a className="tutorials-exact-row-thumbnail" href={tutorial.video} aria-label={`Watch ${tutorial.title}`}>
                 <img src={tutorial.thumbnail} alt={tutorial.title} />
+                <span className="tutorials-play-indicator" aria-hidden="true">▶</span>
               </a>
-              <a className="tutorials-exact-row-title" href={tutorial.video} target="_blank" rel="noreferrer">
+              <a className="tutorials-exact-row-title" href={tutorial.video}>
                 {tutorial.title}
               </a>
-              <a className="tutorials-exact-row-action motion-cta" href={tutorial.video} target="_blank" rel="noreferrer">
+              <a className="tutorials-exact-row-action motion-cta" href={tutorial.video}>
                 WATCH TUTORIAL <span className="motion-cta-arrow">→</span>
               </a>
             </article>

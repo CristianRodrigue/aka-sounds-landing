@@ -1,8 +1,26 @@
+import Image from "next/image";
 import { ProductPurchaseButton } from "../product-detail/product-purchase-button";
 
 const ASSET_ROOT = "/assets";
 
-const freeSounds = [
+type FreeSound = {
+  readonly title: readonly string[];
+  readonly art: string;
+  readonly priceId: string;
+  readonly label?: string;
+  readonly optimized?: boolean;
+  readonly details?: string;
+};
+
+const freeSounds: readonly FreeSound[] = [
+  {
+    title: ["MODERN RAW KICK", "ARSENAL VOL. 1"],
+    art: "modern-raw-kick-arsenal-vol-1-free-edition-cover.jpg",
+    priceId: "pri_01m0zn4mt890s0fp4xym0jpj9s",
+    label: "FREE EDITION",
+    details: "13 RAW KICK SAMPLES / 3 FULL KICKS / 10 COMPONENTS",
+    optimized: true,
+  },
   {
     title: ["SERUM 2 HARD DANCE", "SCREECHES"],
     art: "Cover_FREE_SCREECH_Cyan.png",
@@ -23,7 +41,7 @@ const freeSounds = [
     art: "AkasoundsProductCover.jpeg",
     priceId: "pri_01kkwnrqgq7xcd5hhpxg99ae6p",
   },
-] as const;
+];
 
 const shapeTriangles = [
   [520, 185, 0],
@@ -75,13 +93,26 @@ export function FreeSoundsH1Section() {
         <div className="free-h1-top-rule" aria-hidden="true" />
         <div className="free-h1-rail" aria-label="Free Sounds products" data-motion-rail>
           {freeSounds.map((sound, index) => (
-            <article className="free-h1-product" key={sound.art} data-motion-reveal data-motion-delay={String(index * 70 + 220)}>
-              <img className="free-h1-artwork" data-motion-artwork src={`${ASSET_ROOT}/${sound.art}`} alt={`${sound.title.join(" ")} artwork`} />
+            <article className={`free-h1-product${sound.details ? " free-h1-product-with-details" : ""}`} key={sound.art} data-motion-reveal data-motion-delay={String(index * 70 + 220)}>
+              {sound.optimized ? (
+                <Image
+                  className="free-h1-artwork"
+                  src={`${ASSET_ROOT}/${sound.art}`}
+                  alt={`${sound.title.join(" ")} artwork`}
+                  width={6000}
+                  height={6000}
+                  quality={100}
+                  sizes="(max-width: 760px) 68vw, 260px"
+                />
+              ) : (
+                <img className="free-h1-artwork" src={`${ASSET_ROOT}/${sound.art}`} alt={`${sound.title.join(" ")} artwork`} />
+              )}
               <div className="free-h1-module-rule" aria-hidden="true" />
-              <p className="free-h1-label">FREE SOUND</p>
+              <p className="free-h1-label">{sound.label ?? "FREE SOUND"}</p>
               <h3 className="free-h1-product-title">
                 {sound.title.map((line) => <span className="free-h1-product-title-line" key={line}>{line}</span>)}
               </h3>
+              {sound.details ? <p className="free-h1-product-details">{sound.details}</p> : null}
               <ProductPurchaseButton
                 priceId={sound.priceId}
                 label="GET FREE SOUND"
@@ -98,7 +129,7 @@ export function FreeSoundsH1Section() {
           <button type="button" className="free-h1-rail-arrow free-h1-next-arrow" data-free-rail-next aria-label="Next free sound">→</button>
         </div>
         <div className="free-h1-end-rule" aria-hidden="true" />
-        <p className="free-h1-rail-meta">HORIZONTAL RAIL&nbsp; / &nbsp;4 FREE SOUNDS&nbsp; / &nbsp;DRAG TO EXPLORE</p>
+        <p className="free-h1-rail-meta">HORIZONTAL RAIL&nbsp; / &nbsp;5 FREE SOUNDS&nbsp; / &nbsp;DRAG TO EXPLORE</p>
       </div>
     </section>
   );

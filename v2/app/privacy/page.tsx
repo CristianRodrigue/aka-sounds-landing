@@ -1,4 +1,11 @@
 import { SupportPage, SupportSection } from "@/components/support-page";
+import { createPageMetadata } from "@/lib/seo";
+
+export const metadata = createPageMetadata({
+  title: "Privacy Policy | AKA Sounds",
+  description: "How AKA Sounds handles information needed to provide the website, purchases, downloads and newsletter.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

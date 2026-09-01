@@ -94,7 +94,7 @@ export function AkaHomepage() {
           <div className="signal-ticker-viewport">
             <div className="signal-ticker-track">
               <div className="signal-ticker-sequence">
-                <a href="#sample-packs">NEW RELEASE <span>—</span> HARDTECHNO ESSENTIALS VOL. 01</a>
+                <a href="#sample-packs">NEW RELEASE <span>—</span> MODERN RAW KICK ARSENAL VOL. 1</a>
                 <i aria-hidden="true">/</i>
                 <a href="#free-sounds">FREE SOUNDS <span>—</span> SERUM 2 HARD DANCE SCREECHES</a>
                 <i aria-hidden="true">/</i>
@@ -102,7 +102,7 @@ export function AkaHomepage() {
                 <i aria-hidden="true">/</i>
               </div>
               <div className="signal-ticker-sequence" aria-hidden="true">
-                <a href="#sample-packs" tabIndex={-1}>NEW RELEASE <span>—</span> HARDTECHNO ESSENTIALS VOL. 01</a>
+                <a href="#sample-packs" tabIndex={-1}>NEW RELEASE <span>—</span> MODERN RAW KICK ARSENAL VOL. 1</a>
                 <i aria-hidden="true">/</i>
                 <a href="#free-sounds" tabIndex={-1}>FREE SOUNDS <span>—</span> SERUM 2 HARD DANCE SCREECHES</a>
                 <i aria-hidden="true">/</i>
@@ -117,16 +117,14 @@ export function AkaHomepage() {
 
         <div className="hero-inner section-shell" id="featured-product">
           <div className="hero-artwork artwork-frame" data-motion-reveal data-motion-delay="90">
-            <img src={ASSET_ROOT + "/HARDTECHNO-ESSENTIALS-VOL.-1.jpg"} alt="Hardtechno Essentials Vol. 01 artwork" />
-            <div className="artwork-caption">THE WEIGHT OF SOUND&nbsp; / &nbsp;HARDTECHNO ESSENTIALS</div>
+            <img src={ASSET_ROOT + "/modern-raw-kick-arsenal-vol-1-cover.png"} alt="Modern Raw Kick Arsenal Vol. 1 full edition artwork" loading="eager" fetchPriority="high" />
+            <div className="artwork-caption">THE WEIGHT OF SOUND&nbsp; / &nbsp;MODERN RAW KICK ARSENAL</div>
           </div>
           <div className="hero-copy" data-motion-reveal data-motion-delay="140">
             <SectionLabel>FEATURED SAMPLE PACK</SectionLabel>
-            <h1>HARDTECHNO<br />ESSENTIALS</h1>
-            <p className="hero-volume">VOL. 01</p>
-            <p>Hard techno samples for modern production.</p>
-            <a className="text-cta hero-primary-cta" href="/sounds/hardtechno-essentials-vol-1">EXPLORE THE PACK <span>→</span></a>
-            <p className="hero-meta">HARD TECHNO&nbsp; / &nbsp;SAMPLE PACK</p>
+            <h1>MODERN RAW KICK<br />ARSENAL VOL. 1</h1>
+            <p>151 raw kick samples for modern hard dance production.<br />31 full kicks, 120 kick-building components,<br />4 FL Studio projects and 3 Serum 2 presets.</p>
+            <a className="text-cta hero-primary-cta" href="/sounds/modern-raw-kick-arsenal-vol-1">EXPLORE THE PACK <span>→</span></a>
           </div>
         </div>
       </section>

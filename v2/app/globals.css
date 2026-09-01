@@ -1177,6 +1177,8 @@ img { display: block; max-width: 100%; }
   display: block;
   width: 720px;
   height: 405px;
+  overflow: hidden;
+  cursor: pointer;
 }
 
 .tutorials-exact-feature-thumbnail img,
@@ -1241,6 +1243,11 @@ img { display: block; max-width: 100%; }
   left: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
+}
+
+.tutorials-exact-archive a {
+  pointer-events: auto;
 }
 
 .tutorials-exact-archive-label {
@@ -1278,6 +1285,40 @@ img { display: block; max-width: 100%; }
   display: block;
   width: 170px;
   height: 96px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.tutorials-play-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid rgba(241, 241, 237, 0.78);
+  border-radius: 50%;
+  background: rgba(7, 7, 7, 0.78);
+  color: #f1f1ed;
+  font-size: 15px;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.tutorials-exact-row-thumbnail .tutorials-play-indicator {
+  width: 30px;
+  height: 30px;
+  font-size: 9px;
+}
+
+.tutorials-exact-feature-thumbnail:hover .tutorials-play-indicator,
+.tutorials-exact-feature-thumbnail:focus-visible .tutorials-play-indicator,
+.tutorials-exact-row-thumbnail:hover .tutorials-play-indicator,
+.tutorials-exact-row-thumbnail:focus-visible .tutorials-play-indicator {
+  background: rgba(7, 7, 7, 0.94);
+  transform: translate(-50%, -50%) scale(1.06);
 }
 
 .tutorials-exact-row-title {
@@ -3102,6 +3143,15 @@ html.motion-ready [data-motion-reveal][data-motion-exit="above"] {
   line-height: 1.5;
 }
 
+.product-v2-preview-context {
+  max-width: none !important;
+  margin-top: 18px !important;
+  color: #777771 !important;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
 .product-v2-audio-player {
   min-width: 0;
   border-top: 1px solid #383838;
@@ -5657,6 +5707,11 @@ html.motion-ready .hero-exact-section .hero-copy[data-motion-reveal][data-motion
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
+
+html.motion-ready .hero-exact-section .hero-artwork[data-motion-reveal][data-motion-exit="above"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
 /* SAMPLE PACK CTA HIT-AREA FIX — 20260825 */
 .sample-exact-premium-copy,
 .sample-exact-trial-copy {
@@ -5666,4 +5721,542 @@ html.motion-ready .hero-exact-section .hero-copy[data-motion-reveal][data-motion
 .sample-exact-premium-copy a,
 .sample-exact-trial-copy a {
   pointer-events: auto;
+}
+/* MODERN RAW KICK ARSENAL — additive product presentation and high-quality image delivery */
+.product-v2-reference-price {
+  align-self: flex-end;
+  padding-bottom: 5px;
+  color: #777771;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: #999993;
+}
+
+.product-v2-related-title-line { display: block; }
+
+.sample-launch-section {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid #c1c1bb;
+  background: #f1f1ed;
+  color: #111111;
+}
+
+.sample-launch-inner {
+  width: min(1296px, calc(100% - 144px));
+  margin: 0 auto;
+  padding: 72px 0 82px;
+}
+
+.sample-launch-index,
+.sample-launch-label,
+.sample-launch-license {
+  margin: 0;
+  color: #60605c;
+  font-size: 10px;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  font-weight: 700;
+}
+
+.sample-launch-layout {
+  display: grid;
+  grid-template-columns: minmax(360px, 0.88fr) minmax(360px, 1.12fr);
+  align-items: center;
+  gap: clamp(56px, 9vw, 132px);
+  margin-top: 34px;
+}
+
+.sample-launch-art-frame {
+  min-width: 0;
+  border: 1px solid #c1c1bb;
+  background: #0d0d0d;
+}
+
+.sample-launch-art-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.sample-launch-copy { max-width: 590px; }
+
+.sample-launch-copy h2 {
+  max-width: 650px;
+  margin: 18px 0 0;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(44px, 5.2vw, 76px);
+  line-height: 0.88;
+  letter-spacing: -0.075em;
+}
+
+.sample-launch-description {
+  max-width: 460px;
+  margin: 30px 0 0;
+  color: #5a5a56;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.sample-launch-price {
+  display: flex;
+  align-items: end;
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.sample-launch-price strong {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 42px;
+  line-height: 0.9;
+  letter-spacing: -0.06em;
+}
+
+.sample-launch-price del {
+  padding-bottom: 4px;
+  color: #777771;
+  font-size: 14px;
+  line-height: 1;
+  text-decoration-thickness: 1px;
+}
+
+.sample-launch-price span {
+  padding-bottom: 4px;
+  color: #777771;
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+
+.sample-launch-license { margin-top: 20px; }
+
+.sample-launch-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 34px;
+  color: #111111;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.sample-launch-cta .motion-cta-arrow {
+  font-size: 16px;
+  transition: transform 180ms ease;
+}
+
+.sample-launch-cta:hover .motion-cta-arrow,
+.sample-launch-cta:focus-visible .motion-cta-arrow { transform: translateX(4px); }
+
+@media (max-width: 760px) {
+  .sample-launch-inner {
+    width: calc(100% - 40px);
+    padding: 58px 0 68px;
+  }
+
+  .sample-launch-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 34px;
+    margin-top: 28px;
+  }
+
+  .sample-launch-copy { max-width: none; }
+
+  .sample-launch-copy h2 { font-size: clamp(39px, 11vw, 58px); }
+
+  .sample-launch-description {
+    margin-top: 24px;
+    font-size: 14px;
+  }
+
+  .sample-launch-price {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
+
+/* Free Edition related module: keep the original light composition with subtle contrast. */
+.product-v2-related-free-edition {
+  background: #e7e7e1;
+}
+
+.product-v2-related-free-edition .product-v2-ambient-light .product-v2-ambient-motion path {
+  stroke-opacity: 0.18 !important;
+}
+.product-v2-related-free-edition .product-v2-trial-module,
+.product-v2-related-free-edition .product-v2-trial-module > div {
+  min-width: 0;
+}
+
+.product-v2-related-free-edition .product-v2-trial-module img {
+  display: block;
+  width: 190px;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 1100px) and (min-width: 761px) {
+  .product-v2-related-free-edition .product-v2-section-shell {
+    grid-template-columns: minmax(190px, 0.72fr) minmax(0, 1.28fr);
+    gap: 48px;
+  }
+
+  .product-v2-related-free-edition .product-v2-trial-module {
+    grid-template-columns: minmax(144px, 170px) minmax(0, 1fr);
+    gap: 20px;
+    padding-left: 24px;
+  }
+
+  .product-v2-related-free-edition .product-v2-trial-module img {
+    width: min(170px, 100%);
+  }
+
+  .product-v2-related-free-edition .product-v2-trial-module h3 {
+    font-size: clamp(18px, 2.5vw, 25px);
+  }
+}
+/* Homepage release hierarchy: keep both premium packs in one compact catalog, newest first. */
+.sample-exact-section {
+  height: 590px;
+  min-height: 590px;
+}
+
+.sample-exact-section .sample-exact-shape-grid {
+  height: 590px;
+}
+
+.sample-catalog-grid {
+  position: absolute;
+  top: 180px;
+  left: 72px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  width: calc(100% - 144px);
+}
+
+.sample-catalog-card {
+  display: grid;
+  grid-template-columns: clamp(118px, 10vw, 164px) minmax(0, 1fr);
+  gap: 14px;
+  min-width: 0;
+  min-height: 240px;
+  padding-right: 16px;
+  border-right: 1px solid #b7b7b1;
+}
+
+.sample-catalog-card:last-child {
+  padding-right: 0;
+  border-right: 0;
+}
+
+.sample-catalog-art {
+  display: block;
+  width: clamp(118px, 10vw, 164px);
+  height: clamp(118px, 10vw, 164px);
+  object-fit: cover;
+  background: #0d0d0d;
+}
+
+.sample-catalog-copy {
+  display: flex;
+  min-width: 0;
+  height: clamp(118px, 10vw, 164px);
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sample-catalog-label,
+.sample-catalog-type,
+.sample-catalog-footer {
+  margin: 0;
+  color: #60605c;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.sample-catalog-card h3 {
+  margin: 12px 0 0;
+  color: #111111;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 21px;
+  line-height: 0.95;
+  font-weight: 700;
+}
+
+.sample-catalog-type {
+  margin-top: 14px;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.sample-catalog-copy a {
+  margin-top: auto;
+  color: #111111;
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.sample-catalog-end-rule {
+  position: absolute;
+  top: 455px;
+  left: 72px;
+  width: calc(100% - 144px);
+  height: 1px;
+  background: #b7b7b1;
+}
+
+.sample-catalog-footer {
+  position: absolute;
+  top: 482px;
+  left: 72px;
+  color: #777771;
+  font-size: 9px;
+}
+
+/* The release card includes its required Free Edition contents without changing other cards. */
+.free-h1-product-details {
+  position: absolute;
+  top: 364px;
+  left: 0;
+  max-width: 260px;
+  margin: 0;
+  color: #8f8f8a;
+  font-family: "Inter", sans-serif;
+  font-size: 8px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.free-h1-product-with-details {
+  height: 430px;
+}
+
+.free-h1-product-with-details .free-h1-action {
+  top: 404px;
+}
+
+@media (max-width: 1100px) and (min-width: 761px) {
+  .sample-exact-section {
+    height: 720px;
+    min-height: 720px;
+  }
+
+  .sample-exact-section .sample-exact-shape-grid { height: 720px; }
+
+  .sample-catalog-grid {
+    top: 180px;
+    left: 40px;
+    width: calc(100% - 80px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .sample-catalog-card {
+    grid-template-columns: minmax(0, 118px) minmax(0, 1fr);
+    gap: 14px;
+    min-height: 190px;
+    padding-right: 14px;
+  }
+
+  .sample-catalog-art {
+    width: 118px;
+    height: 118px;
+  }
+
+  .sample-catalog-copy { height: 150px; }
+  .sample-catalog-label { font-size: 8px; }
+  .sample-catalog-card h3 { margin-top: 9px; font-size: 17px; }
+  .sample-catalog-type { margin-top: 10px; font-size: 8px; }
+  .sample-catalog-copy a { font-size: 9px; }
+  .sample-catalog-end-rule { top: 660px; left: 40px; width: calc(100% - 80px); }
+  .sample-catalog-footer { top: 686px; left: 40px; }
+}
+
+@media (max-width: 760px) {
+  .sample-exact-section {
+    height: 980px;
+    min-height: 980px;
+  }
+
+  .sample-exact-section .sample-exact-shape-grid { height: 980px; }
+
+  .sample-catalog-grid {
+    top: 164px;
+    left: 20px;
+    display: flex;
+    width: calc(100% - 40px);
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .sample-catalog-card {
+    grid-template-columns: minmax(0, 120px) minmax(0, 1fr);
+    gap: 16px;
+    min-height: 160px;
+    padding: 0 0 18px;
+    border-right: 0;
+    border-bottom: 1px solid #b7b7b1;
+  }
+
+  .sample-catalog-card:last-child { border-bottom: 0; }
+  .sample-catalog-art { width: 120px; height: 120px; }
+  .sample-catalog-copy { height: 120px; }
+  .sample-catalog-label { font-size: 8px; }
+  .sample-catalog-card h3 { margin-top: 8px; font-size: clamp(17px, 4.7vw, 21px); }
+  .sample-catalog-type { margin-top: 9px; font-size: 8px; }
+  .sample-catalog-copy a { font-size: 9px; }
+  .sample-catalog-end-rule { top: 890px; left: 20px; width: calc(100% - 40px); }
+  .sample-catalog-footer { top: 916px; left: 20px; font-size: 8px; }
+
+  .free-h1-rail { height: 420px; }
+  .free-h1-product-with-details { height: 420px; }
+  .free-h1-product-details {
+    top: calc(clamp(240px, 68vw, 260px) + 102px);
+    max-width: 220px;
+    font-size: 8px;
+  }
+  .free-h1-product-with-details .free-h1-action {
+    top: calc(clamp(240px, 68vw, 260px) + 140px);
+  }
+}
+
+/* Featured product keeps the original Hardtechno hierarchy: title, description, CTA. */
+@media (min-width: 901px) {
+  .hero-exact-section .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-exact-section .hero-copy .section-label,
+  .hero-exact-section .hero-copy h1,
+  .hero-exact-section .hero-copy > p:not(.hero-meta),
+  .hero-exact-section .hero-copy .hero-primary-cta {
+    position: static;
+  }
+
+  .hero-exact-section .hero-copy .section-label {
+    width: auto;
+    height: auto;
+  }
+
+  .hero-exact-section .hero-copy h1 {
+    width: 386px;
+    max-width: 100%;
+    margin: 54px 0 0;
+    font-size: 48px;
+    line-height: 0.9;
+    letter-spacing: -2.4px;
+  }
+
+  .hero-exact-section .hero-copy > p:not(.hero-meta) {
+    width: 360px;
+    max-width: none;
+    margin: 32px 0 0 4px;
+    color: #9a9a9a;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    line-height: 1.35;
+    font-weight: 400;
+  }
+
+  .hero-exact-section .hero-copy .hero-primary-cta {
+    margin-top: 38px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-exact-section .hero-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-exact-section .hero-copy .section-label,
+  .hero-exact-section .hero-copy h1 {
+    position: static;
+    width: auto;
+    height: auto;
+  }
+
+  .hero-exact-section .hero-copy h1 {
+    max-width: 100%;
+    font-size: clamp(44px, 12vw, 62px);
+    letter-spacing: -3px;
+  }
+
+  .hero-exact-section .hero-copy > p:not(.hero-meta) {
+    position: static;
+    width: auto;
+    max-width: 330px;
+    margin: 24px 0 0;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  .hero-exact-section .hero-copy .hero-primary-cta {
+    position: static;
+    margin-top: 32px;
+  }
+}
+
+/* Large desktop canvas: keep the approved fixed composition centered on wide screens. */
+@media (min-width: 1440px) {
+  .hero-exact-section .home-nav,
+  .hero-exact-section .hero-inner {
+    left: calc((100vw - 1440px) / 2);
+    right: auto;
+    width: 1440px;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    transform: none;
+  }
+
+  .sample-exact-inner,
+  .free-h1-inner,
+  .tutorials-exact-inner,
+  .brand-a2-inner {
+    left: auto;
+    right: auto;
+    width: 1440px;
+    max-width: none;
+    margin-left: auto;
+    margin-right: auto;
+    transform: none;
+  }
+
+  .hero-exact-section .home-nav,
+  .hero-exact-section .hero-inner {
+    position: absolute;
+  }
+
+  /* The visual intro adds a more specific placement rule; keep its desktop canvas centered too. */
+  .hero-exact-section:has(> .visual-intro) .home-nav,
+  .hero-exact-section:has(> .visual-intro) .visual-intro ~ .hero-inner {
+    left: calc((100vw - 1440px) / 2);
+    right: auto;
+    width: 1440px;
+    transform: none;
+  }
 }
