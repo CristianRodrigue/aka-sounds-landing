@@ -133,6 +133,70 @@ describe("G4A Resend webhook verification and state", () => {
     assert.equal(receipt?.resendLastEventId, "msg_delivered_001");
   });
 
+  it("reconciles a delivered event received before email acceptance", async () => {
+    const store = new InMemoryReceiptStore();
+    await store.claimEvent(receiptEvent("evt_resend_event_first_001"));
+
+    const response = await handle(
+      signedRequest(deliveryEvent("email.delivered", "re_event_first_001"), "msg_event_first_001"),
+      store,
+    );
+
+    assert.equal(response.status, 200);
+    assert.equal(store.getResendDeliveryEvent("msg_event_first_001")?.receiptEventId, null);
+
+    await store.markTransactionalEmailAccepted("evt_resend_event_first_001", "re_event_first_001");
+
+    const receipt = await store.get("evt_resend_event_first_001");
+    assert.equal(receipt?.resendEmailId, "re_event_first_001");
+    assert.equal(receipt?.resendDeliveryStatus, "delivered");
+    assert.equal(receipt?.resendLastEventId, "msg_event_first_001");
+    assert.equal(receipt?.resendLastEventAt, "2026-08-30T10:00:00.000Z");
+    assert.equal(store.getResendDeliveryEvent("msg_event_first_001")?.receiptEventId, "evt_resend_event_first_001");
+  });
+
+  it("reconciles multiple orphan events and reduces to delivered", async () => {
+    const store = new InMemoryReceiptStore();
+    await store.claimEvent(receiptEvent("evt_resend_multi_orphan_001"));
+
+    await handle(
+      signedRequest(deliveryEvent("email.delivery_delayed", "re_multi_orphan_001", "2026-08-30T10:00:00Z"), "msg_multi_delayed_001"),
+      store,
+    );
+    await handle(
+      signedRequest(deliveryEvent("email.delivered", "re_multi_orphan_001", "2026-08-30T10:01:00Z"), "msg_multi_delivered_001"),
+      store,
+    );
+
+    await store.markTransactionalEmailAccepted("evt_resend_multi_orphan_001", "re_multi_orphan_001");
+
+    const receipt = await store.get("evt_resend_multi_orphan_001");
+    assert.equal(receipt?.resendDeliveryStatus, "delivered");
+    assert.equal(receipt?.resendLastEventId, "msg_multi_delivered_001");
+    assert.equal(store.getResendDeliveryEvent("msg_multi_delayed_001")?.receiptEventId, "evt_resend_multi_orphan_001");
+    assert.equal(store.getResendDeliveryEvent("msg_multi_delivered_001")?.receiptEventId, "evt_resend_multi_orphan_001");
+  });
+
+  it("protects a terminal state when a newer delayed event arrives first in transport order", async () => {
+    const store = new InMemoryReceiptStore();
+    await store.claimEvent(receiptEvent("evt_resend_terminal_guard_001"));
+
+    await handle(
+      signedRequest(deliveryEvent("email.delivered", "re_terminal_guard_001", "2026-08-30T10:00:00Z"), "msg_terminal_delivered_001"),
+      store,
+    );
+    await handle(
+      signedRequest(deliveryEvent("email.delivery_delayed", "re_terminal_guard_001", "2026-08-30T10:01:00Z"), "msg_terminal_delayed_001"),
+      store,
+    );
+
+    await store.markTransactionalEmailAccepted("evt_resend_terminal_guard_001", "re_terminal_guard_001");
+
+    const receipt = await store.get("evt_resend_terminal_guard_001");
+    assert.equal(receipt?.resendDeliveryStatus, "delivered");
+    assert.equal(receipt?.resendLastEventId, "msg_terminal_delivered_001");
+  });
+
   it("is idempotent for a duplicate svix ID", async () => {
     const store = new InMemoryReceiptStore();
     await store.claimEvent(receiptEvent("evt_resend_duplicate_001"));
@@ -216,6 +280,34 @@ describe("G4A Resend webhook verification and state", () => {
     assert.equal(response.status, 200);
     assert.equal(store.getResendDeliveryEventCount(), 1);
     assert.equal(store.getResendDeliveryEvent("msg_unknown_001")?.receiptEventId, null);
+  });
+
+  it("never reassigns an event already correlated to another receipt", async () => {
+    const store = new InMemoryReceiptStore();
+    await store.claimEvent(receiptEvent("evt_resend_owner_a_001"));
+    await store.markTransactionalEmailAccepted("evt_resend_owner_a_001", "re_shared_email_001");
+    await handle(
+      signedRequest(deliveryEvent("email.delivered", "re_shared_email_001"), "msg_shared_email_001"),
+      store,
+    );
+
+    await store.claimEvent(receiptEvent("evt_resend_owner_b_001"));
+    await store.markTransactionalEmailAccepted("evt_resend_owner_b_001", "re_shared_email_001");
+
+    assert.equal(store.getResendDeliveryEvent("msg_shared_email_001")?.receiptEventId, "evt_resend_owner_a_001");
+    assert.equal((await store.get("evt_resend_owner_b_001"))?.resendLastEventId, null);
+  });
+
+  it("keeps accepted when no lifecycle event exists", async () => {
+    const store = new InMemoryReceiptStore();
+    await store.claimEvent(receiptEvent("evt_resend_accepted_only_001"));
+
+    await store.markTransactionalEmailAccepted("evt_resend_accepted_only_001", "re_accepted_only_001");
+
+    const receipt = await store.get("evt_resend_accepted_only_001");
+    assert.equal(receipt?.resendDeliveryStatus, "accepted");
+    assert.equal(receipt?.resendLastEventId, null);
+    assert.equal(receipt?.resendLastEventAt, null);
   });
 
   it("records bounced and failed events without a retry or send path", async () => {
