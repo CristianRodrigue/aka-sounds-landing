@@ -10,9 +10,9 @@ export interface ProviderFailure {
   readonly status?: number;
   readonly retryable?: boolean;
 }
-
 export interface ProviderResult {
   readonly accepted: boolean;
+  readonly emailId?: string;
   readonly failure?: ProviderFailure;
   readonly outcome?: MailerLiteOutcome;
   readonly subscriberStatus?: MailerLiteSubscriberStatus;
@@ -80,6 +80,33 @@ export interface ReceiptRecord {
   readonly customerHydratedAt: string | null;
   readonly marketingConsentSnapshot: boolean | null;
   readonly processingLeaseUntil: string | null;
+  readonly resendEmailId: string | null;
+  readonly resendDeliveryStatus: ResendDeliveryStatus | null;
+  readonly resendLastEventId: string | null;
+  readonly resendLastEventAt: string | null;
+}
+
+export type ResendDeliveryEventType =
+  | "email.delivered"
+  | "email.bounced"
+  | "email.failed"
+  | "email.delivery_delayed";
+
+export type ResendDeliveryStatus = "accepted" | "delivered" | "bounced" | "failed" | "delivery_delayed";
+
+export interface ResendDeliveryEventInput {
+  readonly svixId: string;
+  readonly emailId: string;
+  readonly eventType: ResendDeliveryEventType;
+  readonly eventCreatedAt: string;
+  readonly bounceType: string | null;
+  readonly bounceSubtype: string | null;
+  readonly providerMessage: string | null;
+}
+
+export interface ResendDeliveryEventResult {
+  readonly inserted: boolean;
+  readonly receiptEventId: string | null;
 }
 
 export interface ReceiptEvent {
@@ -109,9 +136,14 @@ export interface ReceiptStore {
   transition(eventId: string, state: DeliveryState, failure?: ProviderFailure): Promise<void>;
   recordProviderFailure(eventId: string, failure: ProviderFailure): Promise<void>;
   markCustomerHydrated(eventId: string, marketingConsent: boolean | null): Promise<void>;
+  markTransactionalEmailAccepted(eventId: string, emailId: string): Promise<void>;
   markTransactionalEmailCompleted(eventId: string): Promise<void>;
   markMarketingRequested(eventId: string, requested: boolean): Promise<void>;
   markMarketingCompleted(eventId: string): Promise<void>;
+}
+
+export interface ResendDeliveryStore {
+  recordResendDeliveryEvent(input: ResendDeliveryEventInput): Promise<ResendDeliveryEventResult>;
 }
 
 export type ProviderValue<T> =

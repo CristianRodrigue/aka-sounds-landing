@@ -37,6 +37,18 @@ export const catalogProducts = [
     kind: "free",
     source: "legacy-free-packs",
   },
+  {
+    slug: "modern-raw-kick-arsenal-vol-1",
+    title: "AKA SOUNDS MODERN RAW KICK ARSENAL VOL. 1 — FULL EDITION",
+    kind: "paid",
+    source: "new-products",
+  },
+  {
+    slug: "modern-raw-kick-arsenal-vol-1-free-edition",
+    title: "AKA SOUNDS MODERN RAW KICK ARSENAL VOL. 1 — FREE EDITION",
+    kind: "free",
+    source: "new-products",
+  },
 ] as const satisfies readonly CatalogProduct[];
 
 // Product relations below are verified from Paddle live read-only catalog data.
@@ -115,6 +127,32 @@ export const canonicalOffers = [
     },
     paddlePriceId: "pri_01knt149kwqhp35wa0hwb4gwqn",
     paddleProductId: "pro_01knt11by8qqzskg701zgd7k2c",
+    historicalPriceIds: [],
+    verification: "verified",
+    availability: "active",
+  },
+  {
+    id: "offer-modern-raw-kick-arsenal-vol-1",
+    catalogProductSlug: "modern-raw-kick-arsenal-vol-1",
+    paddle: {
+      live: { priceId: "pri_01m0zn4mcma11bnywpvcp2qfk0", productId: "pro_01m0zn4m2yj1b1a6hcec11762f" },
+      sandbox: null,
+    },
+    paddlePriceId: "pri_01m0zn4mcma11bnywpvcp2qfk0",
+    paddleProductId: "pro_01m0zn4m2yj1b1a6hcec11762f",
+    historicalPriceIds: [],
+    verification: "verified",
+    availability: "active",
+  },
+  {
+    id: "offer-modern-raw-kick-arsenal-vol-1-free-edition",
+    catalogProductSlug: "modern-raw-kick-arsenal-vol-1-free-edition",
+    paddle: {
+      live: { priceId: "pri_01m0zn4mt890s0fp4xym0jpj9s", productId: "pro_01m0zn4mjav7rq5hq620tkedmk" },
+      sandbox: null,
+    },
+    paddlePriceId: "pri_01m0zn4mt890s0fp4xym0jpj9s",
+    paddleProductId: "pro_01m0zn4mjav7rq5hq620tkedmk",
     historicalPriceIds: [],
     verification: "verified",
     availability: "active",

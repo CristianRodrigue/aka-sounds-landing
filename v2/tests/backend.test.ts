@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHmac } from "node:crypto";
 import { describe, it } from "node:test";
 import { POST as webhookPost } from "../app/api/webhook/route";
-import { createGcsAdapter, SIGNED_URL_TTL_SECONDS, type GcsClient } from "../lib/commerce/gcs";
+import { createGcsAdapter, SIGNED_URL_TTL_SECONDS } from "../lib/commerce/gcs";
 import { processFulfillmentEvent } from "../lib/commerce/fulfillment-service";
 import { createMailerLiteAdapter } from "../lib/commerce/mailerlite";
 import { verifyOfficialPaddleWebhook } from "../lib/commerce/paddle-verifier";
@@ -102,7 +102,6 @@ describe("G2B durable ReceiptStore", () => {
     await assert.rejects(() => store.transition(input.eventId, "FULFILLED"), /INVALID_STATE_TRANSITION/);
   });
 });
-
 describe("G2B fulfillment orchestration", () => {
   it("fulfills exact catalog policy and records transactional plus marketing outcomes", async () => {
     const store = new InMemoryReceiptStore();
@@ -224,51 +223,74 @@ describe("G2B fulfillment orchestration", () => {
   });
 });
 
-describe("G2B GCS signed URL adapter", () => {
-  it("requests the exact private object and explicit 15 minute expiry", async () => {
-    let requestedBucket = "";
-    let requestedObject = "";
-    let requestedExpiry = 0;
-    const client: GcsClient = {
-      bucket: (name) => ({
-        file: (objectName) => ({
-          getSignedUrl: async (options) => {
-            requestedBucket = name;
-            requestedObject = objectName;
-            requestedExpiry = options.expires.getTime();
-            return ["https://storage.example.test/private"];
-          },
-        }),
-      }),
-    };
-    const policy = canonicalCommerceModel.fulfillmentPolicies[1];
-    const result = await createGcsAdapter(client, "aka-private-bucket").createSignedDownload(policy);
-    assert.equal(result.accepted, true);
-    assert.equal(requestedBucket, "aka-private-bucket");
-    assert.equal(requestedObject, "AKA_SOUNDS_HARDTECHNO-ESSENTIALS-VOL.-1-FREE-TRIAL 1.zip");
-    assert.ok(requestedExpiry >= Date.now() + (SIGNED_URL_TTL_SECONDS - 2) * 1000);
-    assert.ok(requestedExpiry <= Date.now() + (SIGNED_URL_TTL_SECONDS + 2) * 1000);
+describe("G2B GCS signer adapter", () => {
+  const signerUrl = "https://signer.example.test/api/sign";
+  const signerSecret = "internal-signer-secret";
+
+  it("calls the signer with the exact object and preserves the adapter contract", async () => {
+    let requestedUrl = "";
+    let requestedMethod = "";
+    let authorization = "";
+    let requestBody = "";
+    const result = await createGcsAdapter({
+      signerUrl,
+      signerSecret,
+      fetchImpl: async (input, init) => {
+        requestedUrl = String(input);
+        requestedMethod = String(init?.method);
+        authorization = new Headers(init?.headers).get("authorization") ?? "";
+        requestBody = String(init?.body);
+        return Response.json({ url: "https://storage.example.test/private" });
+      },
+    }).createSignedDownload(canonicalCommerceModel.fulfillmentPolicies[3]);
+
+    assert.deepEqual(result, { accepted: true, value: "https://storage.example.test/private" });
+    assert.equal(requestedUrl, signerUrl);
+    assert.equal(requestedMethod, "POST");
+    assert.equal(authorization, `Bearer ${signerSecret}`);
+    assert.deepEqual(JSON.parse(requestBody), { objectName: "AKA Sounds Free Serum 2 Zaag Kick.zip" });
   });
 
-  it("classifies missing object and signing failure without exposing object data", async () => {
-    const missing = createGcsAdapter({
-      bucket: () => ({ file: () => ({ getSignedUrl: async () => { throw Object.assign(new Error("missing"), { code: 404 }); } }) }),
-    }, "aka-private-bucket");
-    const missingResult = await missing.createSignedDownload(canonicalCommerceModel.fulfillmentPolicies[2]);
-    assert.deepEqual(missingResult, {
-      accepted: false,
-      failure: { provider: "gcs", code: "OBJECT_NOT_FOUND", status: 404, retryable: false },
-    });
+  it("turns signer HTTP failures into provider failures", async () => {
+    for (const status of [401, 403, 500]) {
+      const result = await createGcsAdapter({
+        signerUrl,
+        signerSecret,
+        fetchImpl: async () => Response.json({ error: "failure" }, { status }),
+      }).createSignedDownload(canonicalCommerceModel.fulfillmentPolicies[3]);
+      assert.equal(result.accepted, false);
+      if (!result.accepted) {
+        assert.equal(result.failure?.status, status);
+        assert.equal(result.failure?.retryable, status === 500);
+      }
+    }
+  });
 
-    const failed = createGcsAdapter({
-      bucket: () => ({ file: () => ({ getSignedUrl: async () => { throw new Error("signing failed"); } }) }),
-    }, "aka-private-bucket");
-    const failedResult = await failed.createSignedDownload(canonicalCommerceModel.fulfillmentPolicies[2]);
-    assert.equal(failedResult.accepted, false);
-    if (!failedResult.accepted) assert.equal(failedResult.failure!.code, "SIGNED_URL_FAILED");
+  it("rejects missing or invalid signer URLs", async () => {
+    for (const body of [{}, { url: "" }, { url: "http://storage.example.test/file" }, { url: "not-a-url" }]) {
+      const result = await createGcsAdapter({
+        signerUrl,
+        signerSecret,
+        fetchImpl: async () => Response.json(body),
+      }).createSignedDownload(canonicalCommerceModel.fulfillmentPolicies[3]);
+      assert.equal(result.accepted, false);
+      if (!result.accepted) assert.equal(result.failure?.code, "SIGNED_URL_INVALID_RESPONSE");
+    }
+  });
+
+  it("fails closed when signer configuration is missing", async () => {
+    let called = false;
+    const result = await createGcsAdapter({
+      fetchImpl: async () => {
+        called = true;
+        return Response.json({ url: "https://storage.example.test/private" });
+      },
+    }).createSignedDownload(canonicalCommerceModel.fulfillmentPolicies[3]);
+    assert.equal(result.accepted, false);
+    if (!result.accepted) assert.equal(result.failure?.code, "SIGNER_NOT_CONFIGURED");
+    assert.equal(called, false);
   });
 });
-
 describe("G2B Resend and MailerLite adapters", () => {
   it("sends only transactional product identity and uses safe test recipient override", async () => {
     let requestBody: Record<string, unknown> | undefined;

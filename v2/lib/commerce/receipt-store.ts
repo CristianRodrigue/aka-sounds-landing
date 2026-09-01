@@ -1,7 +1,17 @@
 import { neon } from "@neondatabase/serverless";
 import { canTransition, deliveryStates } from "./state";
 import { classifyProviderFailure } from "./providers";
-import type { ProviderFailure, ReceiptClaim, ReceiptEvent, ReceiptRecord, ReceiptStore } from "./providers";
+import type {
+  ProviderFailure,
+  ReceiptClaim,
+  ReceiptEvent,
+  ReceiptRecord,
+  ReceiptStore,
+  ResendDeliveryEventInput,
+  ResendDeliveryEventResult,
+  ResendDeliveryStatus,
+  ResendDeliveryStore,
+} from "./providers";
 import type { DeliveryState } from "./state";
 type MutableReceiptRecord = {
   -readonly [K in keyof ReceiptRecord]: ReceiptRecord[K];
@@ -12,7 +22,6 @@ const PROCESSING_LEASE_MS = 5 * 60 * 1000;
 function nowIso(): string {
   return new Date().toISOString();
 }
-
 function leaseUntilIso(): string {
   return new Date(Date.now() + PROCESSING_LEASE_MS).toISOString();
 }
@@ -47,6 +56,10 @@ function createRecord(input: ReceiptEvent): MutableReceiptRecord {
     customerHydratedAt: null,
     marketingConsentSnapshot: null,
     processingLeaseUntil: null,
+    resendEmailId: null,
+    resendDeliveryStatus: null,
+    resendLastEventId: null,
+    resendLastEventAt: null,
   };
 }
 
@@ -74,9 +87,25 @@ function markCustomer(record: MutableReceiptRecord, marketingConsent: boolean | 
   record.updatedAt = nowIso();
 }
 
+function resendStatusForEvent(eventType: ResendDeliveryEventInput["eventType"]): ResendDeliveryStatus {
+  switch (eventType) {
+    case "email.delivered": return "delivered";
+    case "email.bounced": return "bounced";
+    case "email.failed": return "failed";
+    case "email.delivery_delayed": return "delivery_delayed";
+  }
+}
+
+function shouldApplyResendEvent(record: MutableReceiptRecord, input: ResendDeliveryEventInput): boolean {
+  if (record.resendLastEventAt !== null && Date.parse(input.eventCreatedAt) <= Date.parse(record.resendLastEventAt)) return false;
+  return !(input.eventType === "email.delivery_delayed" &&
+    (record.resendDeliveryStatus === "delivered" || record.resendDeliveryStatus === "bounced" || record.resendDeliveryStatus === "failed"));
+}
+
 /** In-memory implementation used by tests and local route harnesses. */
 export class InMemoryReceiptStore implements ReceiptStore {
   private readonly records = new Map<string, MutableReceiptRecord>();
+  private readonly resendEvents = new Map<string, ResendDeliveryEventInput & { readonly receiptEventId: string | null }>();
 
   async get(eventId: string): Promise<ReceiptRecord | null> {
     const record = this.records.get(eventId);
@@ -148,6 +177,14 @@ export class InMemoryReceiptStore implements ReceiptStore {
     markCustomer(record, marketingConsent);
   }
 
+  async markTransactionalEmailAccepted(eventId: string, emailId: string): Promise<void> {
+    const record = this.records.get(eventId);
+    if (!record) throw new Error(`RECEIPT_NOT_FOUND:${eventId}`);
+    record.resendEmailId ??= emailId;
+    record.resendDeliveryStatus ??= "accepted";
+    record.updatedAt = nowIso();
+  }
+
   async markTransactionalEmailCompleted(eventId: string): Promise<void> {
     const record = this.records.get(eventId);
     if (!record) throw new Error(`RECEIPT_NOT_FOUND:${eventId}`);
@@ -169,6 +206,33 @@ export class InMemoryReceiptStore implements ReceiptStore {
     if (!record) throw new Error(`RECEIPT_NOT_FOUND:${eventId}`);
     record.marketingCompletedAt = nowIso();
     record.updatedAt = nowIso();
+  }
+
+  async recordResendDeliveryEvent(input: ResendDeliveryEventInput): Promise<ResendDeliveryEventResult> {
+    const existing = this.resendEvents.get(input.svixId);
+    if (existing) return { inserted: false, receiptEventId: existing.receiptEventId };
+
+    const matched = [...this.records.values()]
+      .filter((record) => record.resendEmailId === input.emailId)
+      .sort((left, right) => Date.parse(right.createdAt) - Date.parse(left.createdAt))[0];
+    const receiptEventId = matched?.eventId ?? null;
+    this.resendEvents.set(input.svixId, { ...input, receiptEventId });
+
+    if (matched && shouldApplyResendEvent(matched, input)) {
+      matched.resendDeliveryStatus = resendStatusForEvent(input.eventType);
+      matched.resendLastEventId = input.svixId;
+      matched.resendLastEventAt = input.eventCreatedAt;
+      matched.updatedAt = nowIso();
+    }
+    return { inserted: true, receiptEventId };
+  }
+
+  getResendDeliveryEventCount(): number {
+    return this.resendEvents.size;
+  }
+
+  getResendDeliveryEvent(svixId: string): (ResendDeliveryEventInput & { readonly receiptEventId: string | null }) | null {
+    return this.resendEvents.get(svixId) ?? null;
   }
 }
 
@@ -210,7 +274,17 @@ function asRecord(row: SqlRow): ReceiptRecord {
     customerHydratedAt: asNullableString(row.customer_hydrated_at),
     marketingConsentSnapshot: asNullableBoolean(row.marketing_consent_snapshot),
     processingLeaseUntil: asNullableString(row.processing_lease_until),
+    resendEmailId: asNullableString(row.resend_email_id),
+    resendDeliveryStatus: parseResendDeliveryStatus(row.resend_delivery_status),
+    resendLastEventId: asNullableString(row.resend_last_event_id),
+    resendLastEventAt: asNullableString(row.resend_last_event_at),
   };
+}
+
+function parseResendDeliveryStatus(value: unknown): ResendDeliveryStatus | null {
+  return value === "accepted" || value === "delivered" || value === "bounced" || value === "failed" || value === "delivery_delayed"
+    ? value
+    : null;
 }
 
 function databaseUrl(): string {
@@ -220,7 +294,7 @@ function databaseUrl(): string {
 }
 
 /** Neon-backed store. INSERT/UPDATE predicates provide database-level ownership. */
-export class NeonReceiptStore implements ReceiptStore {
+export class NeonReceiptStore implements ReceiptStore, ResendDeliveryStore {
   private sql() {
     return neon(databaseUrl());
   }
@@ -330,6 +404,19 @@ export class NeonReceiptStore implements ReceiptStore {
     if (rows.length === 0) throw new Error(`RECEIPT_NOT_FOUND:${eventId}`);
   }
 
+  async markTransactionalEmailAccepted(eventId: string, emailId: string): Promise<void> {
+    const sql = this.sql();
+    const rows = await sql`
+      UPDATE webhook_receipts
+      SET resend_email_id = COALESCE(resend_email_id, ${emailId}),
+          resend_delivery_status = COALESCE(resend_delivery_status, 'accepted'),
+          updated_at = NOW()
+      WHERE event_id = ${eventId}
+      RETURNING event_id
+    `;
+    if (rows.length === 0) throw new Error(`RECEIPT_NOT_FOUND:${eventId}`);
+  }
+
   async markTransactionalEmailCompleted(eventId: string): Promise<void> {
     const sql = this.sql();
     const rows = await sql`
@@ -357,5 +444,51 @@ export class NeonReceiptStore implements ReceiptStore {
       WHERE event_id = ${eventId} RETURNING event_id
     `;
     if (rows.length === 0) throw new Error(`RECEIPT_NOT_FOUND:${eventId}`);
+  }
+
+  async recordResendDeliveryEvent(input: ResendDeliveryEventInput): Promise<ResendDeliveryEventResult> {
+    const sql = this.sql();
+    const status = resendStatusForEvent(input.eventType);
+    const rows = await sql`
+      WITH matched_receipt AS (
+        SELECT event_id
+        FROM webhook_receipts
+        WHERE resend_email_id = ${input.emailId}
+        ORDER BY created_at DESC
+        LIMIT 1
+      ),
+      inserted AS (
+        INSERT INTO resend_delivery_events
+          (svix_id, email_id, event_type, event_created_at, receipt_event_id, bounce_type, bounce_subtype, provider_message)
+        VALUES
+          (${input.svixId}, ${input.emailId}, ${input.eventType}, ${input.eventCreatedAt},
+           (SELECT event_id FROM matched_receipt), ${input.bounceType}, ${input.bounceSubtype}, ${input.providerMessage})
+        ON CONFLICT (svix_id) DO NOTHING
+        RETURNING svix_id, email_id, event_type, event_created_at, receipt_event_id
+      ),
+      updated AS (
+        UPDATE webhook_receipts AS receipt
+        SET resend_delivery_status = ${status},
+            resend_last_event_id = inserted.svix_id,
+            resend_last_event_at = inserted.event_created_at,
+            updated_at = NOW()
+        FROM inserted
+        WHERE receipt.event_id = inserted.receipt_event_id
+          AND (receipt.resend_last_event_at IS NULL OR inserted.event_created_at > receipt.resend_last_event_at)
+          AND NOT (
+            inserted.event_type = 'email.delivery_delayed'
+            AND receipt.resend_delivery_status IN ('delivered', 'bounced', 'failed')
+          )
+        RETURNING receipt.event_id
+      )
+      SELECT inserted.receipt_event_id, updated.event_id AS updated_event_id
+      FROM inserted
+      LEFT JOIN updated ON TRUE
+    `;
+    if (rows.length === 0) return { inserted: false, receiptEventId: null };
+    return {
+      inserted: true,
+      receiptEventId: asNullableString((rows[0] as SqlRow).receipt_event_id),
+    };
   }
 }

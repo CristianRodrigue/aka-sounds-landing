@@ -149,7 +149,18 @@ export function createResendAdapter(options: ResendAdapterOptions = {}): ResendA
                 `
           }),
         });
-        return response.ok ? { accepted: true } : classifyStatus(response.status);
+        if (!response.ok) return classifyStatus(response.status);
+        const responseText = await response.text().catch(() => "");
+        let emailId: string | undefined;
+        try {
+          const responseBody: unknown = JSON.parse(responseText);
+          if (responseBody && typeof responseBody === "object" && "id" in responseBody && typeof responseBody.id === "string" && responseBody.id.length > 0) {
+            emailId = responseBody.id;
+          }
+        } catch {
+          // Preserve the existing accepted semantics when the provider omits a parseable body.
+        }
+        return emailId ? { accepted: true, emailId } : { accepted: true };
       } catch {
         return { accepted: false, failure: { provider: "resend", code: "NETWORK_OR_TIMEOUT", retryable: true } };
       }

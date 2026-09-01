@@ -1,17 +1,13 @@
-import { Storage } from "@google-cloud/storage";
-import type { GcsAdapter, ProviderValue } from "./providers";
+import type { GcsAdapter, ProviderFailure, ProviderValue } from "./providers";
 import type { FulfillmentPolicy } from "./types";
 
 export const SIGNED_URL_TTL_SECONDS = 24 * 60 * 60;
 
-type GcsFile = {
-  getSignedUrl(options: { version: "v4"; action: "read"; expires: Date }): Promise<[string]>;
-};
-
-type GcsBucket = { file(objectName: string): GcsFile };
-
-export interface GcsClient {
-  bucket(name: string): GcsBucket;
+export interface GcsAdapterOptions {
+  readonly fetchImpl?: typeof fetch;
+  readonly signerUrl?: string;
+  readonly signerSecret?: string;
+  readonly timeoutMs?: number;
 }
 
 function objectNameFor(policy: FulfillmentPolicy): string | null {
@@ -19,55 +15,102 @@ function objectNameFor(policy: FulfillmentPolicy): string | null {
   return process.env[policy.storageObject.variable]?.trim() || null;
 }
 
-function statusFromError(error: unknown): number | undefined {
-  if (!error || typeof error !== "object") return undefined;
-  const value = error as { code?: unknown; statusCode?: unknown };
-  const raw = typeof value.code === "number" ? value.code : value.statusCode;
-  return typeof raw === "number" ? raw : typeof raw === "string" && /^\d+$/.test(raw) ? Number(raw) : undefined;
+function isHttpsUrl(value: unknown): value is string {
+  if (typeof value !== "string" || value.trim() === "") return false;
+  try {
+    return new URL(value).protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
-function providerFailure(error: unknown): { provider: "gcs"; code: string; status?: number; retryable: boolean } {
-  const status = statusFromError(error);
-  const retryable = status === 408 || status === 429 || (status !== undefined && status >= 500);
+function providerFailure(code: string, status?: number, retryable = false): ProviderFailure {
   return {
     provider: "gcs",
-    code: status === 404 ? "OBJECT_NOT_FOUND" : error instanceof Error && error.name === "TimeoutError" ? "TIMEOUT" : "SIGNED_URL_FAILED",
+    code,
     ...(status === undefined ? {} : { status }),
     retryable,
   };
 }
 
-function createGcsClient(): GcsClient {
-  const projectId = process.env.GCP_PROJECT_ID;
-  const clientEmail = process.env.GCP_CLIENT_EMAIL;
-  const privateKey = process.env.GCP_PRIVATE_KEY?.replace(/\\n/g, "\n");
-  const storage = new Storage({
-    ...(projectId ? { projectId } : {}),
-    ...(clientEmail && privateKey ? { credentials: { client_email: clientEmail, private_key: privateKey } } : {}),
-  });
-  return storage as unknown as GcsClient;
+function failureFromStatus(status: number): ProviderFailure {
+  const retryable = status === 408 || status === 429 || status >= 500;
+  return providerFailure("SIGNED_URL_FAILED", status, retryable);
 }
 
-export function createGcsAdapter(client: GcsClient = createGcsClient(), bucketName = process.env.GCP_BUCKET_NAME): GcsAdapter {
+async function requestSigner(
+  fetchImpl: typeof fetch,
+  signerUrl: string,
+  signerSecret: string,
+  objectName: string,
+  timeoutMs: number,
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetchImpl(signerUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${signerSecret}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ objectName }),
+      signal: controller.signal,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function failureFromError(error: unknown): ProviderFailure {
+  if (error instanceof Error && (error.name === "AbortError" || error.name === "TimeoutError")) {
+    return providerFailure("TIMEOUT", undefined, true);
+  }
+  return providerFailure("SIGNED_URL_FAILED");
+}
+
+function urlFromResponse(body: unknown): string | null {
+  if (!body || typeof body !== "object" || !("url" in body)) return null;
+  const url = body.url;
+  return isHttpsUrl(url) ? url : null;
+}
+
+export function createGcsAdapter(options: GcsAdapterOptions = {}): GcsAdapter {
+  const fetchImpl = options.fetchImpl ?? fetch;
+  const signerUrl = options.signerUrl ?? process.env.GCS_SIGNER_URL;
+  const signerSecret = options.signerSecret ?? process.env.GCS_SIGNER_SECRET;
+  const timeoutMs = options.timeoutMs ?? 15_000;
+
   return {
     async createSignedDownload(policy): Promise<ProviderValue<string>> {
       const objectName = objectNameFor(policy);
-      if (!bucketName) {
-        return { accepted: false, failure: { provider: "gcs", code: "BUCKET_NOT_CONFIGURED", retryable: false } };
-      }
       if (!objectName) {
-        return { accepted: false, failure: { provider: "gcs", code: "OBJECT_NOT_CONFIGURED", retryable: false } };
+        return { accepted: false, failure: providerFailure("OBJECT_NOT_CONFIGURED") };
+      }
+      if (!signerUrl || !signerSecret || !isHttpsUrl(signerUrl)) {
+        return { accepted: false, failure: providerFailure("SIGNER_NOT_CONFIGURED") };
       }
 
       try {
-        const [url] = await client.bucket(bucketName).file(objectName).getSignedUrl({
-          version: "v4",
-          action: "read",
-          expires: new Date(Date.now() + SIGNED_URL_TTL_SECONDS * 1000),
-        });
+        const response = await requestSigner(fetchImpl, signerUrl, signerSecret, objectName, timeoutMs);
+        if (response.status !== 200) {
+          return { accepted: false, failure: failureFromStatus(response.status) };
+        }
+
+        let body: unknown;
+        try {
+          body = await response.json();
+        } catch {
+          return { accepted: false, failure: providerFailure("SIGNED_URL_INVALID_RESPONSE") };
+        }
+
+        const url = urlFromResponse(body);
+        if (!url) {
+          return { accepted: false, failure: providerFailure("SIGNED_URL_INVALID_RESPONSE") };
+        }
         return { accepted: true, value: url };
       } catch (error) {
-        return { accepted: false, failure: providerFailure(error) };
+        return { accepted: false, failure: failureFromError(error) };
       }
     },
   };

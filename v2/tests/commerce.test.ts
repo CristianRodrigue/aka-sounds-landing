@@ -56,12 +56,14 @@ const verifiedRelations = [
   { priceId: "pri_01kmnmnp5fr08h43fsfa2qbcqt", productId: "pro_01kmnmhnth6nz30geqrfrfvj82" },
   { priceId: "pri_01kn7gspy845ttqp6m8mn4jgkr", productId: "pro_01kn7gqyc33erxrypv628qak5t" },
   { priceId: "pri_01knt149kwqhp35wa0hwb4gwqn", productId: "pro_01knt11by8qqzskg701zgd7k2c" },
+  { priceId: "pri_01m0zn4mcma11bnywpvcp2qfk0", productId: "pro_01m0zn4m2yj1b1a6hcec11762f" },
+  { priceId: "pri_01m0zn4mt890s0fp4xym0jpj9s", productId: "pro_01m0zn4mjav7rq5hq620tkedmk" },
 ] as const;
 
 describe("G2A canonical commerce model", () => {
   it("contains a valid policy for every current offer", () => {
     assert.deepEqual(validateCommerceModel(canonicalCommerceModel), []);
-    assert.equal(canonicalOffers.length, 6);
+    assert.equal(canonicalOffers.length, 8);
     for (const offer of canonicalOffers) {
       assert.ok(canonicalCommerceModel.fulfillmentPolicies.some((policy) => policy.offerId === offer.id));
     }
@@ -164,7 +166,6 @@ describe("G2A canonical commerce model", () => {
     );
   });
 });
-
 describe("G2A consent and normalized transaction boundaries", () => {
   it("allows transactional email but only explicit true enables marketing", () => {
     assert.equal(decideConsent(true).marketingSubscriptionAllowed, true);

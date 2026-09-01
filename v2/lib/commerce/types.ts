@@ -6,9 +6,8 @@ export interface CatalogProduct {
   readonly slug: string;
   readonly title: string;
   readonly kind: CatalogProductKind;
-  readonly source: "legacy-products" | "legacy-free-packs";
+  readonly source: "legacy-products" | "legacy-free-packs" | "new-products";
 }
-
 export interface PaddleCatalogMapping {
   readonly priceId: string;
   readonly productId: string;

@@ -1,0 +1,16 @@
+{
+  "name": "aka-sounds-gcs-signer",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "7.19.0",
+    "@vercel/node": "7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "typescript": "6.0.3"
+  }
+}

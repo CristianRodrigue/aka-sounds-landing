@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "framework": null,
+  "builds": [
+    {
+      "src": "api/sign.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/sign",
+      "dest": "/api/sign.ts"
+    }
+  ]
+}

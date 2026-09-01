@@ -18,7 +18,6 @@ export interface FulfillmentDependencies {
   readonly resend: ResendAdapter;
   readonly mailerlite?: MailerLiteAdapter;
 }
-
 export interface ReceiptProcessingDependencies extends FulfillmentDependencies {
   readonly customer: PaddleCustomerAdapter;
 }
@@ -101,6 +100,9 @@ async function executeFulfillmentEvent(
     return recordFailure(dependencies, transaction.eventId, email.failure ?? fallbackFailure("resend"));
   }
 
+  if (email.emailId) {
+    await dependencies.receiptStore.markTransactionalEmailAccepted(transaction.eventId, email.emailId);
+  }
   await dependencies.receiptStore.transition(transaction.eventId, "FULFILLED");
   await dependencies.receiptStore.markTransactionalEmailCompleted(transaction.eventId);
 

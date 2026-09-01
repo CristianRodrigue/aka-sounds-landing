@@ -54,4 +54,22 @@ export const fulfillmentPolicies = [
       objectName: "AKA Sounds Free Serum 2 Hard Dance Screeches.zip",
     },
   },
+  {
+    offerId: "offer-modern-raw-kick-arsenal-vol-1",
+    productName: "AKA Sounds Modern Raw Kick Arsenal Vol. 1 — Full Edition",
+    emailSubject: "Your AKA SOUNDS Download Request!",
+    storageObject: {
+      kind: "static",
+      objectName: "AKA_SOUNDS_MODERN_RAW_KICK_ARSENAL_VOL_1_FULL_EDITION.zip",
+    },
+  },
+  {
+    offerId: "offer-modern-raw-kick-arsenal-vol-1-free-edition",
+    productName: "AKA Sounds Modern Raw Kick Arsenal Vol. 1 — Free Edition",
+    emailSubject: "Your AKA SOUNDS Free Access!",
+    storageObject: {
+      kind: "static",
+      objectName: "AKA_SOUNDS_MODERN_RAW_KICK_ARSENAL_VOL_1_FREE_EDITION.zip",
+    },
+  },
 ] as const satisfies readonly FulfillmentPolicy[];

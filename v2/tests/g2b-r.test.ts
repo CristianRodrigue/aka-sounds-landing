@@ -392,25 +392,29 @@ describe("G2B-R MailerLite response semantics", () => {
 });
 
 describe("G2B-R GCS policy", () => {
-  it("uses an exact 24-hour V4 signed read URL", async () => {
+  it("delegates the exact 24-hour download policy to the standalone signer", async () => {
     assert.equal(SIGNED_URL_TTL_SECONDS, 24 * 60 * 60);
-    let expiresAt = 0;
+    let requestedUrl = "";
+    let authorization = "";
+    let requestBody = "";
     const result = await createGcsAdapter({
-      bucket: () => ({
-        file: () => ({
-          getSignedUrl: async (options) => {
-            expiresAt = options.expires.getTime();
-            return ["https://storage.example.test/signed"];
-          },
-        }),
-      }),
-    }, "aka-private-bucket").createSignedDownload({
+      signerUrl: "https://signer.example.test/api/sign",
+      signerSecret: "internal-signer-secret",
+      fetchImpl: async (input, init) => {
+        requestedUrl = String(input);
+        authorization = new Headers(init?.headers).get("authorization") ?? "";
+        requestBody = String(init?.body);
+        return Response.json({ url: "https://storage.example.test/signed" });
+      },
+    }).createSignedDownload({
       offerId: "offer",
       productName: "Product",
       emailSubject: "Product",
       storageObject: { kind: "static", objectName: "canonical-object.zip" },
     });
     assert.equal(result.accepted, true);
-    assert.ok(Math.abs(expiresAt - (Date.now() + 24 * 60 * 60 * 1000)) < 2_000);
+    assert.equal(requestedUrl, "https://signer.example.test/api/sign");
+    assert.equal(authorization, "Bearer internal-signer-secret");
+    assert.deepEqual(JSON.parse(requestBody), { objectName: "canonical-object.zip" });
   });
 });
