@@ -16,6 +16,8 @@ import { createResendAdapter } from "../lib/commerce/resend";
 import { fulfillmentPolicies } from "../lib/commerce/fulfillment";
 import { isPaddleCheckoutCompletedEvent, paddleTransactionId } from "../components/product-detail/paddle-checkout-events";
 import { beginC6Flow, canDismissC6, stateAfterDelayCheck, stateAfterPreparingStatus } from "../components/product-detail/c6-state-machine";
+import { buildCommerceApiUrl } from "../components/product-detail/commerce-api";
+import { purchaseAccessOptions, withPurchaseAccessCors } from "../app/api/purchase-access/cors";
 
 const offer = canonicalOffers[0];
 
@@ -229,6 +231,42 @@ describe("C6 local purchase-access simulator", () => {
     assert.equal(isPaddleCheckoutCompletedEvent(event), true);
     assert.equal(paddleTransactionId(event), "txn_free_checkout");
     assert.equal(isPaddleCheckoutCompletedEvent({ name: "checkout.closed" }), false);
+  });
+
+  it("uses the configured Vercel origin for Hostinger browser calls", () => {
+    assert.equal(
+      buildCommerceApiUrl("/api/purchase-access/session", "https://aka-sounds-v2-preview.vercel.app"),
+      "https://aka-sounds-v2-preview.vercel.app/api/purchase-access/session",
+    );
+    assert.equal(
+      buildCommerceApiUrl("/api/purchase-access/download?grant=opaque", "https://aka-sounds-v2-preview.vercel.app"),
+      "https://aka-sounds-v2-preview.vercel.app/api/purchase-access/download?grant=opaque",
+    );
+  });
+
+  it("allows C6 CORS only from the production frontend origin", () => {
+    const allowedRequest = new Request("https://aka-sounds-v2-preview.vercel.app/api/purchase-access/status", {
+      headers: { Origin: "https://akasounds.com" },
+    });
+    const allowedResponse = withPurchaseAccessCors(allowedRequest, new Response("ok"), "POST, OPTIONS");
+    assert.equal(allowedResponse.headers.get("Access-Control-Allow-Origin"), "https://akasounds.com");
+    assert.equal(allowedResponse.headers.get("Access-Control-Allow-Headers"), "Content-Type");
+    assert.equal(purchaseAccessOptions(allowedRequest, "POST, OPTIONS").status, 204);
+    const redirectResponse = withPurchaseAccessCors(
+      allowedRequest,
+      Response.redirect("https://storage.example/pack.zip", 302),
+      "GET, OPTIONS",
+    );
+    assert.equal(redirectResponse.status, 302);
+    assert.equal(redirectResponse.headers.get("Location"), "https://storage.example/pack.zip");
+    assert.equal(redirectResponse.headers.get("Access-Control-Allow-Origin"), "https://akasounds.com");
+
+    const foreignRequest = new Request("https://aka-sounds-v2-preview.vercel.app/api/purchase-access/status", {
+      headers: { Origin: "https://attacker.example" },
+    });
+    const foreignResponse = withPurchaseAccessCors(foreignRequest, new Response("ok"), "POST, OPTIONS");
+    assert.equal(foreignResponse.headers.get("Access-Control-Allow-Origin"), null);
+    assert.equal(purchaseAccessOptions(foreignRequest, "POST, OPTIONS").status, 403);
   });
 
   it("uses the approved official AKA geometric symbol background in transactional email", async () => {

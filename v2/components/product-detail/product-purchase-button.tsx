@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { C6PurchaseModal, type C6ModalState } from "./c6-purchase-modal";
+import { commerceApiUrl } from "./commerce-api";
 import {
   isPaddleCheckoutCompletedEvent,
   paddleTransactionId,
@@ -169,7 +170,7 @@ export function ProductPurchaseButton({
     }
 
     try {
-      const response = await fetch("/api/purchase-access/session", {
+      const response = await fetch(commerceApiUrl("/api/purchase-access/session"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ priceId }),
@@ -189,7 +190,7 @@ export function ProductPurchaseButton({
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 3_000);
     try {
-      const response = await fetch("/api/purchase-access/status", {
+      const response = await fetch(commerceApiUrl("/api/purchase-access/status"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessionId: session.sessionId, browserSecret: session.browserSecret }),
@@ -211,7 +212,7 @@ export function ProductPurchaseButton({
       if (flowIdRef.current !== flowId) return;
       if (status?.status === "READY") {
         setReadyProductName(status.productName);
-        setDownloadUrl(status.downloadUrl);
+        setDownloadUrl(commerceApiUrl(status.downloadUrl));
         setModalState("ready");
         return;
       }
@@ -332,7 +333,7 @@ export function ProductPurchaseButton({
       const status = await fetchStatus(session);
       if (status?.status === "READY") {
         setReadyProductName(status.productName);
-        setDownloadUrl(status.downloadUrl);
+        setDownloadUrl(commerceApiUrl(status.downloadUrl));
         setModalState("ready");
       }
     } finally {
