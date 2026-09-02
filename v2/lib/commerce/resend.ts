@@ -3,6 +3,8 @@ import type { ProviderResult, ResendAdapter } from "./providers";
 
 type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 
+export const TRANSACTIONAL_EMAIL_BRAND_ASSET_URL = "https://akasounds.com/assets/aka-logo-symbol-white-official.png";
+
 function escapeHtml(value: string): string {
   const replacements: Record<string, string> = {
     "&": "&amp;",
@@ -97,9 +99,9 @@ export function createResendAdapter(options: ResendAdapterOptions = {}): ResendA
             </td>
           </tr>
 
-          <!-- Body (Dark, oversized faded logo background) -->
+          <!-- Body (Dark, oversized official AKA geometric symbol background) -->
           <tr>
-            <td align="center" background="https://akasounds.com/favicon.png" style="background-color: #050505; background-image: url('https://akasounds.com/favicon.png'); background-size: 150%; background-position: center; background-repeat: no-repeat; padding: 60px 40px 40px 40px;">
+            <td align="center" background="${TRANSACTIONAL_EMAIL_BRAND_ASSET_URL}" style="background-color: #050505; background-image: url('${TRANSACTIONAL_EMAIL_BRAND_ASSET_URL}'); background-size: 900px auto; background-position: center center; background-repeat: no-repeat; padding: 60px 40px 40px 40px;">
               <!-- We wrap the text in a div with a semi-transparent black background to ensure high readability -->
               <div style="background-color: rgba(5, 5, 5, 0.90); padding: 30px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                 <h2 style="color: #ffffff; margin: 0 0 24px 0; font-size: 22px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">ACCESS GRANTED</h2>

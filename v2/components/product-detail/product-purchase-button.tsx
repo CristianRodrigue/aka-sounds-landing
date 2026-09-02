@@ -2,22 +2,28 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { C6PurchaseModal, type C6ModalState } from "./c6-purchase-modal";
-
-type PaddleEvent = {
-  readonly name?: string;
-  readonly data?: { readonly transaction_id?: string };
-};
+import {
+  isPaddleCheckoutCompletedEvent,
+  paddleTransactionId,
+  type PaddleCheckoutEvent,
+} from "./paddle-checkout-events";
 
 type PaddleCheckout = {
   open: (options: {
     items: Array<{ priceId: string; quantity: number }>;
     customData?: { readonly purchase_session_id: string };
   }) => void;
+  close?: () => void;
 };
 
 type PaddleApi = {
-  Initialize: (options: { token: string; eventCallback: (event: PaddleEvent) => void }) => void;
+  Initialize: (options: { token: string; eventCallback: (event: PaddleCheckoutEvent) => void }) => void;
   Checkout: PaddleCheckout;
+};
+
+type ActivePaddleCheckout = {
+  readonly sessionId: string;
+  readonly onCompleted: (event: PaddleCheckoutEvent) => void;
 };
 
 type PurchaseSessionResponse = {
@@ -34,13 +40,18 @@ declare global {
   interface Window {
     Paddle?: PaddleApi;
     __akaPaddleInitialized?: boolean;
-    __akaPaddleEventHandlers?: Set<(event: PaddleEvent) => void>;
+    __akaPaddleActiveCheckout?: ActivePaddleCheckout;
   }
 }
 
 const PADDLE_CLIENT_TOKEN = "live_84024e2add60d6337f992cc003a";
 const PREPARING_TIMEOUT_MS = 10_000;
 const STATUS_POLL_INTERVAL_MS = 1_000;
+
+function dispatchPaddleEvent(event: PaddleCheckoutEvent): void {
+  if (!isPaddleCheckoutCompletedEvent(event)) return;
+  window.__akaPaddleActiveCheckout?.onCompleted(event);
+}
 
 function sessionStorageKey(priceId: string): string {
   return `aka-c6-purchase-session:${priceId}`;
@@ -215,11 +226,19 @@ export function ProductPurchaseButton({
     if (flowIdRef.current === flowId) setModalState("delay");
   }, [fetchStatus]);
 
-  const handlePaddleEvent = useCallback((event: PaddleEvent) => {
-    if (event.name !== "checkout.completed") return;
+  const handlePaddleEvent = useCallback((event: PaddleCheckoutEvent) => {
+    if (!isPaddleCheckoutCompletedEvent(event)) return;
     const session = sessionRef.current;
     if (!session) return;
-    transactionIdRef.current = event.data?.transaction_id ?? null;
+    transactionIdRef.current = paddleTransactionId(event);
+    if (window.__akaPaddleActiveCheckout?.sessionId === session.sessionId) {
+      window.__akaPaddleActiveCheckout = undefined;
+    }
+    try {
+      window.Paddle?.Checkout.close?.();
+    } catch {
+      // The C6 confirmation flow must still surface if Paddle is already closing.
+    }
     writeSessionLifecycle(priceId, "completed");
     const flowId = flowIdRef.current + 1;
     flowIdRef.current = flowId;
@@ -228,14 +247,6 @@ export function ProductPurchaseButton({
     setModalState("preparing");
     void pollUntilSettled(session, flowId);
   }, [pollUntilSettled, priceId, productName]);
-
-  useEffect(() => {
-    window.__akaPaddleEventHandlers ??= new Set();
-    window.__akaPaddleEventHandlers.add(handlePaddleEvent);
-    return () => {
-      window.__akaPaddleEventHandlers?.delete(handlePaddleEvent);
-    };
-  }, [handlePaddleEvent]);
 
   const beginCheckout = useCallback(async () => {
     const session = await ensureSession();
@@ -250,18 +261,22 @@ export function ProductPurchaseButton({
     }
     setMessage("");
     writeSessionLifecycle(priceId, "active");
+    window.__akaPaddleActiveCheckout = {
+      sessionId: session.sessionId,
+      onCompleted: handlePaddleEvent,
+    };
     window.Paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       customData: { purchase_session_id: session.sessionId },
     });
-  }, [ensureSession, priceId]);
+  }, [ensureSession, handlePaddleEvent, priceId]);
 
   const initializePaddle = useCallback(() => {
     if (!window.Paddle) return;
     if (!window.__akaPaddleInitialized) {
       window.Paddle.Initialize({
         token: PADDLE_CLIENT_TOKEN,
-        eventCallback: (event) => window.__akaPaddleEventHandlers?.forEach((handler) => handler(event)),
+        eventCallback: dispatchPaddleEvent,
       });
       window.__akaPaddleInitialized = true;
     }
@@ -293,6 +308,12 @@ export function ProductPurchaseButton({
     return () => script.removeEventListener("load", initializePaddle);
   }, [initializePaddle]);
 
+  useEffect(() => () => {
+    if (window.__akaPaddleActiveCheckout?.sessionId === sessionRef.current?.sessionId) {
+      window.__akaPaddleActiveCheckout = undefined;
+    }
+  }, []);
+
   const openCheckout = () => {
     if (!window.Paddle) {
       pendingCheckoutRef.current = true;
@@ -320,6 +341,9 @@ export function ProductPurchaseButton({
   }, [checking, fetchStatus]);
 
   const closeModal = useCallback(() => {
+    if (window.__akaPaddleActiveCheckout?.sessionId === sessionRef.current?.sessionId) {
+      window.__akaPaddleActiveCheckout = undefined;
+    }
     flowIdRef.current += 1;
     sessionRef.current = null;
     transactionIdRef.current = null;

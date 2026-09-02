@@ -12,6 +12,9 @@ import { InMemoryReceiptStore } from "../lib/commerce/receipt-store";
 import { canonicalOffers } from "../lib/commerce/server-catalog";
 import { handleV2Webhook } from "../lib/commerce/webhook-handler";
 import type { Offer } from "../lib/commerce/types";
+import { createResendAdapter } from "../lib/commerce/resend";
+import { fulfillmentPolicies } from "../lib/commerce/fulfillment";
+import { isPaddleCheckoutCompletedEvent, paddleTransactionId } from "../components/product-detail/paddle-checkout-events";
 import { beginC6Flow, canDismissC6, stateAfterDelayCheck, stateAfterPreparingStatus } from "../components/product-detail/c6-state-machine";
 
 const offer = canonicalOffers[0];
@@ -202,5 +205,65 @@ describe("C6 local purchase-access simulator", () => {
   it("only resolves grants from the canonical offer and never accepts an arbitrary object", () => {
     assert.ok(purchaseOfferForPrice(offer.paddlePriceId));
     assert.equal(purchaseOfferForPrice("arbitrary-object.zip"), null);
+  });
+
+  it("covers every current active Paddle offer through the secure entitlement path", async () => {
+    for (const [index, selectedOffer] of canonicalOffers.entries()) {
+      assert.equal(selectedOffer.availability, "active");
+      assert.ok(selectedOffer.paddleProductId);
+      const store = new InMemoryReceiptStore();
+      const credentials = await createSession(store, Date.now(), selectedOffer);
+      const input = await claimAndBind(store, credentials, `c6_universal_offer_${index}`, selectedOffer);
+      await fulfill(store, input.eventId);
+      const status = await readPurchaseAccessStatus(store, credentials.sessionId, credentials.browserSecret);
+      assert.equal(status.status, "READY", selectedOffer.id);
+      if (status.status === "READY") {
+        assert.equal(status.productName.length > 0, true);
+        assert.equal((await authorizePurchaseDownload(store, new URL(status.downloadUrl, "https://v2.test").searchParams.get("grant")!)).authorized, true);
+      }
+    }
+  });
+
+  it("handles Paddle's checkout.completed payload for zero-dollar checkouts", () => {
+    const event = { name: "checkout.completed", data: { transaction_id: "txn_free_checkout" } };
+    assert.equal(isPaddleCheckoutCompletedEvent(event), true);
+    assert.equal(paddleTransactionId(event), "txn_free_checkout");
+    assert.equal(isPaddleCheckoutCompletedEvent({ name: "checkout.closed" }), false);
+  });
+
+  it("uses the approved official AKA geometric symbol background in transactional email", async () => {
+    let html = "";
+    const adapter = createResendAdapter({
+      apiKey: "test-api-key",
+      from: "AKA Sounds <noreply@akasounds.com>",
+      fetchImpl: async (_input, init) => {
+        const payload = JSON.parse(String(init?.body)) as { html?: string };
+        html = payload.html ?? "";
+        return new Response(JSON.stringify({ id: "email_test_logo" }), { status: 200, headers: { "Content-Type": "application/json" } });
+      },
+    });
+    const freeOffer = canonicalOffers.find((candidate) => candidate.id === "offer-modern-raw-kick-arsenal-vol-1-free-edition");
+    assert.ok(freeOffer);
+    const policy = fulfillmentPolicies.find((candidate) => candidate.offerId === freeOffer.id);
+    assert.ok(policy);
+    const result = await adapter.sendTransactionEmail({
+      email: "customer@example.com",
+      transaction: {
+        eventId: "evt_email_logo",
+        notificationId: null,
+        occurredAt: null,
+        transactionId: "txn_email_logo",
+        status: "completed",
+        customerId: null,
+        customerEmail: "customer@example.com",
+        marketingConsent: null,
+        items: [{ priceId: freeOffer.paddlePriceId, productId: freeOffer.paddleProductId, quantity: 1 }],
+      },
+      policy,
+      downloadUrl: "https://akasounds.com/api/download/test",
+    });
+    assert.equal(result.accepted, true);
+    assert.match(html, /https:\/\/akasounds\.com\/assets\/aka-logo-symbol-white-official\.png/);
+    assert.doesNotMatch(html, /akasounds\.com\/favicon\.png/);
   });
 });
