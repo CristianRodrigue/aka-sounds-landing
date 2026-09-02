@@ -115,6 +115,7 @@ export function FreeSoundsH1Section() {
               {sound.details ? <p className="free-h1-product-details">{sound.details}</p> : null}
               <ProductPurchaseButton
                 priceId={sound.priceId}
+                productName={sound.title.join(" ")}
                 label="GET FREE SOUND"
                 variant="custom"
                 buttonClassName="free-h1-action motion-cta"

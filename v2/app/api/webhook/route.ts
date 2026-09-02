@@ -16,6 +16,7 @@ export async function POST(request: Request): Promise<Response> {
   return handleV2Webhook(request, {
     verify: verifyOfficialPaddleWebhook,
     receiptStore,
+    bindPurchaseSession: (input) => receiptStore.bindPurchaseAccessSession(input),
     processReceipt: (eventId) =>
       processReceiptEvent(eventId, {
         receiptStore,

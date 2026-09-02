@@ -13,6 +13,14 @@ import type {
   ResendDeliveryStore,
 } from "./providers";
 import type { DeliveryState } from "./state";
+import type {
+  DownloadGrantInput,
+  DownloadGrantRecord,
+  PurchaseAccessBindingInput,
+  PurchaseAccessSessionInput,
+  PurchaseAccessSessionRecord,
+  PurchaseAccessStore,
+} from "./purchase-access";
 type MutableReceiptRecord = {
   -readonly [K in keyof ReceiptRecord]: ReceiptRecord[K];
 };
@@ -98,6 +106,10 @@ function resendStatusForEvent(eventType: ResendDeliveryEventInput["eventType"]):
 
 type StoredResendDeliveryEvent = ResendDeliveryEventInput & { readonly receiptEventId: string | null };
 
+type MutablePurchaseAccessSessionRecord = {
+  -readonly [K in keyof PurchaseAccessSessionRecord]: PurchaseAccessSessionRecord[K];
+};
+
 function isTerminalResendEvent(input: Pick<ResendDeliveryEventInput, "eventType">): boolean {
   return input.eventType === "email.delivered" || input.eventType === "email.bounced" || input.eventType === "email.failed";
 }
@@ -138,6 +150,8 @@ function reconcileOrphanResendEvents(
 export class InMemoryReceiptStore implements ReceiptStore {
   private readonly records = new Map<string, MutableReceiptRecord>();
   private readonly resendEvents = new Map<string, StoredResendDeliveryEvent>();
+  private readonly purchaseSessions = new Map<string, MutablePurchaseAccessSessionRecord>();
+  private readonly downloadGrants = new Map<string, DownloadGrantRecord>();
 
   async get(eventId: string): Promise<ReceiptRecord | null> {
     const record = this.records.get(eventId);
@@ -263,6 +277,57 @@ export class InMemoryReceiptStore implements ReceiptStore {
   getResendDeliveryEvent(svixId: string): StoredResendDeliveryEvent | null {
     return this.resendEvents.get(svixId) ?? null;
   }
+
+  async createPurchaseAccessSession(input: PurchaseAccessSessionInput): Promise<void> {
+    if (this.purchaseSessions.has(input.sessionId)) throw new Error("PURCHASE_SESSION_EXISTS");
+    this.purchaseSessions.set(input.sessionId, {
+      ...input,
+      boundEventId: null,
+      boundTransactionId: null,
+    });
+  }
+
+  async getPurchaseAccessSession(sessionId: string): Promise<PurchaseAccessSessionRecord | null> {
+    const session = this.purchaseSessions.get(sessionId);
+    return session ? { ...session } : null;
+  }
+
+  async bindPurchaseAccessSession(input: PurchaseAccessBindingInput): Promise<boolean> {
+    const session = this.purchaseSessions.get(input.sessionId);
+    const receipt = this.records.get(input.eventId);
+    if (!session || !receipt || Date.parse(session.expiresAt) <= Date.now()) return false;
+    if (
+      session.fulfillmentOfferId !== input.fulfillmentOfferId
+      || session.priceId !== input.priceId
+      || session.productId !== input.productId
+      || receipt.transactionId !== input.transactionId
+      || receipt.priceId !== input.priceId
+      || receipt.productId !== input.productId
+    ) return false;
+    if (session.boundEventId !== null && (session.boundEventId !== input.eventId || session.boundTransactionId !== input.transactionId)) {
+      return false;
+    }
+    const alreadyBound = [...this.purchaseSessions.values()].find((candidate) =>
+      candidate.sessionId !== session.sessionId && candidate.boundTransactionId === input.transactionId,
+    );
+    if (alreadyBound) return false;
+    session.boundEventId = input.eventId;
+    session.boundTransactionId = input.transactionId;
+    receipt.fulfillmentOfferId = input.fulfillmentOfferId;
+    receipt.updatedAt = nowIso();
+    return true;
+  }
+
+  async createDownloadGrant(input: DownloadGrantInput): Promise<void> {
+    if (!this.purchaseSessions.has(input.sessionId)) throw new Error("PURCHASE_SESSION_NOT_FOUND");
+    if (this.downloadGrants.has(input.grantHash)) throw new Error("DOWNLOAD_GRANT_EXISTS");
+    this.downloadGrants.set(input.grantHash, { ...input });
+  }
+
+  async getDownloadGrant(grantHash: string): Promise<DownloadGrantRecord | null> {
+    const grant = this.downloadGrants.get(grantHash);
+    return grant ? { ...grant } : null;
+  }
 }
 
 type SqlRow = Record<string, unknown>;
@@ -323,7 +388,7 @@ function databaseUrl(): string {
 }
 
 /** Neon-backed store. INSERT/UPDATE predicates provide database-level ownership. */
-export class NeonReceiptStore implements ReceiptStore, ResendDeliveryStore {
+export class NeonReceiptStore implements ReceiptStore, ResendDeliveryStore, PurchaseAccessStore {
   private sql() {
     return neon(databaseUrl());
   }
@@ -611,6 +676,114 @@ export class NeonReceiptStore implements ReceiptStore, ResendDeliveryStore {
     return {
       inserted: inserted.length > 0,
       receiptEventId: asNullableString((eventRows[0] as SqlRow).receipt_event_id),
+    };
+  }
+
+  async createPurchaseAccessSession(input: PurchaseAccessSessionInput): Promise<void> {
+    const sql = this.sql();
+    await sql`
+      INSERT INTO purchase_access_sessions
+        (session_id, browser_secret_hash, fulfillment_offer_id, price_id, product_id, created_at, expires_at)
+      VALUES
+        (${input.sessionId}, ${input.browserSecretHash}, ${input.fulfillmentOfferId}, ${input.priceId}, ${input.productId}, ${input.createdAt}, ${input.expiresAt})
+    `;
+  }
+
+  async getPurchaseAccessSession(sessionId: string): Promise<PurchaseAccessSessionRecord | null> {
+    const sql = this.sql();
+    const rows = await sql`
+      SELECT session_id, browser_secret_hash, fulfillment_offer_id, price_id, product_id,
+             bound_event_id, bound_transaction_id, created_at, expires_at
+      FROM purchase_access_sessions
+      WHERE session_id = ${sessionId}
+      LIMIT 1
+    `;
+    const row = rows[0] as SqlRow | undefined;
+    if (!row) return null;
+    return {
+      sessionId: String(row.session_id),
+      browserSecretHash: String(row.browser_secret_hash),
+      fulfillmentOfferId: String(row.fulfillment_offer_id),
+      priceId: String(row.price_id),
+      productId: String(row.product_id),
+      boundEventId: asNullableString(row.bound_event_id),
+      boundTransactionId: asNullableString(row.bound_transaction_id),
+      createdAt: asNullableString(row.created_at) ?? nowIso(),
+      expiresAt: asNullableString(row.expires_at) ?? nowIso(),
+    };
+  }
+
+  async bindPurchaseAccessSession(input: PurchaseAccessBindingInput): Promise<boolean> {
+    const sql = this.sql();
+    const [, bound] = await sql.transaction([
+      sql`SELECT pg_advisory_xact_lock(hashtextextended(${input.sessionId}, 0))`,
+      sql`
+        WITH candidate_session AS (
+          SELECT session_id
+          FROM purchase_access_sessions
+          WHERE session_id = ${input.sessionId}
+            AND fulfillment_offer_id = ${input.fulfillmentOfferId}
+            AND price_id = ${input.priceId}
+            AND product_id = ${input.productId}
+            AND expires_at > NOW()
+            AND (bound_event_id IS NULL OR (bound_event_id = ${input.eventId} AND bound_transaction_id = ${input.transactionId}))
+            AND NOT EXISTS (
+              SELECT 1
+              FROM purchase_access_sessions AS other
+              WHERE other.bound_transaction_id = ${input.transactionId}
+                AND other.session_id <> ${input.sessionId}
+            )
+        ),
+        candidate_receipt AS (
+          SELECT event_id
+          FROM webhook_receipts
+          WHERE event_id = ${input.eventId}
+            AND transaction_id = ${input.transactionId}
+            AND price_id = ${input.priceId}
+            AND product_id = ${input.productId}
+            AND (fulfillment_offer_id IS NULL OR fulfillment_offer_id = ${input.fulfillmentOfferId})
+          FOR UPDATE
+        ),
+        updated_receipt AS (
+          UPDATE webhook_receipts AS receipt
+          SET fulfillment_offer_id = ${input.fulfillmentOfferId}, updated_at = NOW()
+          FROM candidate_receipt
+          WHERE receipt.event_id = candidate_receipt.event_id
+          RETURNING receipt.event_id
+        )
+        UPDATE purchase_access_sessions AS session
+        SET bound_event_id = ${input.eventId}, bound_transaction_id = ${input.transactionId}
+        FROM candidate_session, updated_receipt
+        WHERE session.session_id = candidate_session.session_id
+        RETURNING session.session_id
+      `,
+    ]);
+    return bound.length > 0;
+  }
+
+  async createDownloadGrant(input: DownloadGrantInput): Promise<void> {
+    const sql = this.sql();
+    await sql`
+      INSERT INTO purchase_download_grants (grant_hash, session_id, created_at, expires_at)
+      VALUES (${input.grantHash}, ${input.sessionId}, ${input.createdAt}, ${input.expiresAt})
+    `;
+  }
+
+  async getDownloadGrant(grantHash: string): Promise<DownloadGrantRecord | null> {
+    const sql = this.sql();
+    const rows = await sql`
+      SELECT grant_hash, session_id, created_at, expires_at
+      FROM purchase_download_grants
+      WHERE grant_hash = ${grantHash}
+      LIMIT 1
+    `;
+    const row = rows[0] as SqlRow | undefined;
+    if (!row) return null;
+    return {
+      grantHash: String(row.grant_hash),
+      sessionId: String(row.session_id),
+      createdAt: asNullableString(row.created_at) ?? nowIso(),
+      expiresAt: asNullableString(row.expires_at) ?? nowIso(),
     };
   }
 }

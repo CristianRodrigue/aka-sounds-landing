@@ -18,6 +18,12 @@ function firstString(...values: unknown[]): string | null {
   return null;
 }
 
+function purchaseSessionIdFromCustomData(data: UnknownRecord): string | null {
+  const customData = asRecord(data.custom_data) ?? asRecord(data.customData);
+  const value = firstString(customData?.purchase_session_id, customData?.purchaseSessionId);
+  return value && /^[A-Za-z0-9_-]{40,80}$/.test(value) ? value : null;
+}
+
 export type NormalizationFailure =
   | "INVALID_PAYLOAD"
   | "UNSUPPORTED_EVENT"
@@ -68,6 +74,7 @@ export function normalizeTransactionCompleted(payload: unknown): NormalizationRe
       customerEmail: null,
       marketingConsent: null,
       items,
+      purchaseSessionId: purchaseSessionIdFromCustomData(data),
     },
   };
 }

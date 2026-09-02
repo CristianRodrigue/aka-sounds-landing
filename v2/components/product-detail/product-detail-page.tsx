@@ -246,7 +246,7 @@ export function ProductDetailPage({ product }: { product: ProductDetailModel }) 
               <strong>{product.currentPrice}</strong>
               {product.referencePrice ? <del className="product-v2-reference-price">{product.referencePrice}</del> : null}
             </div>
-            <ProductPurchaseButton priceId={product.paddlePriceId} />
+            <ProductPurchaseButton priceId={product.paddlePriceId} productName={product.displayName} />
           </div>
         </div>
         <div className="product-v2-hero-meta" data-motion-reveal data-motion-delay="260">{product.heroMeta.title} <span>/</span> {product.heroMeta.detail}</div>
@@ -322,6 +322,7 @@ export function ProductDetailPage({ product }: { product: ProductDetailModel }) 
               </h3>
               <ProductPurchaseButton
                 priceId={product.relatedTrial.paddlePriceId}
+                productName={product.relatedTrial.title}
                 label={product.relatedTrial.sectionTitle === "FREE EDITION" ? "GET FREE EDITION" : "GET FREE TRIAL"}
                 variant="text"
               />
@@ -339,7 +340,7 @@ export function ProductDetailPage({ product }: { product: ProductDetailModel }) 
             <div className="product-v2-final-buy">
               <strong>{product.currentPrice}</strong>
               {product.referencePrice ? <del className="product-v2-reference-price">{product.referencePrice}</del> : null}
-              <ProductPurchaseButton priceId={product.paddlePriceId} compact />
+              <ProductPurchaseButton priceId={product.paddlePriceId} productName={product.displayName} compact />
             </div>
           </div>
         </div>

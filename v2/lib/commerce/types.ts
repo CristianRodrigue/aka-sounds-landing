@@ -62,4 +62,5 @@ export interface NormalizedTransaction {
   readonly customerEmail: string | null;
   readonly marketingConsent: MarketingConsent;
   readonly items: readonly NormalizedTransactionItem[];
+  readonly purchaseSessionId?: string | null;
 }

@@ -4,6 +4,8 @@ import type { OfficialVerificationResult } from "./paddle-verifier";
 import type { ReceiptStore } from "./providers";
 import type { NormalizedTransaction } from "./types";
 import { isTerminalState } from "./state";
+import { compatiblePurchaseOffer } from "./purchase-access";
+import type { PurchaseAccessBindingInput } from "./purchase-access";
 
 export interface WebhookHandlerDependencies {
   readonly verify: (rawBody: string, signature: string | null, secret: string) => Promise<OfficialVerificationResult>;
@@ -12,6 +14,7 @@ export interface WebhookHandlerDependencies {
   readonly schedule?: (task: () => Promise<void>) => void;
   /** Legacy test harness only; production must use receiptStore + processReceipt. */
   readonly process?: (transaction: NormalizedTransaction) => Promise<FulfillmentServiceResult>;
+  readonly bindPurchaseSession?: (input: PurchaseAccessBindingInput) => Promise<boolean>;
 }
 
 function receiptEventFromTransaction(transaction: NormalizedTransaction) {
@@ -26,6 +29,7 @@ function receiptEventFromTransaction(transaction: NormalizedTransaction) {
     quantity: item?.quantity ?? 0,
     itemCount: transaction.items.length,
     occurredAt: transaction.occurredAt,
+    fulfillmentOfferId: compatiblePurchaseOffer(transaction)?.offerId ?? null,
   };
 }
 
@@ -83,6 +87,18 @@ export async function handleV2Webhook(request: Request, dependencies: WebhookHan
     claim = await dependencies.receiptStore.claimEvent(receiptEventFromTransaction(normalized.transaction));
   } catch {
     return Response.json({ error: "RECEIPT_NOT_ACCEPTED" }, { status: 503 });
+  }
+
+  const offer = compatiblePurchaseOffer(normalized.transaction);
+  if (normalized.transaction.purchaseSessionId && offer && dependencies.bindPurchaseSession) {
+    await dependencies.bindPurchaseSession({
+      sessionId: normalized.transaction.purchaseSessionId,
+      eventId: normalized.transaction.eventId,
+      transactionId: normalized.transaction.transactionId,
+      fulfillmentOfferId: offer.offerId,
+      priceId: offer.priceId,
+      productId: offer.productId,
+    }).catch(() => false);
   }
 
   if (!isTerminalState(claim.record.state)) {
