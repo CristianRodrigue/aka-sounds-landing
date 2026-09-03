@@ -6463,6 +6463,10 @@ html.nav-scrolled .site-nav {
   .site-nav-cta { display: none; }
 }
 
+@media (max-width: 1350px) and (min-width: 1101px) {
+  .site-nav-links { right: 220px; }
+}
+
 @media (max-width: 900px) and (min-width: 761px) {
   .site-nav {
     height: 112px;
@@ -6760,6 +6764,13 @@ html.nav-scrolled .site-nav {
   padding: 24px clamp(20px, 3vw, 48px);
   color: #111;
   mix-blend-mode: multiply;
+  transition: background-color 220ms ease, box-shadow 220ms ease, mix-blend-mode 220ms ease;
+}
+
+html.nav-scrolled .deat-profile-header {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(17, 17, 17, 0.08);
+  mix-blend-mode: normal;
 }
 
 .deat-profile-back,

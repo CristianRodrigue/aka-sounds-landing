@@ -90,7 +90,7 @@ export function DeatAkaProfile() {
   return (
     <main className="deat-profile">
       <MotionOrchestrator reversible />
-      <header className="deat-profile-header" data-motion-reveal data-motion-delay="0">
+      <header className="deat-profile-header" data-deat-nav>
         <Link href="/" className="deat-profile-back"><span aria-hidden="true">←</span>{t.nav.back}</Link>
         <div className="deat-profile-language" aria-label="Language selector">
           <button type="button" onClick={() => setLang("en")} className={lang === "en" ? "is-active" : ""}>EN</button>
