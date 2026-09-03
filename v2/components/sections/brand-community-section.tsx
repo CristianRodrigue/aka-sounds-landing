@@ -54,6 +54,7 @@ export function BrandCommunityA2Section() {
         <p className="brand-a2-genre">RAWSTYLE&nbsp; / &nbsp;HARDTECHNO&nbsp; / &nbsp;SOUND DESIGN</p>
         <p className="brand-a2-offer">SAMPLE PACKS&nbsp; / &nbsp;PRESETS&nbsp; / &nbsp;TUTORIALS</p>
         <p className="brand-a2-support" data-motion-reveal data-motion-delay="300">SOUND DESIGN FOR THE HARDER SIDE OF MUSIC.</p>
+        <a className="brand-a2-profile-cta" href="/deat_aka">KNOW DEAT AKA <span aria-hidden="true">→</span></a>
 
         <div className="brand-a2-community" data-motion-reveal data-motion-delay="390">
           <p className="brand-a2-community-label">COMMUNITY / LIVE CHANNELS</p>

@@ -22,7 +22,7 @@ export type ProductDetailModel = {
   readonly paddlePriceId: string;
   readonly previewContext?: string;
   readonly previewTracks: readonly ProductPreviewTrack[];
-  readonly soundCloudTrackUrl: string;
+  readonly soundCloudTrackUrls: readonly string[];
   readonly relatedTrial: {
     readonly title: string;
     readonly titleLines: readonly string[];
@@ -69,7 +69,10 @@ export const hardtechnoEssentialsProduct: ProductDetailModel = {
     { id: 7, name: "DEAT_AKA_VOCAL_WET_01", type: "VOCAL WET", duration: "0:04", url: "/samples/DEAT_AKA_VOCAL_WET_01.wav" },
     { id: 8, name: "DEAT_AKA_VOCAL_GLITCH_01", type: "VOCAL GLITCH", duration: "0:04", url: "/samples/DEAT_AKA_VOCAL_GLITCH_01.wav" },
   ],
-  soundCloudTrackUrl: "https://soundcloud.com/deat_aka/this-is-a-f-cking-hardtechno",
+  soundCloudTrackUrls: [
+    "https://soundcloud.com/deat_aka/this-is-a-f-cking-hardtechno",
+    "https://soundcloud.com/gpowered/g-powered-afterlife",
+  ],
   relatedTrial: {
     title: "HARDTECHNO ESSENTIALS VOL. 01 FREE TRIAL",
     titleLines: ["HARDTECHNO ESSENTIALS", "VOL. 01 FREE TRIAL"],
@@ -126,7 +129,7 @@ export const modernRawKickArsenalProduct: ProductDetailModel = {
     { id: 112, name: "AKA_SOUNDS_RKA1_FREE_EDITION_CLICK_006", type: "CLICK / TRANSIENT", duration: "0:00.033", url: "/samples/modern-raw-kick-arsenal-free/AKA_SOUNDS_RKA1_FREE_EDITION_CLICK_006.wav" },
     { id: 113, name: "AKA_SOUNDS_RKA1_FREE_EDITION_REVERB_009", type: "PUNCH REVERB", duration: "0:00.429", url: "/samples/modern-raw-kick-arsenal-free/AKA_SOUNDS_RKA1_FREE_EDITION_REVERB_009.wav" },
   ],
-  soundCloudTrackUrl: "",
+  soundCloudTrackUrls: [],
   relatedTrial: {
     title: "MODERN RAW KICK ARSENAL VOL. 1 FREE EDITION",
     titleLines: ["MODERN RAW KICK ARSENAL", "VOL. 1 — FREE EDITION"],

@@ -132,6 +132,7 @@ export function MotionOrchestrator({ reversible = false }: MotionOrchestratorPro
 
     const onPointerDown = (event: PointerEvent) => {
       if (!rail || (event.pointerType === "mouse" && event.button !== 0)) return;
+      if (event.pointerType === "touch" || event.pointerType === "pen") return;
       const target = event.target;
       if (target instanceof Element && target.closest("button, a, input, textarea, select")) return;
       dragging = true;

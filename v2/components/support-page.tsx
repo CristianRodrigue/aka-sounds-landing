@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
+import { SiteNavigation } from "./site-navigation";
 
 type SupportPageProps = {
   index: string;
@@ -44,37 +46,34 @@ export function SupportSection({ heading, children }: { heading: string; childre
 }
 
 function SupportNavigation() {
-  return (
-    <header className="support-page-nav">
-      <a className="support-nav-lockup" href="/" aria-label="AKA Sounds home">
-        <img src="/assets/aka-logo-horizontal-white-official.png" alt="AKA Sounds" />
-      </a>
-      <nav className="support-nav-links" aria-label="Primary navigation">
-        <a href="/#sample-packs">SAMPLE PACKS</a>
-        <a href="/#free-sounds">FREE SOUNDS</a>
-        <a href="/#tutorials">TUTORIALS</a>
-        <a href="/#about">ABOUT</a>
-      </nav>
-      <a className="support-nav-cta" href="/sounds/hardtechno-essentials-vol-1">
-        BROWSE PACKS <span aria-hidden="true">→</span>
-      </a>
-    </header>
-  );
+  return <SiteNavigation />;
 }
 
 function SupportFooter() {
   return (
-    <footer className="support-page-footer section-dark">
-      <div>
-        <p className="section-label">AKA SOUNDS / SUPPORT</p>
-        <nav aria-label="Support pages">
-          <a href="/privacy">PRIVACY</a>
-          <a href="/terms">TERMS</a>
-          <a href="/refunds">REFUNDS</a>
-          <a href="/contact">CONTACT</a>
+    <footer className="footer-b2-section section-dark support-page-directory-footer">
+      <svg className="footer-b2-ambient-figure" viewBox="0 0 1440 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <path d="M72 442H494V130H684M756 130H1368V442H946" />
+        <path d="M72 398H436M1004 398H1368" />
+        <path d="M640 130V442M800 130V442" />
+      </svg>
+      <div className="footer-b2-layout">
+        <div className="footer-b2-brand">
+          <p className="section-label">07 / SUPPORT</p>
+          <div className="footer-b2-brand-mark">
+            <img className="footer-b2-lockup" src="/assets/aka-logo-horizontal-white-official.png" alt="AKA Sounds" />
+          </div>
+          <h2>STRUCTURED DIRECTORY</h2>
+        </div>
+        <nav className="footer-b2-directory" aria-label="Footer directory">
+          <div><span>PRODUCTS</span><Link href="/#sample-packs">SAMPLE PACKS</Link><Link href="/#free-sounds">FREE SOUNDS</Link></div>
+          <div><span>CONTENT</span><Link href="/#tutorials">TUTORIALS</Link></div>
+          <div><span>BRAND</span><Link href="/#about">ABOUT</Link><Link href="/deat_aka">DEAT AKA</Link></div>
+          <div><span>SOCIAL</span><a href="https://www.youtube.com/@Aka_sounds">YOUTUBE</a><a href="https://soundcloud.com/deat_aka">SOUNDCLOUD</a><a href="https://www.instagram.com/aka_sounds/">INSTAGRAM</a><a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU?si=e1WUj9Z6TfOckAKzqED8hg">SPOTIFY</a></div>
+          <div><span>LEGAL</span><Link href="/privacy">PRIVACY</Link><Link href="/terms">TERMS</Link><Link href="/refunds">REFUNDS</Link><Link href="/contact">CONTACT</Link></div>
         </nav>
+        <div className="footer-b2-bottom"><span>© AKA SOUNDS</span><span>PRODUCTS / CONTENT / BRAND</span></div>
       </div>
-      <span>© AKA SOUNDS</span>
     </footer>
   );
 }
@@ -99,7 +98,7 @@ export function SupportNotFoundPage() {
           <h1>404</h1>
           <h2>SIGNAL LOST.</h2>
           <p>The frequency you&apos;re looking for doesn&apos;t exist on this band.</p>
-          <a className="support-page-action" href="/">BACK TO HOME <span aria-hidden="true">→</span></a>
+          <Link className="support-page-action" href="/">BACK TO HOME <span aria-hidden="true">→</span></Link>
         </div>
       </main>
       <SupportFooter />

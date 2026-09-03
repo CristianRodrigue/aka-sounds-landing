@@ -1,13 +1,20 @@
+const CLOUDINARY_HERO_VIDEO_URL = "https://res.cloudinary.com/drrx9rcec/video/upload/v1788403254/DEAT_AKA_-_init_for_AKA_SOUNDS_PAGEmp4_jt6pmj.mp4";
+
 export function HomepageVisualIntro() {
+  const heroVideoUrl = process.env.NEXT_PUBLIC_HERO_VIDEO_URL || CLOUDINARY_HERO_VIDEO_URL;
+
   return (
     <section className="visual-intro" aria-labelledby="visual-intro-title">
       <div className="visual-intro-fallback" aria-hidden="true" />
-      <iframe
+      <video
         className="visual-intro-media"
-        src="https://www.youtube.com/embed/b9OFXRXgnhY?autoplay=1&mute=1&loop=1&playlist=b9OFXRXgnhY&controls=0&showinfo=0&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&fs=0&color=white"
-        title="AKA Sounds video background"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-        loading="eager"
+        src={heroVideoUrl}
+        poster="/assets/HARDTECHNO-ESSENTIALS-VOL.-1.jpg"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
         tabIndex={-1}
         aria-hidden="true"
       />

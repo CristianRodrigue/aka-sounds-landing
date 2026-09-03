@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ProductPurchaseButton } from "../product-detail/product-purchase-button";
 
 const ASSET_ROOT = "/assets";
@@ -7,6 +8,7 @@ type FreeSound = {
   readonly title: readonly string[];
   readonly art: string;
   readonly priceId: string;
+  readonly relatedProductHref?: string;
   readonly label?: string;
   readonly optimized?: boolean;
   readonly details?: string;
@@ -17,6 +19,7 @@ const freeSounds: readonly FreeSound[] = [
     title: ["MODERN RAW KICK", "ARSENAL VOL. 1"],
     art: "modern-raw-kick-arsenal-vol-1-free-edition-cover.jpg",
     priceId: "pri_01m0zn4mt890s0fp4xym0jpj9s",
+    relatedProductHref: "/sounds/modern-raw-kick-arsenal-vol-1#free-trial",
     label: "FREE EDITION",
     details: "13 RAW KICK SAMPLES / 3 FULL KICKS / 10 COMPONENTS",
     optimized: true,
@@ -40,6 +43,13 @@ const freeSounds: readonly FreeSound[] = [
     title: ["SERUM 2 REVERSE", "BASS KICK"],
     art: "AkasoundsProductCover.jpeg",
     priceId: "pri_01kkwnrqgq7xcd5hhpxg99ae6p",
+  },
+  {
+    title: ["HARDTECHNO ESSENTIALS", "VOL. 01 FREE TRIAL"],
+    art: "HARDTECHNO-ESSENTIALS-VOL.-1-FREE-SAMPLEPACK.jpg",
+    priceId: "pri_01kkd2y0pdsxvg234s8zvfshqj",
+    relatedProductHref: "/sounds/hardtechno-essentials-vol-1#free-trial",
+    label: "FREE TRIAL",
   },
 ];
 
@@ -89,7 +99,6 @@ export function FreeSoundsH1Section() {
         <p className="free-h1-index" data-motion-reveal data-motion-delay="0">03 / FREE SOUNDS</p>
         <h2 className="free-h1-heading" data-motion-reveal data-motion-delay="70">FREE SOUNDS</h2>
         <p className="free-h1-description" data-motion-reveal data-motion-delay="120">Free sounds for download and testing.</p>
-        <a className="free-h1-explore motion-cta" data-motion-reveal data-motion-delay="160" href="#free-sounds">EXPLORE ALL SOUNDS <span className="motion-cta-arrow">→</span></a>
         <div className="free-h1-top-rule" aria-hidden="true" />
         <div className="free-h1-rail" aria-label="Free Sounds products" data-motion-rail>
           {freeSounds.map((sound, index) => (
@@ -113,13 +122,19 @@ export function FreeSoundsH1Section() {
                 {sound.title.map((line) => <span className="free-h1-product-title-line" key={line}>{line}</span>)}
               </h3>
               {sound.details ? <p className="free-h1-product-details">{sound.details}</p> : null}
-              <ProductPurchaseButton
-                priceId={sound.priceId}
-                productName={sound.title.join(" ")}
-                label="GET FREE SOUND"
-                variant="custom"
-                buttonClassName="free-h1-action motion-cta"
-              />
+              {sound.relatedProductHref ? (
+                <Link className="free-h1-action motion-cta" href={sound.relatedProductHref}>
+                  GET FREE SOUND <span aria-hidden="true">→</span>
+                </Link>
+              ) : (
+                <ProductPurchaseButton
+                  priceId={sound.priceId}
+                  productName={sound.title.join(" ")}
+                  label="GET FREE SOUND"
+                  variant="custom"
+                  buttonClassName="free-h1-action motion-cta"
+                />
+              )}
             </article>
           ))}
         </div>
@@ -130,7 +145,7 @@ export function FreeSoundsH1Section() {
           <button type="button" className="free-h1-rail-arrow free-h1-next-arrow" data-free-rail-next aria-label="Next free sound">→</button>
         </div>
         <div className="free-h1-end-rule" aria-hidden="true" />
-        <p className="free-h1-rail-meta">HORIZONTAL RAIL&nbsp; / &nbsp;5 FREE SOUNDS&nbsp; / &nbsp;DRAG TO EXPLORE</p>
+        <p className="free-h1-rail-meta">HORIZONTAL RAIL&nbsp; / &nbsp;6 FREE SOUNDS&nbsp; / &nbsp;DRAG TO EXPLORE</p>
       </div>
     </section>
   );

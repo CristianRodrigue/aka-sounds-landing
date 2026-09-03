@@ -3,23 +3,10 @@ import { ProductAudioPreview } from "./product-audio-preview";
 import type { ProductDetailModel } from "./product-data";
 import { ProductPurchaseButton } from "./product-purchase-button";
 import { MotionOrchestrator } from "../motion-orchestrator";
+import { SiteNavigation } from "../site-navigation";
 
 function ProductHeader() {
-  return (
-    <header className="product-v2-nav" aria-label="AKA Sounds product navigation">
-      <a className="product-v2-lockup" href="/" aria-label="AKA Sounds home">
-        <img className="product-v2-lockup-wordmark" src="/assets/aka-logo-horizontal-white-official.png" alt="AKA Sounds" />
-        <img className="product-v2-lockup-symbol" src="/assets/aka-logo-symbol-white-official.png" alt="AKA Sounds" />
-      </a>
-      <nav className="product-v2-nav-links" aria-label="Primary navigation">
-        <a href="/#sample-packs">SAMPLE PACKS</a>
-        <a href="/#free-sounds">FREE SOUNDS</a>
-        <a href="/#tutorials">TUTORIALS</a>
-        <a href="/#about">ABOUT</a>
-      </nav>
-      <a className="product-v2-nav-cta" href="/#sample-packs">BROWSE PACKS <span aria-hidden="true">→</span></a>
-    </header>
-  );
+  return <SiteNavigation />;
 }
 
 function ProductSignalTicker() {
@@ -206,7 +193,7 @@ function ProductFooter() {
         <nav className="footer-b2-directory" aria-label="Footer directory">
           <div><span>PRODUCTS</span><a href="/#sample-packs">SAMPLE PACKS</a><a href="/#free-sounds">FREE SOUNDS</a></div>
           <div><span>CONTENT</span><a href="/#tutorials">TUTORIALS</a></div>
-          <div><span>BRAND</span><a href="/#about">ABOUT</a></div>
+          <div><span>BRAND</span><a href="/#about">ABOUT</a><a href="/deat_aka">DEAT AKA</a></div>
           <div><span>SOCIAL</span><a href="https://www.youtube.com/@Aka_sounds">YOUTUBE</a><a href="https://soundcloud.com/deat_aka">SOUNDCLOUD</a><a href="https://www.instagram.com/aka_sounds/">INSTAGRAM</a><a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU?si=e1WUj9Z6TfOckAKzqED8hg">SPOTIFY</a></div>
           <div><span>LEGAL</span><a href="/privacy">PRIVACY</a><a href="/terms">TERMS</a><a href="/refunds">REFUNDS</a><a href="/contact">CONTACT</a></div>
         </nav>
@@ -281,18 +268,25 @@ export function ProductDetailPage({ product }: { product: ProductDetailModel }) 
             <h2>SELECT<br />A SOUND.</h2>
             {product.previewContext ? <p className="product-v2-preview-context">{product.previewContext}</p> : null}
           </div>
-          <ProductAudioPreview tracks={product.previewTracks} />
-          {product.soundCloudTrackUrl ? (
+          <div className="product-v2-audio-stage">
+            <ProductAudioPreview tracks={product.previewTracks} artwork={product.artwork} />
+          </div>
+          {product.soundCloudTrackUrls.length > 0 ? (
             <div className="product-v2-soundcloud">
               <div>
                 <p className="product-v2-section-index">SOUNDCLOUD DEMO</p>
                 <p>THIS IS A F*CKING HARDTECHNO</p>
               </div>
-              <iframe
-                title={product.displayName + " SoundCloud demo"}
-                src={"https://w.soundcloud.com/player/?url=" + encodeURIComponent(product.soundCloudTrackUrl) + "&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"}
-                allow="autoplay"
-              />
+              <div className="product-v2-soundcloud-players">
+                {product.soundCloudTrackUrls.map((trackUrl, index) => (
+                  <iframe
+                    key={trackUrl}
+                    title={product.displayName + " SoundCloud demo " + String(index + 1)}
+                    src={"https://w.soundcloud.com/player/?url=" + encodeURIComponent(trackUrl) + "&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"}
+                    allow="autoplay"
+                  />
+                ))}
+              </div>
             </div>
           ) : null}
         </div>

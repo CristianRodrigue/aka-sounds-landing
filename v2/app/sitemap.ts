@@ -9,6 +9,7 @@ const publicPaths = [
   "/privacy",
   "/terms",
   "/refunds",
+  "/deat_aka",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

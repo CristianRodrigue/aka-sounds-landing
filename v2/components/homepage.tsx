@@ -6,6 +6,7 @@ import { SamplePacksSection } from "./sections/sample-packs-section";
 import { NewsletterSection } from "./sections/newsletter-section";
 import { MotionOrchestrator } from "./motion-orchestrator";
 import { HomepageVisualIntro } from "./homepage-visual-intro";
+import { SiteNavigation } from "./site-navigation";
 
 const ASSET_ROOT = "/assets";
 const shapeColumns = {
@@ -76,19 +77,7 @@ export function AkaHomepage() {
       <MotionOrchestrator reversible />
       <section className="hero-section hero-exact-section section-dark" id="top">
         <HeroShapeGrid />
-        <nav className="home-nav section-shell" aria-label="Primary navigation">
-          <a className="brand-lockup" href="#top" aria-label="AKA Sounds home">
-            <img className="brand-lockup-wordmark" src={ASSET_ROOT + "/aka-logo-horizontal-white-official.png"} alt="AKA Sounds" />
-            <img className="brand-lockup-symbol" src={ASSET_ROOT + "/aka-logo-symbol-white-official.png"} alt="AKA Sounds" />
-          </a>
-          <div className="nav-links">
-            <a href="#sample-packs">SAMPLE PACKS</a>
-            <a href="#free-sounds">FREE SOUNDS</a>
-            <a href="#tutorials">TUTORIALS</a>
-            <a href="#brand">ABOUT</a>
-          </div>
-          <a className="nav-cta" href="#sample-packs">BROWSE PACKS <span>→</span></a>
-        </nav>
+        <SiteNavigation home />
 
         <div className="signal-ticker" aria-label="AKA Sounds current signals">
           <div className="signal-ticker-viewport">
@@ -154,7 +143,7 @@ export function AkaHomepage() {
           <nav className="footer-b2-directory" aria-label="Footer directory" data-motion-reveal data-motion-delay="90">
             <div><span>PRODUCTS</span><a href="#sample-packs">SAMPLE PACKS</a><a href="#free-sounds">FREE SOUNDS</a></div>
             <div><span>CONTENT</span><a href="#tutorials">TUTORIALS</a></div>
-            <div><span>BRAND</span><a href="#about">ABOUT</a></div>
+            <div><span>BRAND</span><a href="#about">ABOUT</a><a href="/deat_aka">DEAT AKA</a></div>
             <div><span>SOCIAL</span><a href="https://www.youtube.com/@Aka_sounds">YOUTUBE</a><a href="https://soundcloud.com/deat_aka">SOUNDCLOUD</a><a href="https://www.instagram.com/aka_sounds/">INSTAGRAM</a><a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU?si=e1WUj9Z6TfOckAKzqED8hg">SPOTIFY</a></div>
             <div><span>LEGAL</span><a href="/privacy">PRIVACY</a><a href="/terms">TERMS</a><a href="/refunds">REFUNDS</a><a href="/contact">CONTACT</a></div>
           </nav>

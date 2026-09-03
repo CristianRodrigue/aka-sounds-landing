@@ -1,8 +1,6 @@
 const ASSET_ROOT = "/assets";
 const PREMIUM_PRODUCT_PATH = "/sounds/hardtechno-essentials-vol-1";
-const FREE_TRIAL_PATH = PREMIUM_PRODUCT_PATH + "#free-trial";
 const NEW_PREMIUM_PRODUCT_PATH = "/sounds/modern-raw-kick-arsenal-vol-1";
-const NEW_FREE_EDITION_PATH = NEW_PREMIUM_PRODUCT_PATH + "#free-trial";
 
 const sampleShapeColumns = [-216, -60, 96, 252, 408, 564, 720, 876, 1032, 1188, 1344, 1500, 1656, 1812] as const;
 const sampleShapeRows = Array.from({ length: 12 }, (_, row) => ({
@@ -46,7 +44,7 @@ export function SamplePacksSection() {
       <div className="sample-exact-inner">
         <p className="sample-exact-index" data-motion-reveal data-motion-delay="0">02 / PRODUCTS</p>
         <h2 className="sample-exact-heading" data-motion-reveal data-motion-delay="70">SAMPLE PACKS</h2>
-        <p className="sample-exact-description" data-motion-reveal data-motion-delay="120">Two premium packs, two related free editions.</p>
+        <p className="sample-exact-description" data-motion-reveal data-motion-delay="120">Two premium packs.</p>
 
         <div className="sample-catalog-grid" aria-label="Sample pack catalog">
           <article className="sample-catalog-card sample-catalog-card-new" data-motion-reveal data-motion-delay="170">
@@ -63,20 +61,6 @@ export function SamplePacksSection() {
             </div>
           </article>
 
-          <article className="sample-catalog-card sample-catalog-card-free" data-motion-reveal data-motion-delay="200">
-            <img
-              className="sample-catalog-art"
-              src={`${ASSET_ROOT}/modern-raw-kick-arsenal-vol-1-free-edition-cover.jpg`}
-              alt="Modern Raw Kick Arsenal Vol. 1 Free Edition artwork"
-            />
-            <div className="sample-catalog-copy">
-              <p className="sample-catalog-label">RELATED FREE EDITION</p>
-              <h3>MODERN RAW KICK<br />ARSENAL VOL. 1 FREE EDITION</h3>
-              <p className="sample-catalog-type">FREE EDITION / SAMPLE PACK</p>
-              <a className="motion-cta" href={NEW_FREE_EDITION_PATH}>GET FREE EDITION <span className="motion-cta-arrow">→</span></a>
-            </div>
-          </article>
-
           <article className="sample-catalog-card" data-motion-reveal data-motion-delay="230">
             <img
               className="sample-catalog-art"
@@ -86,28 +70,15 @@ export function SamplePacksSection() {
             <div className="sample-catalog-copy">
               <p className="sample-catalog-label">PREMIUM SAMPLE PACK</p>
               <h3>HARDTECHNO ESSENTIALS<br />VOL. 01</h3>
-              <p className="sample-catalog-type">PAID / SAMPLE PACK</p>
+              <p className="sample-catalog-type">FULL EDITION / $14.99</p>
               <a className="motion-cta" href={PREMIUM_PRODUCT_PATH}>EXPLORE PACK <span className="motion-cta-arrow">→</span></a>
             </div>
           </article>
 
-          <article className="sample-catalog-card sample-catalog-card-trial" data-motion-reveal data-motion-delay="290">
-            <img
-              className="sample-catalog-art"
-              src={`${ASSET_ROOT}/HARDTECHNO-ESSENTIALS-VOL.-1-FREE-SAMPLEPACK.jpg`}
-              alt="Hardtechno Essentials Vol. 01 Free Trial"
-            />
-            <div className="sample-catalog-copy">
-              <p className="sample-catalog-label">RELATED FREE TRIAL</p>
-              <h3>HARDTECHNO ESSENTIALS<br />VOL. 01 FREE TRIAL</h3>
-              <p className="sample-catalog-type">FREE TRIAL / SAMPLE PACK</p>
-              <a className="motion-cta" href={FREE_TRIAL_PATH}>GET FREE TRIAL <span className="motion-cta-arrow">→</span></a>
-            </div>
-          </article>
         </div>
 
         <div className="sample-catalog-end-rule" aria-hidden="true" />
-        <p className="sample-catalog-footer">2 PREMIUM PACKS&nbsp; / &nbsp;2 RELATED FREE EDITIONS</p>
+        <p className="sample-catalog-footer">2 PREMIUM PACKS</p>
       </div>
     </section>
   );

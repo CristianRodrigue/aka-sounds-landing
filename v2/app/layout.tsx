@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { CookieConsent } from "@/components/cookie-consent";
+import { HashRouteCompatibility } from "@/components/hash-route-compatibility";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -51,4 +53,6 @@ export const metadata: Metadata = {
     },
   },
 };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) { return <html lang="en"><body>{children}</body></html>; }
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <html lang="en"><body><HashRouteCompatibility />{children}<CookieConsent /></body></html>;
+}
