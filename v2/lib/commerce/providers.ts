@@ -23,6 +23,7 @@ export type MailerLiteOutcome =
   | "CREATED_ACTIVE"
   | "EXISTING_ACTIVE"
   | "EXISTING_NONACTIVE"
+  | "UNSUBSCRIBED"
   | "REJECTED"
   | "RETRYABLE_FAILURE";
 
@@ -54,6 +55,10 @@ export interface MailerLiteAdapter {
     readonly email: string;
     readonly transactionId: string;
   }): Promise<ProviderResult>;
+}
+
+export interface MailerLiteUnsubscribeAdapter {
+  unsubscribeMarketingSubscriber(email: string): Promise<ProviderResult>;
 }
 
 export interface ReceiptRecord {

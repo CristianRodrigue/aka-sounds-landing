@@ -1,5 +1,6 @@
 import type {
   MailerLiteAdapter,
+  MailerLiteUnsubscribeAdapter,
   MailerLiteOutcome,
   MailerLiteSubscriberStatus,
   ProviderResult,
@@ -46,7 +47,9 @@ async function readPayload(response: Response): Promise<unknown> {
   }
 }
 
-export function createMailerLiteAdapter(options: MailerLiteAdapterOptions = {}): MailerLiteAdapter {
+export function createMailerLiteAdapter(
+  options: MailerLiteAdapterOptions = {},
+): MailerLiteAdapter & MailerLiteUnsubscribeAdapter {
   const fetchImpl = options.fetchImpl ?? fetch;
   const apiKey = options.apiKey ?? process.env.MAILERLITE_API_KEY;
   const groupId = options.groupId ?? process.env.MAILERLITE_GROUP_ID;
@@ -87,6 +90,51 @@ export function createMailerLiteAdapter(options: MailerLiteAdapterOptions = {}):
               provider: "mailerlite",
               code: "NON_ACTIVE_SUBSCRIBER",
               status: 200,
+              retryable: false,
+            },
+          };
+        }
+        return providerFailure(response.status);
+      } catch {
+        return {
+          accepted: false,
+          outcome: "RETRYABLE_FAILURE",
+          failure: { provider: "mailerlite", code: "NETWORK_OR_TIMEOUT", retryable: true },
+        };
+      }
+    },
+    async unsubscribeMarketingSubscriber(email): Promise<ProviderResult> {
+      if (!apiKey) {
+        return {
+          accepted: false,
+          outcome: "REJECTED",
+          failure: { provider: "mailerlite", code: "MAILERLITE_NOT_CONFIGURED", retryable: false },
+        };
+      }
+      try {
+        const response = await fetchImpl("https://connect.mailerlite.com/api/subscribers", {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + apiKey,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, status: "unsubscribed" }),
+        });
+        const payload = await readPayload(response);
+        const status = subscriberStatus(payload);
+        if ((response.status === 200 || response.status === 201) && status === "unsubscribed") {
+          return { accepted: true, outcome: "UNSUBSCRIBED", subscriberStatus: status };
+        }
+        if (response.status >= 200 && response.status < 300) {
+          return {
+            accepted: false,
+            outcome: "REJECTED",
+            subscriberStatus: status,
+            failure: {
+              provider: "mailerlite",
+              code: "UNSUBSCRIBE_NOT_CONFIRMED",
+              status: response.status,
               retryable: false,
             },
           };
