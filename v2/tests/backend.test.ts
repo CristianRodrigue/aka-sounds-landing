@@ -308,7 +308,7 @@ describe("G2B Resend and MailerLite adapters", () => {
       email: "customer@example.test",
       transaction: transactionFor(),
       policy: canonicalCommerceModel.fulfillmentPolicies[0],
-      downloadUrl: "https://storage.example.test/signed",
+      downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
     });
     assert.deepEqual(result, { accepted: true });
     const body = requestBody as Record<string, unknown>;
@@ -319,7 +319,8 @@ describe("G2B Resend and MailerLite adapters", () => {
     assert.match(String(body.html), /www\.akasounds\.com/);
     assert.match(String(body.html), /Welcome to the underground/);
     assert.match(String(body.html), /Hardtechno Essentials/);
-    assert.match(String(body.html), /storage\.example\.test/);
+    assert.match(String(body.html), /akasounds\.com\/api\/purchase-access\/download/);
+    assert.doesNotMatch(String(body.html), /storage\.googleapis\.com|X-Goog-/i);
     assert.doesNotMatch(String(body.html), /<p>Your product:/);
     assert.doesNotMatch(String(body.html), /marketing|newsletter/i);
   });
@@ -333,7 +334,7 @@ describe("G2B Resend and MailerLite adapters", () => {
       email: "customer@example.test",
       transaction: transactionFor(),
       policy: canonicalCommerceModel.fulfillmentPolicies[0],
-      downloadUrl: "https://storage.example.test/signed",
+       downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
     });
     assert.deepEqual(await response(202), { accepted: true });
     const permanent = await response(400);
@@ -351,7 +352,7 @@ describe("G2B Resend and MailerLite adapters", () => {
       email: "customer@example.test",
       transaction: transactionFor(),
       policy: canonicalCommerceModel.fulfillmentPolicies[0],
-      downloadUrl: "https://storage.example.test/signed",
+       downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
     });
     assert.equal(timeout.accepted, false);
     if (!timeout.accepted) assert.equal(timeout.failure!.retryable, true);
@@ -504,7 +505,7 @@ describe("Resend safe test mode", () => {
     email: "customer@example.test",
     transaction: transactionFor(),
     policy: canonicalCommerceModel.fulfillmentPolicies[0],
-    downloadUrl: "https://storage.example.test/signed",
+     downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
   };
 
   it("fails closed without a safe test recipient and never calls Resend", async () => {

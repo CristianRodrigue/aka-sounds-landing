@@ -92,7 +92,7 @@ describe("G4A Resend email ID persistence", () => {
       email: "customer@example.test",
       transaction: transactionFor(),
       policy: canonicalCommerceModel.fulfillmentPolicies[0],
-      downloadUrl: "https://storage.example.test/signed",
+      downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
     });
 
     assert.deepEqual(result, { accepted: true, emailId: "re_g4a_email_001" });

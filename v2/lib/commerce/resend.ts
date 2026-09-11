@@ -28,6 +28,20 @@ function classifyStatus(status: number): ProviderResult {
   };
 }
 
+function isAkaDownloadUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    const akaHost = url.hostname === "akasounds.com" || url.hostname === "www.akasounds.com";
+    return url.protocol === "https:"
+      && akaHost
+      && url.pathname === "/api/purchase-access/download"
+      && url.searchParams.size === 1
+      && Boolean(url.searchParams.get("grant"));
+  } catch {
+    return false;
+  }
+}
+
 export interface ResendAdapterOptions {
   readonly fetchImpl?: FetchLike;
   readonly apiKey?: string;
@@ -59,6 +73,9 @@ export function createResendAdapter(options: ResendAdapterOptions = {}): ResendA
       }
       if (!apiKey || !from) {
         return { accepted: false, failure: { provider: "resend", code: "RESEND_NOT_CONFIGURED", retryable: false } };
+      }
+      if (!isAkaDownloadUrl(input.downloadUrl)) {
+        return { accepted: false, failure: { provider: "resend", code: "DOWNLOAD_URL_NOT_ALLOWED", retryable: false } };
       }
       const recipient = safeTestMode ? configuredTestRecipient! : input.email;
       const productName = escapeHtml(input.policy.productName);

@@ -1,5 +1,11 @@
 import { decideFulfillment } from "./decision";
 import { isTerminalState } from "./state";
+import {
+  compatiblePurchaseOffer,
+  createPurchaseSessionCredentials,
+  issueEmailDownloadGrant,
+} from "./purchase-access";
+import type { PurchaseAccessStore } from "./purchase-access";
 import type {
   GcsAdapter,
   MailerLiteAdapter,
@@ -13,7 +19,7 @@ import { classifyProviderFailure } from "./providers";
 import type { NormalizedTransaction } from "./types";
 
 export interface FulfillmentDependencies {
-  readonly receiptStore: ReceiptStore;
+  readonly receiptStore: ReceiptStore & PurchaseAccessStore;
   readonly gcs: GcsAdapter;
   readonly resend: ResendAdapter;
   readonly mailerlite?: MailerLiteAdapter;
@@ -90,11 +96,22 @@ async function executeFulfillmentEvent(
   const download = await dependencies.gcs.createSignedDownload(decision.policy);
   if (!download.accepted) return recordFailure(dependencies, transaction.eventId, download.failure);
 
+  const offer = compatiblePurchaseOffer(transaction);
+  if (!offer) {
+    return recordFailure(dependencies, transaction.eventId, {
+      provider: "receipt-store",
+      code: "PURCHASE_ACCESS_OFFER_MISSING",
+      retryable: false,
+    });
+  }
+  const emailDownload = await issueEmailDownloadGrant(dependencies.receiptStore, transaction, offer);
+  if (!emailDownload.accepted) return recordFailure(dependencies, transaction.eventId, emailDownload.failure);
+
   const email = await dependencies.resend.sendTransactionEmail({
     email: transaction.customerEmail,
     transaction,
     policy: decision.policy,
-    downloadUrl: download.value,
+    downloadUrl: emailDownload.value,
   });
   if (!email.accepted) {
     return recordFailure(dependencies, transaction.eventId, email.failure ?? fallbackFailure("resend"));
@@ -138,6 +155,35 @@ async function executeFulfillmentEvent(
   };
 }
 
+async function ensureDirectTransactionSession(
+  transaction: NormalizedTransaction,
+  store: PurchaseAccessStore,
+): Promise<boolean> {
+  if (transaction.purchaseSessionId || !compatiblePurchaseOffer(transaction)) return true;
+  if (await store.getPurchaseAccessSessionByEventId(transaction.eventId)) return true;
+
+  const offer = compatiblePurchaseOffer(transaction);
+  if (!offer) return true;
+  const credentials = createPurchaseSessionCredentials();
+  await store.createPurchaseAccessSession({
+    sessionId: credentials.sessionId,
+    browserSecretHash: credentials.browserSecretHash,
+    fulfillmentOfferId: offer.offerId,
+    priceId: offer.priceId,
+    productId: offer.productId,
+    createdAt: credentials.createdAt,
+    expiresAt: credentials.expiresAt,
+  });
+  return store.bindPurchaseAccessSession({
+    sessionId: credentials.sessionId,
+    eventId: transaction.eventId,
+    transactionId: transaction.transactionId,
+    fulfillmentOfferId: offer.offerId,
+    priceId: offer.priceId,
+    productId: offer.productId,
+  });
+}
+
 /** Compatibility harness for direct transaction tests; production uses processReceiptEvent. */
 export async function processFulfillmentEvent(
   transaction: NormalizedTransaction,
@@ -150,6 +196,22 @@ export async function processFulfillmentEvent(
       httpStatus: 200,
       body: { status: isTerminalState(claim.record.state) ? "DUPLICATE_COMPLETED" : "DUPLICATE_IN_PROGRESS" },
     };
+  }
+
+  try {
+    if (!await ensureDirectTransactionSession(transaction, dependencies.receiptStore)) {
+      return recordFailure(dependencies, transaction.eventId, {
+        provider: "receipt-store",
+        code: "PURCHASE_ACCESS_SESSION_BIND_FAILED",
+        retryable: false,
+      });
+    }
+  } catch {
+    return recordFailure(dependencies, transaction.eventId, {
+      provider: "receipt-store",
+      code: "PURCHASE_ACCESS_SESSION_CREATE_FAILED",
+      retryable: true,
+    });
   }
 
   return executeFulfillmentEvent(transaction, dependencies);
@@ -203,8 +265,24 @@ export async function processReceiptEvent(
     if (!customer.accepted) return recordFailure(dependencies, eventId, customer.failure);
 
     await dependencies.receiptStore.markCustomerHydrated(eventId, customer.value.marketingConsent);
+    const transaction = transactionFromReceipt(claim.record, customer.value.email, customer.value.marketingConsent);
+    try {
+      if (!await ensureDirectTransactionSession(transaction, dependencies.receiptStore)) {
+        return recordFailure(dependencies, eventId, {
+          provider: "receipt-store",
+          code: "PURCHASE_ACCESS_SESSION_BIND_FAILED",
+          retryable: false,
+        });
+      }
+    } catch {
+      return recordFailure(dependencies, eventId, {
+        provider: "receipt-store",
+        code: "PURCHASE_ACCESS_SESSION_CREATE_FAILED",
+        retryable: true,
+      });
+    }
     return executeFulfillmentEvent(
-      transactionFromReceipt(claim.record, customer.value.email, customer.value.marketingConsent),
+      transaction,
       dependencies,
       claim.record.state === "FULFILLMENT_PENDING" ? "FULFILLMENT_PENDING" : "SIGNATURE_VERIFIED",
     );

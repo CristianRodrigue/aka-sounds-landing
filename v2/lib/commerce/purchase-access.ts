@@ -1,11 +1,13 @@
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { findFulfillmentPolicy, findOfferByPriceId } from "./server-catalog";
 import { resolvePaddleEnvironment } from "./paddle-customer";
-import type { ReceiptRecord } from "./providers";
+import type { ProviderFailure, ProviderValue, ReceiptRecord } from "./providers";
 import type { NormalizedTransaction } from "./types";
 
 export const PURCHASE_SESSION_TTL_MS = 30 * 60 * 1000;
 export const DOWNLOAD_GRANT_TTL_MS = 5 * 60 * 1000;
+export const EMAIL_DOWNLOAD_GRANT_TTL_MS = 24 * 60 * 60 * 1000;
+export const PUBLIC_DOWNLOAD_ORIGIN = "https://www.akasounds.com";
 
 export type PurchaseAccessSessionRecord = {
   readonly sessionId: string;
@@ -55,6 +57,7 @@ export type DownloadGrantInput = {
 export interface PurchaseAccessStore {
   createPurchaseAccessSession(input: PurchaseAccessSessionInput): Promise<void>;
   getPurchaseAccessSession(sessionId: string): Promise<PurchaseAccessSessionRecord | null>;
+  getPurchaseAccessSessionByEventId(eventId: string): Promise<PurchaseAccessSessionRecord | null>;
   bindPurchaseAccessSession(input: PurchaseAccessBindingInput): Promise<boolean>;
   createDownloadGrant(input: DownloadGrantInput): Promise<void>;
   getDownloadGrant(grantHash: string): Promise<DownloadGrantRecord | null>;
@@ -134,6 +137,27 @@ export function createDownloadGrantCredentials(now = Date.now()): {
   };
 }
 
+export function createEmailDownloadGrantCredentials(now = Date.now()): {
+  readonly token: string;
+  readonly grantHash: string;
+  readonly createdAt: string;
+  readonly expiresAt: string;
+} {
+  const grant = token();
+  return {
+    token: grant,
+    grantHash: hashDownloadGrant(grant),
+    createdAt: isoNow(now),
+    expiresAt: isoNow(now + EMAIL_DOWNLOAD_GRANT_TTL_MS),
+  };
+}
+
+export function buildPublicDownloadUrl(grantToken: string): string {
+  const url = new URL("/api/purchase-access/download", PUBLIC_DOWNLOAD_ORIGIN);
+  url.searchParams.set("grant", grantToken);
+  return url.toString();
+}
+
 export function purchaseOfferForPrice(priceId: string | null): PurchaseOffer | null {
   if (!priceId) return null;
   const environment = resolvePaddleEnvironment();
@@ -157,6 +181,55 @@ export function compatiblePurchaseOffer(transaction: NormalizedTransaction): Pur
   const offer = purchaseOfferForPrice(item?.priceId ?? null);
   if (!offer || item?.productId !== offer.productId) return null;
   return offer;
+}
+
+function purchaseSessionMatchesTransaction(
+  session: PurchaseAccessSessionRecord,
+  transaction: NormalizedTransaction,
+  offer: PurchaseOffer,
+): boolean {
+  return session.boundEventId === transaction.eventId
+    && session.boundTransactionId === transaction.transactionId
+    && session.fulfillmentOfferId === offer.offerId
+    && session.priceId === offer.priceId
+    && session.productId === offer.productId;
+}
+
+function providerFailure(code: string, retryable: boolean): ProviderFailure {
+  return { provider: "receipt-store", code, retryable };
+}
+
+export async function issueEmailDownloadGrant(
+  store: PurchaseAccessStore,
+  transaction: NormalizedTransaction,
+  offer: PurchaseOffer,
+  now = Date.now(),
+): Promise<ProviderValue<string>> {
+  let session: PurchaseAccessSessionRecord | null;
+  try {
+    session = transaction.purchaseSessionId
+      ? await store.getPurchaseAccessSession(transaction.purchaseSessionId)
+      : await store.getPurchaseAccessSessionByEventId(transaction.eventId);
+  } catch {
+    return { accepted: false, failure: providerFailure("PURCHASE_ACCESS_LOOKUP_FAILED", true) };
+  }
+
+  if (!session || !purchaseSessionMatchesTransaction(session, transaction, offer)) {
+    return { accepted: false, failure: providerFailure("PURCHASE_ACCESS_SESSION_NOT_BOUND", false) };
+  }
+
+  const grant = createEmailDownloadGrantCredentials(now);
+  try {
+    await store.createDownloadGrant({
+      grantHash: grant.grantHash,
+      sessionId: session.sessionId,
+      createdAt: grant.createdAt,
+      expiresAt: grant.expiresAt,
+    });
+  } catch {
+    return { accepted: false, failure: providerFailure("DOWNLOAD_GRANT_CREATE_FAILED", true) };
+  }
+  return { accepted: true, value: buildPublicDownloadUrl(grant.token) };
 }
 
 function sessionReceiptMatches(session: PurchaseAccessSessionRecord, receipt: ReceiptRecord): boolean {
@@ -212,7 +285,9 @@ export async function authorizePurchaseDownload(
   if (!grant || !isLive(grant.expiresAt, now)) return { authorized: false };
 
   const session = await store.getPurchaseAccessSession(grant.sessionId);
-  if (!session || !isLive(session.expiresAt, now) || !session.boundEventId || !session.boundTransactionId) {
+  // The grant has its own explicit TTL. The purchase session still has to exist,
+  // remain bound to a completed receipt, and match the canonical offer.
+  if (!session || !session.boundEventId || !session.boundTransactionId) {
     return { authorized: false };
   }
   const receipt = await store.get(session.boundEventId);

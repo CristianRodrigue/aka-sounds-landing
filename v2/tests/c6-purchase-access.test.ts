@@ -5,9 +5,12 @@ import {
   createDownloadGrantCredentials,
   createPurchaseSessionCredentials,
   hashDownloadGrant,
+  EMAIL_DOWNLOAD_GRANT_TTL_MS,
+  issueEmailDownloadGrant,
   purchaseOfferForPrice,
   readPurchaseAccessStatus,
 } from "../lib/commerce/purchase-access";
+import { processFulfillmentEvent } from "../lib/commerce/fulfillment-service";
 import { InMemoryReceiptStore } from "../lib/commerce/receipt-store";
 import { canonicalOffers } from "../lib/commerce/server-catalog";
 import { handleV2Webhook } from "../lib/commerce/webhook-handler";
@@ -18,6 +21,7 @@ import { isPaddleCheckoutCompletedEvent, paddleTransactionId } from "../componen
 import { beginC6Flow, canDismissC6, stateAfterDelayCheck, stateAfterPreparingStatus } from "../components/product-detail/c6-state-machine";
 import { buildCommerceApiUrl } from "../components/product-detail/commerce-api";
 import { purchaseAccessOptions, withPurchaseAccessCors } from "../app/api/purchase-access/cors";
+import { handlePurchaseDownload } from "../app/api/purchase-access/download/route";
 
 const offer = canonicalOffers[0];
 
@@ -226,6 +230,86 @@ describe("C6 local purchase-access simulator", () => {
     }
   });
 
+  it("issues a clean AKA download URL for transactional email and keeps GCS behind the grant", async () => {
+    const store = new InMemoryReceiptStore();
+    const transaction = {
+      eventId: "qq_clean_email_event",
+      notificationId: null,
+      occurredAt: null,
+      transactionId: "txn_qq_clean_email",
+      status: "completed",
+      customerId: "ctm_qq_clean_email",
+      customerEmail: "customer@example.com",
+      marketingConsent: null,
+      items: [{ priceId: offer.paddlePriceId, productId: offer.paddleProductId, quantity: 1 }],
+    } as const;
+    let emailedUrl = "";
+    const result = await processFulfillmentEvent(transaction, {
+      receiptStore: store,
+      gcs: { createSignedDownload: async () => ({ accepted: true as const, value: "https://storage.googleapis.com/private.zip?X-Goog-Signature=secret" }) },
+      resend: { sendTransactionEmail: async (input) => { emailedUrl = input.downloadUrl; return { accepted: true }; } },
+    });
+
+    assert.equal(result.body.status, "FULFILLED");
+    assert.match(emailedUrl, /^https:\/\/www\.akasounds\.com\/api\/purchase-access\/download\?grant=/);
+    assert.doesNotMatch(emailedUrl, /storage\.googleapis\.com|X-Goog-Signature|X-Goog-Credential/);
+    const grantToken = new URL(emailedUrl).searchParams.get("grant");
+    assert.ok(grantToken);
+    assert.equal((await authorizePurchaseDownload(store, grantToken!)).authorized, true);
+    const downloadResponse = await handlePurchaseDownload(new Request(emailedUrl), {
+      store,
+      gcs: { createSignedDownload: async () => ({ accepted: true as const, value: "https://storage.googleapis.com/private.zip?fresh=1" }) },
+    });
+    assert.equal(downloadResponse.status, 302);
+    assert.equal(downloadResponse.headers.get("location"), "https://storage.googleapis.com/private.zip?fresh=1");
+
+    const session = await store.getPurchaseAccessSessionByEventId(transaction.eventId);
+    assert.ok(session);
+    const issued = await issueEmailDownloadGrant(store, transaction, {
+      offerId: offer.id,
+      priceId: offer.paddlePriceId,
+      productId: offer.paddleProductId!,
+      productName: "test",
+    });
+    assert.equal(issued.accepted, true);
+    if (issued.accepted && session) {
+      const grant = await store.getDownloadGrant(hashDownloadGrant(new URL(issued.value).searchParams.get("grant")!));
+      assert.equal(Date.parse(grant!.expiresAt) - Date.parse(grant!.createdAt), EMAIL_DOWNLOAD_GRANT_TTL_MS);
+    }
+  });
+
+  it("rejects a raw GCS URL at the Resend boundary", async () => {
+    let fetchCalls = 0;
+    const result = await createResendAdapter({
+      apiKey: "test-api-key",
+      from: "AKA Sounds <noreply@akasounds.com>",
+      fetchImpl: async () => {
+        fetchCalls += 1;
+        return new Response(null, { status: 202 });
+      },
+    }).sendTransactionEmail({
+      email: "customer@example.com",
+      transaction: {
+        eventId: "evt_raw_url",
+        notificationId: null,
+        occurredAt: null,
+        transactionId: "txn_raw_url",
+        status: "completed",
+        customerId: null,
+        customerEmail: "customer@example.com",
+        marketingConsent: null,
+        items: [{ priceId: offer.paddlePriceId, productId: offer.paddleProductId, quantity: 1 }],
+      },
+      policy: fulfillmentPolicies[0],
+      downloadUrl: "https://storage.googleapis.com/private.zip?X-Goog-Signature=secret",
+    });
+    assert.deepEqual(result, {
+      accepted: false,
+      failure: { provider: "resend", code: "DOWNLOAD_URL_NOT_ALLOWED", retryable: false },
+    });
+    assert.equal(fetchCalls, 0);
+  });
+
   it("handles Paddle's checkout.completed payload for zero-dollar checkouts", () => {
     const event = { name: "checkout.completed", data: { transaction_id: "txn_free_checkout" } };
     assert.equal(isPaddleCheckoutCompletedEvent(event), true);
@@ -298,7 +382,7 @@ describe("C6 local purchase-access simulator", () => {
         items: [{ priceId: freeOffer.paddlePriceId, productId: freeOffer.paddleProductId, quantity: 1 }],
       },
       policy,
-      downloadUrl: "https://akasounds.com/api/download/test",
+      downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
     });
     assert.equal(result.accepted, true);
     assert.match(html, /https:\/\/akasounds\.com\/assets\/aka-logo-symbol-white-official\.png/);

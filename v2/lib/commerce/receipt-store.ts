@@ -292,6 +292,11 @@ export class InMemoryReceiptStore implements ReceiptStore {
     return session ? { ...session } : null;
   }
 
+  async getPurchaseAccessSessionByEventId(eventId: string): Promise<PurchaseAccessSessionRecord | null> {
+    const session = [...this.purchaseSessions.values()].find((candidate) => candidate.boundEventId === eventId);
+    return session ? { ...session } : null;
+  }
+
   async bindPurchaseAccessSession(input: PurchaseAccessBindingInput): Promise<boolean> {
     const session = this.purchaseSessions.get(input.sessionId);
     const receipt = this.records.get(input.eventId);
@@ -696,6 +701,30 @@ export class NeonReceiptStore implements ReceiptStore, ResendDeliveryStore, Purc
              bound_event_id, bound_transaction_id, created_at, expires_at
       FROM purchase_access_sessions
       WHERE session_id = ${sessionId}
+      LIMIT 1
+    `;
+    const row = rows[0] as SqlRow | undefined;
+    if (!row) return null;
+    return {
+      sessionId: String(row.session_id),
+      browserSecretHash: String(row.browser_secret_hash),
+      fulfillmentOfferId: String(row.fulfillment_offer_id),
+      priceId: String(row.price_id),
+      productId: String(row.product_id),
+      boundEventId: asNullableString(row.bound_event_id),
+      boundTransactionId: asNullableString(row.bound_transaction_id),
+      createdAt: asNullableString(row.created_at) ?? nowIso(),
+      expiresAt: asNullableString(row.expires_at) ?? nowIso(),
+    };
+  }
+
+  async getPurchaseAccessSessionByEventId(eventId: string): Promise<PurchaseAccessSessionRecord | null> {
+    const sql = this.sql();
+    const rows = await sql`
+      SELECT session_id, browser_secret_hash, fulfillment_offer_id, price_id, product_id,
+             bound_event_id, bound_transaction_id, created_at, expires_at
+      FROM purchase_access_sessions
+      WHERE bound_event_id = ${eventId}
       LIMIT 1
     `;
     const row = rows[0] as SqlRow | undefined;
