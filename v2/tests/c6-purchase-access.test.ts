@@ -251,7 +251,7 @@ describe("C6 local purchase-access simulator", () => {
     });
 
     assert.equal(result.body.status, "FULFILLED");
-    assert.match(emailedUrl, /^https:\/\/www\.akasounds\.com\/api\/purchase-access\/download\?grant=/);
+    assert.match(emailedUrl, /^https:\/\/download\.akasounds\.com\/api\/purchase-access\/download\?grant=/);
     assert.doesNotMatch(emailedUrl, /storage\.googleapis\.com|X-Goog-Signature|X-Goog-Credential/);
     const grantToken = new URL(emailedUrl).searchParams.get("grant");
     assert.ok(grantToken);
@@ -382,7 +382,7 @@ describe("C6 local purchase-access simulator", () => {
         items: [{ priceId: freeOffer.paddlePriceId, productId: freeOffer.paddleProductId, quantity: 1 }],
       },
       policy,
-      downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
+      downloadUrl: "https://download.akasounds.com/api/purchase-access/download?grant=test-grant-token",
     });
     assert.equal(result.accepted, true);
     assert.match(html, /https:\/\/akasounds\.com\/assets\/aka-logo-symbol-white-official\.png/);

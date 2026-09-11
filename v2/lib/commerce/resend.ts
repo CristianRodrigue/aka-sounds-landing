@@ -31,7 +31,7 @@ function classifyStatus(status: number): ProviderResult {
 function isAkaDownloadUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    const akaHost = url.hostname === "akasounds.com" || url.hostname === "www.akasounds.com";
+    const akaHost = url.hostname === "download.akasounds.com";
     return url.protocol === "https:"
       && akaHost
       && url.pathname === "/api/purchase-access/download"

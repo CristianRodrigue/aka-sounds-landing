@@ -157,6 +157,7 @@ export function ProductPurchaseButton({
   const pendingCheckoutRef = useRef(false);
   const sessionRef = useRef<PurchaseSessionResponse | null>(null);
   const flowIdRef = useRef(0);
+  const statusRequestIdRef = useRef(0);
   const transactionIdRef = useRef<string | null>(null);
   const isTextVariant = variant === "text";
   const isCustomVariant = variant === "custom";
@@ -208,8 +209,10 @@ export function ProductPurchaseButton({
   const pollUntilSettled = useCallback(async (session: PurchaseSessionResponse, flowId: number) => {
     const deadline = Date.now() + PREPARING_TIMEOUT_MS;
     while (flowIdRef.current === flowId && Date.now() < deadline) {
+      const requestId = statusRequestIdRef.current + 1;
+      statusRequestIdRef.current = requestId;
       const status = await fetchStatus(session);
-      if (flowIdRef.current !== flowId) return;
+      if (flowIdRef.current !== flowId || statusRequestIdRef.current !== requestId) return;
       if (status?.status === "READY") {
         setReadyProductName(status.productName);
         setDownloadUrl(commerceApiUrl(status.downloadUrl));
@@ -223,6 +226,7 @@ export function ProductPurchaseButton({
       const remaining = deadline - Date.now();
       if (remaining <= 0) break;
       await wait(Math.min(STATUS_POLL_INTERVAL_MS, remaining));
+      if (flowIdRef.current !== flowId || statusRequestIdRef.current !== requestId) return;
     }
     if (flowIdRef.current === flowId) setModalState("delay");
   }, [fetchStatus]);
@@ -243,6 +247,7 @@ export function ProductPurchaseButton({
     writeSessionLifecycle(priceId, "completed");
     const flowId = flowIdRef.current + 1;
     flowIdRef.current = flowId;
+    statusRequestIdRef.current += 1;
     setDownloadUrl(null);
     setReadyProductName(productName);
     setModalState("preparing");
@@ -328,16 +333,22 @@ export function ProductPurchaseButton({
   const checkAgain = useCallback(async () => {
     const session = sessionRef.current;
     if (!session || checking) return;
+    const flowId = flowIdRef.current;
+    const requestId = statusRequestIdRef.current + 1;
+    statusRequestIdRef.current = requestId;
     setChecking(true);
     try {
       const status = await fetchStatus(session);
+      if (flowIdRef.current !== flowId || statusRequestIdRef.current !== requestId) return;
       if (status?.status === "READY") {
         setReadyProductName(status.productName);
         setDownloadUrl(commerceApiUrl(status.downloadUrl));
         setModalState("ready");
       }
     } finally {
-      setChecking(false);
+      if (flowIdRef.current === flowId && statusRequestIdRef.current === requestId) {
+        setChecking(false);
+      }
     }
   }, [checking, fetchStatus]);
 
@@ -346,6 +357,7 @@ export function ProductPurchaseButton({
       window.__akaPaddleActiveCheckout = undefined;
     }
     flowIdRef.current += 1;
+    statusRequestIdRef.current += 1;
     sessionRef.current = null;
     transactionIdRef.current = null;
     clearStoredSession(priceId);

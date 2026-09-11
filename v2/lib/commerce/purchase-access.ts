@@ -7,7 +7,7 @@ import type { NormalizedTransaction } from "./types";
 export const PURCHASE_SESSION_TTL_MS = 30 * 60 * 1000;
 export const DOWNLOAD_GRANT_TTL_MS = 5 * 60 * 1000;
 export const EMAIL_DOWNLOAD_GRANT_TTL_MS = 24 * 60 * 60 * 1000;
-export const PUBLIC_DOWNLOAD_ORIGIN = "https://www.akasounds.com";
+export const PUBLIC_DOWNLOAD_ORIGIN = "https://download.akasounds.com";
 
 export type PurchaseAccessSessionRecord = {
   readonly sessionId: string;
@@ -271,7 +271,7 @@ export async function readPurchaseAccessStatus(
   return {
     status: "READY",
     productName: offer.productName,
-    downloadUrl: `/api/purchase-access/download?grant=${encodeURIComponent(grant.token)}`,
+    downloadUrl: buildPublicDownloadUrl(grant.token),
   };
 }
 

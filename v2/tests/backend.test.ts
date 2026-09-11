@@ -308,7 +308,7 @@ describe("G2B Resend and MailerLite adapters", () => {
       email: "customer@example.test",
       transaction: transactionFor(),
       policy: canonicalCommerceModel.fulfillmentPolicies[0],
-      downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
+      downloadUrl: "https://download.akasounds.com/api/purchase-access/download?grant=test-grant-token",
     });
     assert.deepEqual(result, { accepted: true });
     const body = requestBody as Record<string, unknown>;
@@ -334,7 +334,7 @@ describe("G2B Resend and MailerLite adapters", () => {
       email: "customer@example.test",
       transaction: transactionFor(),
       policy: canonicalCommerceModel.fulfillmentPolicies[0],
-       downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
+       downloadUrl: "https://download.akasounds.com/api/purchase-access/download?grant=test-grant-token",
     });
     assert.deepEqual(await response(202), { accepted: true });
     const permanent = await response(400);
@@ -352,7 +352,7 @@ describe("G2B Resend and MailerLite adapters", () => {
       email: "customer@example.test",
       transaction: transactionFor(),
       policy: canonicalCommerceModel.fulfillmentPolicies[0],
-       downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
+       downloadUrl: "https://download.akasounds.com/api/purchase-access/download?grant=test-grant-token",
     });
     assert.equal(timeout.accepted, false);
     if (!timeout.accepted) assert.equal(timeout.failure!.retryable, true);
@@ -505,7 +505,7 @@ describe("Resend safe test mode", () => {
     email: "customer@example.test",
     transaction: transactionFor(),
     policy: canonicalCommerceModel.fulfillmentPolicies[0],
-     downloadUrl: "https://www.akasounds.com/api/purchase-access/download?grant=test-grant-token",
+     downloadUrl: "https://download.akasounds.com/api/purchase-access/download?grant=test-grant-token",
   };
 
   it("fails closed without a safe test recipient and never calls Resend", async () => {
