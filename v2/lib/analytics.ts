@@ -22,7 +22,9 @@ export function initializeAnalytics() {
   document.documentElement.dataset.akaAnalyticsInitialized = "true";
 
   analyticsWindow.dataLayer = analyticsWindow.dataLayer || [];
-  analyticsWindow.gtag = analyticsWindow.gtag || ((...args: unknown[]) => analyticsWindow.dataLayer?.push(args));
+  analyticsWindow.gtag = analyticsWindow.gtag || function gtag() {
+    analyticsWindow.dataLayer?.push(arguments);
+  };
   analyticsWindow.gtag("js", new Date());
   analyticsWindow.gtag("config", GOOGLE_ANALYTICS_ID);
   if (!document.querySelector(`script[data-aka-analytics="google"]`)) {
