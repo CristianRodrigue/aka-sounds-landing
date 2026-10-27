@@ -7,13 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "tsx --test tests/commerce.test.ts tests/backend.test.ts tests/g2b-r.test.ts tests/resend-webhook.test.ts tests/c6-purchase-access.test.ts"
+    "test": "tsx --test tests/*.test.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "7.19.0",
     "@neondatabase/serverless": "^1.1.0",
     "@paddle/paddle-node-sdk": "^3.10.0",
-    "next": "16.3.1",
+    "next": "16.4.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "svix": "2.2.0"

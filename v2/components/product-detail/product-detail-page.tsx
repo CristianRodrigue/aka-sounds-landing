@@ -1,9 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ProductAudioPreview } from "./product-audio-preview";
 import type { ProductDetailModel } from "./product-data";
 import { ProductPurchaseButton } from "./product-purchase-button";
 import { MotionOrchestrator } from "../motion-orchestrator";
 import { SiteNavigation } from "../site-navigation";
+import { HalloweenPrice } from "../campaigns/halloween-campaign";
 
 function ProductHeader() {
   return <SiteNavigation />;
@@ -15,19 +17,19 @@ function ProductSignalTicker() {
       <div className="signal-ticker-viewport">
         <div className="signal-ticker-track">
           <div className="signal-ticker-sequence">
-            <a href="/#sample-packs">NEW RELEASE <span>—</span> MODERN RAW KICK ARSENAL VOL. 1</a>
+            <Link href="/#sample-packs">NEW RELEASE <span>—</span> MODERN RAW KICK ARSENAL VOL. 1</Link>
             <i aria-hidden="true">/</i>
-            <a href="/#free-sounds">FREE SOUNDS <span>—</span> SERUM 2 HARD DANCE SCREECHES</a>
+            <Link href="/#free-sounds">FREE SOUNDS <span>—</span> SERUM 2 HARD DANCE SCREECHES</Link>
             <i aria-hidden="true">/</i>
-            <a href="/#tutorials">NEW TUTORIAL <span>—</span> HARD DANCE SCREECHES / SERUM 2 TUTORIAL</a>
+            <Link href="/#tutorials">NEW TUTORIAL <span>—</span> HARD DANCE SCREECHES / SERUM 2 TUTORIAL</Link>
             <i aria-hidden="true">/</i>
           </div>
           <div className="signal-ticker-sequence" aria-hidden="true">
-            <a href="/#sample-packs" tabIndex={-1}>NEW RELEASE <span>—</span> MODERN RAW KICK ARSENAL VOL. 1</a>
+            <Link href="/#sample-packs" tabIndex={-1}>NEW RELEASE <span>—</span> MODERN RAW KICK ARSENAL VOL. 1</Link>
             <i aria-hidden="true">/</i>
-            <a href="/#free-sounds" tabIndex={-1}>FREE SOUNDS <span>—</span> SERUM 2 HARD DANCE SCREECHES</a>
+            <Link href="/#free-sounds" tabIndex={-1}>FREE SOUNDS <span>—</span> SERUM 2 HARD DANCE SCREECHES</Link>
             <i aria-hidden="true">/</i>
-            <a href="/#tutorials" tabIndex={-1}>NEW TUTORIAL <span>—</span> HARD DANCE SCREECHES / SERUM 2 TUTORIAL</a>
+            <Link href="/#tutorials" tabIndex={-1}>NEW TUTORIAL <span>—</span> HARD DANCE SCREECHES / SERUM 2 TUTORIAL</Link>
             <i aria-hidden="true">/</i>
           </div>
         </div>
@@ -191,9 +193,9 @@ function ProductFooter() {
           <h2>STRUCTURED DIRECTORY</h2>
         </div>
         <nav className="footer-b2-directory" aria-label="Footer directory">
-          <div><span>PRODUCTS</span><a href="/#sample-packs">SAMPLE PACKS</a><a href="/#free-sounds">FREE SOUNDS</a></div>
-          <div><span>CONTENT</span><a href="/#tutorials">TUTORIALS</a></div>
-          <div><span>BRAND</span><a href="/#about">ABOUT</a><a href="/deat_aka">DEAT AKA</a></div>
+          <div><span>PRODUCTS</span><Link href="/#sample-packs">SAMPLE PACKS</Link><Link href="/#free-sounds">FREE SOUNDS</Link></div>
+          <div><span>CONTENT</span><Link href="/#tutorials">TUTORIALS</Link></div>
+          <div><span>BRAND</span><Link href="/#about">ABOUT</Link><a href="/deat_aka">DEAT AKA</a></div>
           <div><span>SOCIAL</span><a href="https://www.youtube.com/@Aka_sounds">YOUTUBE</a><a href="https://soundcloud.com/deat_aka">SOUNDCLOUD</a><a href="https://www.instagram.com/aka_sounds/">INSTAGRAM</a><a href="https://open.spotify.com/intl-es/artist/2J50ThxDETbxoqoT4KP9bU?si=e1WUj9Z6TfOckAKzqED8hg">SPOTIFY</a></div>
           <div><span>LEGAL</span><a href="/privacy">PRIVACY</a><a href="/terms">TERMS</a><a href="/refunds">REFUNDS</a><a href="/contact">CONTACT</a></div>
         </nav>
@@ -223,15 +225,14 @@ export function ProductDetailPage({ product }: { product: ProductDetailModel }) 
             <div className="product-v2-artwork-caption">{product.artworkCaption.title} <span>/</span> {product.artworkCaption.detail}</div>
           </div>
           <div className="product-v2-hero-copy" data-motion-reveal data-motion-delay="140">
-            <a className="product-v2-back-link" href="/#sample-packs">← BACK TO SAMPLE PACKS</a>
+            <Link className="product-v2-back-link" href="/#sample-packs">← BACK TO SAMPLE PACKS</Link>
             <p className="product-v2-index">01 / PRODUCT DETAIL</p>
             <p className="product-v2-kicker">{product.genre}</p>
             <h1>{product.title}<br /><span>{product.volume}</span></h1>
             <p className="product-v2-description">{product.description}</p>
             <div className="product-v2-price-block">
               <span className="product-v2-price-label">CURRENT PRODUCT PRICE</span>
-              <strong>{product.currentPrice}</strong>
-              {product.referencePrice ? <del className="product-v2-reference-price">{product.referencePrice}</del> : null}
+              <HalloweenPrice priceId={product.paddlePriceId} normalPrice={product.currentPrice} referencePrice={product.referencePrice} />
             </div>
             <ProductPurchaseButton priceId={product.paddlePriceId} productName={product.displayName} />
           </div>
@@ -332,8 +333,7 @@ export function ProductDetailPage({ product }: { product: ProductDetailModel }) 
           <div className="product-v2-final-row">
             <h2>{product.title}<br /><span>{product.volume}</span></h2>
             <div className="product-v2-final-buy">
-              <strong>{product.currentPrice}</strong>
-              {product.referencePrice ? <del className="product-v2-reference-price">{product.referencePrice}</del> : null}
+              <HalloweenPrice priceId={product.paddlePriceId} normalPrice={product.currentPrice} referencePrice={product.referencePrice} />
               <ProductPurchaseButton priceId={product.paddlePriceId} productName={product.displayName} compact />
             </div>
           </div>

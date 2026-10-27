@@ -3,6 +3,9 @@ import "./globals.css";
 import { DEFAULT_OG_IMAGE, SITE_URL } from "@/lib/seo";
 import { CookieConsent } from "@/components/cookie-consent";
 import { HashRouteCompatibility } from "@/components/hash-route-compatibility";
+import { connection } from "next/server";
+import { HalloweenAnnouncement, HalloweenCampaignProvider } from "@/components/campaigns/halloween-campaign";
+import { isHalloweenSaleActive } from "@/lib/campaigns/halloween-2026";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -53,6 +56,8 @@ export const metadata: Metadata = {
     },
   },
 };
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body><HashRouteCompatibility />{children}<CookieConsent /></body></html>;
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // Render the campaign from request time; static HTML must never retain expired prices.
+  await connection();
+  return <html lang="en"><body><HalloweenCampaignProvider initialActive={isHalloweenSaleActive()}><HalloweenAnnouncement /><HashRouteCompatibility />{children}<CookieConsent /></HalloweenCampaignProvider></body></html>;
 }

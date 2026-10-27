@@ -52,4 +52,5 @@ export function initializeAnalytics() {
     script.dataset.akaAnalytics = "meta";
     document.head.appendChild(script);
   }
+  window.dispatchEvent(new Event("aka:analytics-ready"));
 }

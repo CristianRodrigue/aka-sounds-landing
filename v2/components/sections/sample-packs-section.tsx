@@ -1,3 +1,5 @@
+import { HalloweenPrice } from "../campaigns/halloween-campaign";
+
 const ASSET_ROOT = "/assets";
 const PREMIUM_PRODUCT_PATH = "/sounds/hardtechno-essentials-vol-1";
 const NEW_PREMIUM_PRODUCT_PATH = "/sounds/modern-raw-kick-arsenal-vol-1";
@@ -56,7 +58,7 @@ export function SamplePacksSection() {
             <div className="sample-catalog-copy">
               <p className="sample-catalog-label">NEW / PREMIUM SAMPLE PACK</p>
               <h3>MODERN RAW KICK<br />ARSENAL VOL. 1</h3>
-              <p className="sample-catalog-type">FULL EDITION / $19.99</p>
+              <p className="sample-catalog-type">FULL EDITION / <HalloweenPrice priceId="pri_01m0zn4mcma11bnywpvcp2qfk0" normalPrice="$19.99" /></p>
               <a className="motion-cta" href={NEW_PREMIUM_PRODUCT_PATH}>EXPLORE PACK <span className="motion-cta-arrow">→</span></a>
             </div>
           </article>
@@ -70,7 +72,7 @@ export function SamplePacksSection() {
             <div className="sample-catalog-copy">
               <p className="sample-catalog-label">PREMIUM SAMPLE PACK</p>
               <h3>HARDTECHNO ESSENTIALS<br />VOL. 01</h3>
-              <p className="sample-catalog-type">FULL EDITION / $14.99</p>
+              <p className="sample-catalog-type">FULL EDITION / <HalloweenPrice priceId="pri_01kk855x7wk29gv2d4hgz60k63" normalPrice="$14.99" /></p>
               <a className="motion-cta" href={PREMIUM_PRODUCT_PATH}>EXPLORE PACK <span className="motion-cta-arrow">→</span></a>
             </div>
           </article>

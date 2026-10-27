@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { C6PurchaseModal, type C6ModalState } from "./c6-purchase-modal";
 import { commerceApiUrl } from "./commerce-api";
+import { halloweenCheckoutDiscount, halloweenProduct } from "@/lib/campaigns/halloween-2026";
+import { trackHalloween } from "@/lib/campaigns/halloween-analytics";
+import { useHalloweenSale } from "../campaigns/halloween-campaign";
 import {
   isPaddleCheckoutCompletedEvent,
   paddleTransactionId,
@@ -13,6 +16,7 @@ type PaddleCheckout = {
   open: (options: {
     items: Array<{ priceId: string; quantity: number }>;
     customData?: { readonly purchase_session_id: string };
+    discountId?: string;
   }) => void;
   close?: () => void;
 };
@@ -148,6 +152,7 @@ export function ProductPurchaseButton({
   variant = "button",
   buttonClassName,
 }: ProductPurchaseButtonProps) {
+  const halloweenSaleActive = useHalloweenSale();
   const [checkoutReady, setCheckoutReady] = useState(false);
   const [message, setMessage] = useState("");
   const [modalState, setModalState] = useState<C6ModalState | null>(null);
@@ -159,6 +164,13 @@ export function ProductPurchaseButton({
   const flowIdRef = useRef(0);
   const statusRequestIdRef = useRef(0);
   const transactionIdRef = useRef<string | null>(null);
+  const campaignCheckoutRef = useRef(false);
+  const campaignPurchaseTrackedRef = useRef(false);
+  const reportCampaignPurchase = useCallback(() => {
+    if (!campaignCheckoutRef.current || campaignPurchaseTrackedRef.current || !transactionIdRef.current) return;
+    campaignPurchaseTrackedRef.current = true;
+    trackHalloween("halloween_purchase", { price_id: priceId, transaction_id: transactionIdRef.current });
+  }, [priceId]);
   const isTextVariant = variant === "text";
   const isCustomVariant = variant === "custom";
   const isLinkLikeVariant = isTextVariant || isCustomVariant;
@@ -214,6 +226,7 @@ export function ProductPurchaseButton({
       const status = await fetchStatus(session);
       if (flowIdRef.current !== flowId || statusRequestIdRef.current !== requestId) return;
       if (status?.status === "READY") {
+        reportCampaignPurchase();
         setReadyProductName(status.productName);
         setDownloadUrl(commerceApiUrl(status.downloadUrl));
         setModalState("ready");
@@ -229,7 +242,7 @@ export function ProductPurchaseButton({
       if (flowIdRef.current !== flowId || statusRequestIdRef.current !== requestId) return;
     }
     if (flowIdRef.current === flowId) setModalState("delay");
-  }, [fetchStatus]);
+  }, [fetchStatus, reportCampaignPurchase]);
 
   const handlePaddleEvent = useCallback((event: PaddleCheckoutEvent) => {
     if (!isPaddleCheckoutCompletedEvent(event)) return;
@@ -271,9 +284,14 @@ export function ProductPurchaseButton({
       sessionId: session.sessionId,
       onCompleted: handlePaddleEvent,
     };
+    const campaignDiscount = halloweenCheckoutDiscount(priceId);
+    campaignCheckoutRef.current = Boolean(campaignDiscount.discountId);
+    campaignPurchaseTrackedRef.current = false;
+    if (campaignCheckoutRef.current) trackHalloween("halloween_checkout_start", { price_id: priceId, product_id: halloweenProduct(priceId)!.productId });
     window.Paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       customData: { purchase_session_id: session.sessionId },
+      ...campaignDiscount,
     });
   }, [ensureSession, handlePaddleEvent, priceId]);
 
@@ -320,6 +338,15 @@ export function ProductPurchaseButton({
     }
   }, []);
 
+  useEffect(() => {
+    if (halloweenSaleActive || !campaignCheckoutRef.current) return;
+    if (window.__akaPaddleActiveCheckout?.sessionId !== sessionRef.current?.sessionId) return;
+    // An open sale checkout must not remain payable in the UI after the deadline.
+    // Reopening uses the existing flow and the unchanged base price, without a discount.
+    // Preserve the completion callback: an already-paid transaction may still report success.
+    window.Paddle?.Checkout.close?.();
+  }, [halloweenSaleActive]);
+
   const openCheckout = () => {
     if (!window.Paddle) {
       pendingCheckoutRef.current = true;
@@ -341,6 +368,7 @@ export function ProductPurchaseButton({
       const status = await fetchStatus(session);
       if (flowIdRef.current !== flowId || statusRequestIdRef.current !== requestId) return;
       if (status?.status === "READY") {
+        reportCampaignPurchase();
         setReadyProductName(status.productName);
         setDownloadUrl(commerceApiUrl(status.downloadUrl));
         setModalState("ready");
@@ -350,7 +378,7 @@ export function ProductPurchaseButton({
         setChecking(false);
       }
     }
-  }, [checking, fetchStatus]);
+  }, [checking, fetchStatus, reportCampaignPurchase]);
 
   const closeModal = useCallback(() => {
     if (window.__akaPaddleActiveCheckout?.sessionId === sessionRef.current?.sessionId) {

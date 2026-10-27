@@ -21,7 +21,7 @@ import { isPaddleCheckoutCompletedEvent, paddleTransactionId } from "../componen
 import { beginC6Flow, canDismissC6, stateAfterDelayCheck, stateAfterPreparingStatus } from "../components/product-detail/c6-state-machine";
 import { buildCommerceApiUrl } from "../components/product-detail/commerce-api";
 import { purchaseAccessOptions, withPurchaseAccessCors } from "../app/api/purchase-access/cors";
-import { handlePurchaseDownload } from "../app/api/purchase-access/download/route";
+import { handlePurchaseDownload } from "../app/api/purchase-access/download/handler";
 
 const offer = canonicalOffers[0];
 
@@ -81,6 +81,10 @@ async function fulfill(store: InMemoryReceiptStore, eventId: string) {
 }
 
 describe("C6 local purchase-access simulator", () => {
+  it("keeps download route exports within the Next.js route contract", async () => {
+    const route = await import("../app/api/purchase-access/download/route");
+    assert.deepEqual(Object.keys(route).sort(), ["GET", "OPTIONS", "dynamic", "runtime"]);
+  });
   it("runs checkout.completed -> server binding -> fulfilled -> READY -> grant validation", async () => {
     const store = new InMemoryReceiptStore();
     const credentials = await createSession(store);

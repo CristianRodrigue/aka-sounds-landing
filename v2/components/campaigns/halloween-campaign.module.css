@@ -1,0 +1,26 @@
+.announcement { position: fixed; inset: 0 0 auto; z-index: 150; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px 24px; height: 88px; box-sizing: border-box; padding: 10px 24px; border-bottom: 1px solid #794324; background: #17110d; color: #f1f1ed; font-size: 11px; font-weight: 700; letter-spacing: .07em; line-height: 1.5; text-align: center; }
+:global(body):has(.announcement) { padding-top: 88px; }
+:global(body):has(.announcement) :global(.site-nav) { top: 88px; }
+.announcement strong { color: #ff9a5c; }
+.announcement a { display: inline-flex; align-items: center; min-height: 44px; gap: 12px; color: #ff9a5c; }
+.landing { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 28px; width: min(100% - 48px, 1280px); margin: 0 auto; padding: 36px 0; border-bottom: 1px solid #794324; color: #f1f1ed; }
+.eyebrow { margin: 0 0 12px; color: #ff9a5c; font-size: 11px; font-weight: 700; letter-spacing: .14em; }
+.landing h2 { margin: 0; font-size: clamp(28px, 4vw, 56px); line-height: 1.05; letter-spacing: -.04em; }
+.tagline { margin: 16px 0 8px; color: #ff9a5c; font-size: clamp(22px, 3vw, 32px); font-weight: 800; line-height: 1.2; }
+.tagline span { display: block; margin-top: 8px; color: #f1f1ed; font-size: 13px; letter-spacing: .08em; }
+.dates { margin: 12px 0 0; color: #c1bab4; font-size: 12px; }
+.actions { display: flex; align-items: flex-start; flex-direction: column; gap: 16px; max-width: 100%; }
+.actions a { display: inline-flex; align-items: center; justify-content: center; gap: 16px; min-height: 44px; max-width: 100%; color: #f1f1ed; font-size: 11px; font-weight: 800; letter-spacing: .08em; }
+.actions .primary { padding: 15px 20px; background: #ff9a5c; color: #111; text-align: center; }
+.price { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 8px 12px; max-width: 100%; font-size: 16px; line-height: 1.3; font-variant-numeric: tabular-nums; }
+.price del { font-size: 13px; opacity: .75; }
+.price.price strong { color: inherit; font-size: 1.3em; line-height: 1.1; letter-spacing: -.03em; }
+:global(.product-v2-price-block) .price, :global(.product-v2-final-buy) .price { font-size: 32px; }
+.featuredPrice { margin: 20px 0; font-size: 24px; }
+.badge { display: inline-block; padding: 4px 7px; background: #ff9a5c; color: #111; font: 800 10px/1.4 Arial, sans-serif; letter-spacing: .06em; white-space: nowrap; }
+.announcement a:focus-visible, .actions a:focus-visible { outline: 2px solid #ff9a5c; outline-offset: 4px; }
+@media (max-width: 480px) { .announcement { padding: 8px 16px; font-size: 10px; gap: 0 12px; } .landing { width: calc(100% - 32px); padding: 28px 0; } }
+/* The existing tablet hero changes to relative positioning but retains its desktop top offset. */
+@media (min-width: 761px) and (max-width: 900px) {
+  :global(body):has(.announcement) :global(.hero-exact-section:has(> .visual-intro) .visual-intro ~ .hero-inner) { top: 0; }
+}

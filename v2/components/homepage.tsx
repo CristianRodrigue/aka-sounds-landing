@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { TutorialsA2Section } from "./sections/tutorials-section";
 import { BrandCommunityA2Section } from "./sections/brand-community-section";
 import { FreeSoundsH1Section } from "./sections/free-sounds-section";
@@ -7,6 +8,7 @@ import { NewsletterSection } from "./sections/newsletter-section";
 import { MotionOrchestrator } from "./motion-orchestrator";
 import { HomepageVisualIntro } from "./homepage-visual-intro";
 import { SiteNavigation } from "./site-navigation";
+import { HalloweenLanding, HalloweenFeaturedPrice } from "./campaigns/halloween-campaign";
 
 const ASSET_ROOT = "/assets";
 const shapeColumns = {
@@ -113,11 +115,13 @@ export function AkaHomepage() {
             <SectionLabel>FEATURED SAMPLE PACK</SectionLabel>
             <h1>MODERN RAW KICK<br />ARSENAL VOL. 1</h1>
             <p>151 raw kick samples for modern hard dance production.<br />31 full kicks, 120 kick-building components,<br />4 FL Studio projects and 3 Serum 2 presets.</p>
-            <a className="text-cta hero-primary-cta" href="/sounds/modern-raw-kick-arsenal-vol-1">EXPLORE THE PACK <span>→</span></a>
+            <HalloweenFeaturedPrice />
+            <Link className="text-cta hero-primary-cta" href="/sounds/modern-raw-kick-arsenal-vol-1">EXPLORE THE PACK <span>→</span></Link>
           </div>
         </div>
       </section>
 
+      <HalloweenLanding />
       <SamplePacksSection />
       <FreeSoundsH1Section />
       <TutorialsA2Section />

@@ -4,6 +4,8 @@ import { StructuredData } from "@/components/structured-data";
 import { ProductDetailPage } from "@/components/product-detail/product-detail-page";
 import { getProductDetailBySlug, productDetails } from "@/components/product-detail/product-data";
 import { createPageMetadata, SITE_URL } from "@/lib/seo";
+import { campaignPrice } from "@/lib/campaigns/halloween-2026";
+import { connection } from "next/server";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -24,11 +26,13 @@ export function generateStaticParams() {
 }
 
 export default async function SoundPage({ params }: { params: Promise<{ slug: string }> }) {
+  await connection();
   const { slug } = await params;
   const product = getProductDetailBySlug(slug);
   if (!product) notFound();
 
   const productUrl = `${SITE_URL}/sounds/${product.slug}`;
+  const sale = campaignPrice(product.paddlePriceId);
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -47,7 +51,8 @@ export default async function SoundPage({ params }: { params: Promise<{ slug: st
       "@type": "Offer",
       url: productUrl,
       priceCurrency: "USD",
-      price: product.currentPrice.replace(/[^0-9.]/g, ""),
+      price: sale ? (sale.saleAmount / 100).toFixed(2) : product.currentPrice.replace(/[^0-9.]/g, ""),
+      ...(sale ? { priceValidUntil: "2026-11-02" } : {}),
       availability: "https://schema.org/InStock",
     },
   };
