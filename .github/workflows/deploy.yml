@@ -37,4 +37,5 @@ jobs:
           port: 21  # Agrégale esta línea para ir a la fija
           local-dir: ./dist/
           server-dir: ./
-          dangerous-clean-slate: true
+          dangerous-clean-slate: false
+          dry-run: true

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import deatPortrait from '../assets/deat_portrait.png';
 import picsartImage from '../assets/Picsart_26-03-01_20-54-57-417.jpg.jpeg';
+import whatDidUComeForCover from '../assets/WhatDidUComeFor.jpg';
 
 // --- BILINGUAL CONTENT DICTIONARY ---
 const content = {
@@ -85,11 +86,11 @@ const tracks = [
     },
     {
         id: '4', 
-        title: 'Мама Приют',
-        spotify: 'https://open.spotify.com/intl-es/track/3tSPiAkKoTb4kU2VJjmDd0?si=2cf049e09752465e',
-        soundcloud: null, 
+        title: 'What Did U Come For?',
+        spotify: 'https://open.spotify.com/track/65cegOPwYeViJTHzaKxszH?si=ca477d9c2efe4a2b',
+        soundcloud: 'https://soundcloud.com/deat_aka/what-did-u-come-for?si=f35a932d7cf848c691c6916630d249fb&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing', 
         youtube: '#',
-        image: 'https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e02a7d2868ea5ecd32bd796f098'
+        image: whatDidUComeForCover
     }
 ];
 
