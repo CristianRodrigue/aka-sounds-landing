@@ -42,13 +42,13 @@ const content = {
 } as const;
 
 const tracks = [
+  { id: "4", title: "What Did U Come For?", spotify: "https://open.spotify.com/track/65cegOPwYeViJTHzaKxszH?si=ca477d9c2efe4a2b", soundcloud: "https://soundcloud.com/deat_aka/what-did-u-come-for?si=f35a932d7cf848c691c6916630d249fb&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing", image: "/deat-aka/WhatDidUComeFor.jpg" },
   { id: "x_x", title: "x_x", spotify: "https://open.spotify.com/track/7tX0EwJoe1Gn05NhTQurJT?si=81a798e7d878438f", soundcloud: "https://soundcloud.com/deat_aka/x_x?si=4655cc42245b40d6a1bd6bff2d09b50c&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing", image: "https://i1.sndcdn.com/artworks-IIR9V8y2uy2XyFyF-U8pTmw-t500x500.jpg" },
   { id: "baddie-girls", title: "Baddie Girls", spotify: "https://open.spotify.com/track/0EwV2SfUNfKBNV0apCUZYy?si=3201186ee65b4e5f", soundcloud: "https://soundcloud.com/deat_aka/baddie-girls?si=caac0d95e1634fe3ae44fc0a660c8ad9&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing", image: "https://i1.sndcdn.com/artworks-XEoOF6UALyGwcVut-R2ikvg-t500x500.jpg" },
   { id: "5", title: "init", spotify: "https://open.spotify.com/intl-es/track/1zwJidnmvDWecYlAoq3uEP?si=ad89509d1b31460f", soundcloud: "https://soundcloud.com/deat_aka/init?si=53593b94ba0c471a956ef171dcc22f87&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing", image: "https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e0265fbbfe7c6e45cdabd70af52" },
   { id: "1", title: "This is a... F#cking Hardtechno", spotify: "https://open.spotify.com/intl-es/track/1E52eF1SJPK3V8ymlRjd0h?si=53f27089d6ef427a", soundcloud: "https://soundcloud.com/deat_aka/this-is-a-f-cking-hardtechno?si=b527ad7408e94e1080c7255a85fe481f", image: "https://i1.sndcdn.com/artworks-b9qwKc4HmfNg8L3q-AI5djg-t500x500.png" },
   { id: "2", title: "XXL", spotify: "https://open.spotify.com/intl-es/track/7pk7aN6he0398VsGEhzGXj?si=3e99d0573a75458f", soundcloud: "https://soundcloud.com/deat_aka/xxl?si=db830f33c4834ab79d76572185af2c01", image: "https://i1.sndcdn.com/artworks-e3LsFmJb8ojve70X-LDdTBQ-t500x500.png" },
   { id: "3", title: "I Want To Leave", spotify: "https://open.spotify.com/intl-es/track/1BeQHxwK0xpvm5wbTY4pfU?si=6a93ad07d0a94d8d", soundcloud: "https://soundcloud.com/deat_aka/i-want-to-leave?si=75e38f8496284327952ed7518bb55736", image: "https://i1.sndcdn.com/artworks-SCBGBUd6KaPTbNdD-Agmsuw-t500x500.jpg" },
-  { id: "4", title: "What Did U Come For?", spotify: "https://open.spotify.com/track/65cegOPwYeViJTHzaKxszH?si=ca477d9c2efe4a2b", soundcloud: "https://soundcloud.com/deat_aka/what-did-u-come-for?si=f35a932d7cf848c691c6916630d249fb&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing", image: "/deat-aka/WhatDidUComeFor.jpg" },
 ] as const;
 
 function SocialIcon({ kind }: { kind: "spotify" | "soundcloud" | "instagram" }) {
