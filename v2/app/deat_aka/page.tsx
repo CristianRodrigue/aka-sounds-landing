@@ -5,8 +5,8 @@ export const metadata = createPageMetadata({
   title: "DEAT AKA | AKA Sounds",
   description: "Know DEAT AKA — producer, artist and the sound behind AKA Sounds.",
   path: "/deat_aka",
-  image: "/assets/deat_portrait.png",
-  imageAlt: "DEAT AKA portrait",
+  image: "/deat-aka/WhatDidUComeFor.jpg",
+  imageAlt: "What Did U Come For? single artwork by DEAT AKA",
 });
 
 export default function DeatAkaPage() {
